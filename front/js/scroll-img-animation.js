@@ -13,16 +13,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Cambiar la imagen cuando la sección está visible
         if (section1Position.top <= window.innerHeight && section1Position.bottom >= 0) {
-            image.src = 'img/fencer1.jpg'; // Cambia la imagen para sección 1
+            image.src = '../img/fencer1.jpg'; // Cambia la imagen para sección 1
             image.style.width = '30%'; 
         } else if (section2Position.top <= window.innerHeight && section2Position.bottom >= 0) {
-            image.src = 'img/fencer2.jpg'; // Cambia la imagen para sección 2
+            image.src = '../img/fencer2.jpg'; // Cambia la imagen para sección 2
              
         } else if (section3Position.top <= window.innerHeight && section3Position.bottom >= 0) {
-            image.src = 'img/fencer3.jpg'; // Cambia la imagen para sección 3
+            image.src = '../img/fencer3.jpg'; // Cambia la imagen para sección 3
             
         } else if (section4Position.top <= window.innerHeight && section4Position.bottom >= 0) {
-            image.src = 'img/fencer4.jpg'; // Cambia la imagen para sección 4
+            image.src = '../img/fencer4.jpg'; // Cambia la imagen para sección 4
             
         }
     }
