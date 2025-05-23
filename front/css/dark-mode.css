@@ -1,0 +1,46 @@
+body.dark-mode {
+    background-color: #0B0B0D;
+    color: #D3D5FD;
+  }
+  
+  .dark-mode .navbar,
+  .dark-mode .fixed-navbar {
+    background-color: #474A56  ;
+    color: #D3D5FD;
+  }
+  
+  .dark-mode a {
+    color: #D3D5FD;
+  }
+  
+  .dark-mode .offcanvas {
+    background-color: #474A56  ;
+    color: #D3D5FD;
+  }
+  .dark-mode .accordion-item {
+    background-color: #474A56  ;
+    color: #D3D5FD;
+    border-color: #444;
+  }
+  
+  .dark-mode .accordion-button {
+    background-color: #474A56  ;
+    color: #D3D5FD;
+  }
+  
+  .dark-mode .accordion-button:not(.collapsed) {
+    background-color: #474A56  ;
+    color: #D3D5FD;
+    box-shadow: none;
+  }
+  
+  .dark-mode .accordion-body {
+    background-color: #474A56  ;
+    color: #D3D5FD;
+  }
+  .dark-mode .list-group-item {
+    background-color: #474A56;
+    color: #D3D5FD;
+    border-color: #444;
+  }
+  

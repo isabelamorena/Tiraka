@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Coach</title>
+    
+    <!-- Conectar a bootstrap -->
+    <link href="css/css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/js/bootstrap.min.js"></script>
+
+    <!-- Link a hoja de estilo CSS para el sitio -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
+
+    <style>
+    body{
+        padding-top: 120px; /* Compensa altura navbar */
+    }
+    
+    .container {
+        border: 2px solid #ccc; /* Puedes personalizar el color del borde */
+        width: 500px;
+        height: auto;
+        margin-bottom: 3%;
+    }
+
+    .btn {
+        background-color: #929AAB;
+    }
+
+    @media screen and (max-width: 768px) {
+        .container-login-fencer {
+            width: 90%; /* Cambia el ancho al 90% en pantallas pequeñas */
+            height: auto; /* Permite que la altura se ajuste automáticamente */
+            margin-bottom: 8%;
+        }
+        .button-dark-mode {
+            display: none;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="fixed-navbar title-font">
+        <div class="container-fluid d-flex align-items-center justify-content-between px-4" style="height: 100px;">
+            <div class="d-flex align-items-center">
+                <a href="home.html"><img src="img/logo.png" class="img-fluid logo" alt="Logo de EliteFencing"></a>
+            </div>
+            <div class="d-flex d-md-flex justify-content-center flex-grow-1 gap-4">
+                <a href="home.html" class="navbar-links">Tiraka</a>
+                <a href="fencer-login.html" class="navbar-links">Tirador</a>
+                <a href="trainer-login.html" class="navbar-links">Entrenador</a>
+            </div>
+            <!-- Modo oscuro -->
+            <div class="ml-4">
+                <button id="darkMode" class="btn button-dark-mode">🌙</button>
+                <script>
+                    const darkModeBtn = document.getElementById('darkMode');
+                    darkModeBtn.addEventListener('click', () => {
+                        document.body.classList.toggle('dark-mode');
+                        /* Cambiar el icono a sol */
+                        darkModeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+                    });
+                </script>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form de la página -->
+    <div class="container-login-fencer container mt-5 pt-5 bg-light border border-2 rounded-0 shadow-sm p-4">
+        <p class="text-center title-font">Regístrate como entrenador</p>
+
+        <form id="regisForm">
+            <div class="mb-3 body-text-font">
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3 body-text-font">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3 body-text-font">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3 body-text-font">
+                <label for="surname" class="form-label">Primer apellido</label>
+                <input type="text" class="form-control" id="surname" name="surname" required>
+            </div>
+            <div class="mb-3 body-text-font">
+                <label for="secondSurname" class="form-label">Segundo apellido</label>
+                <input type="text" class="form-control" id="secondSurname" name="secondSurname" required>
+            </div>
+
+            <div class="mb-3 body-text-font">
+                <label for="clubname" class="form-label">Club</label>
+                <input type="text" class="form-control" id="clubname" name="clubname" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label body-text-font">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+         
+
+            <button type="submit" class="btn body-text-font">Registrarse</button>
+        </form>
+
+        <script>
+            document.getElementById('regisForm').addEventListener('submit', async function(event) {
+                event.preventDefault(); // Evita el envío del formulario por defecto
+
+                // Obtener los valores del formulario
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const name = document.getElementById('name').value;
+                const surname = document.getElementById('surname').value;
+                const secondSurname = document.getElementById('secondSurname').value;
+                const clubname = document.getElementById('clubname').value;
+                const email = document.getElementById('email').value;
+
+                // Verificar que username, nombre y apellidos no tengan espacios al principio o al final
+                if (username.trim() === '' || name.trim() === '' || surname.trim() === '' || secondSurname.trim() === '') {
+                    alert('El nombre de usuario, nombre y apellidos no pueden estar vacíos.');
+                    return;
+                }
+                // Validación de nombre y apellidos (solo letras y espacios)
+                const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/; // Permite letras y espacios, incluyendo acentos
+                if (!nameRegex.test(name) || !nameRegex.test(surname) || !nameRegex.test(secondSurname)) {
+                    alert('El nombre y apellidos solo pueden contener letras y espacios.');
+                    return;
+                }
+
+                // Validación de email
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    alert('El correo electrónico no es válido.');
+                    return;
+                }
+
+
+                try {
+                    // Enviar los datos usando fetch (POST)
+                    const response = await fetch('/registerCoach', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password,
+                            name: name,
+                            surname: surname,
+                            secondSurname: secondSurname,
+                            clubname: clubname,
+                            email: email
+
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('¡Registro exitoso!');
+                        window.location.href = 'trainer-login.html'; // Redirigir a la página de inicio de sesión
+                    } else {
+                        alert('Error en el registro. Por favor, intenta nuevamente.');
+                    }
+
+                } catch (error) {
+                    console.error('Error al registrar:', error);
+                    alert('Hubo un problema al registrar el entrenador. Por favor, intenta más tarde.');
+                }
+            });
+        </script>
+
+        <p class="mt-3 body-text-font">¿Ya tienes cuenta? <a href="trainer-login.html" class="body-text-font">Inicia sesión aquí</a></p>
+    </div>
+</body>
+</html>

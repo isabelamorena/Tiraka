@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de control - Tirador</title>
+
+  <!-- Conectar a bootstrapstrap -->
+  <link href="css/css/bootstrap.min.css" rel="stylesheet">
+  <script src="js/js/bootstrap.min.js"></script>
+<!--   <script src="js/fencer-controlPanel.js"></script> -->
+<script src="js/fencer/competition-diary.js"></script>
+  <script src="js/fencer/attendance-record.js"></script>
+    <script src="js/fencer/class-diary.js"></script>
+    <script src="js/fencer/workout-sessions.js"></script>
+    <script src="js/fencer/profile.js"></script> 
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+
+  <!-- Gráfica -->
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Paginación -->
+  <link rel="stylesheet" href="https://pagination.js.org/dist/2.1.5/pagination.css">
+  <script src="https://pagination.js.org/dist/2.1.5/pagination.min.js"></script>
+
+  <!-- Choices.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+  <!-- Link a hoja de estilo CSS para el sitio -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> <!-- Flatpickr CSS para el rango de fechas -->
+  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" /> <!-- para los iconos -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/dark-mode.css">
+  <link rel="stylesheet" href="css/sidebar-CP.css">
+  <link rel="stylesheet" href="css/controlPanel-main.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
+
+<script>
+    // Verificar si el usuario está autenticado (llama a una ruta del back-end)
+    async function checkSession() {
+    try {
+        const response = await fetch('/check-session', {
+        method: 'GET',
+        credentials: 'include',  // Asegúrate de incluir las cookies para la autenticación
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+        // El usuario está autenticado
+        console.log('Usuario autenticado');
+        } else {
+        // El usuario no está autenticado, redirigir al login
+        window.location.href = 'fencer-login.html';
+        }
+    } catch (error) {
+        console.error('Error al verificar la sesión:', error);
+        window.location.href = 'fencer-login.html';  // Redirige al login si hay error de conexión
+    }
+    }
+
+    // Llamar a la función para verificar sesión
+    checkSession();
+
+</script>
+
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar-toggle">
+            <div class="sidebar-logo title-font">
+                <a href="home.html">Tiraka</a>
+            </div>
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav p-0">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-home-2"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#" id="showProfile" class="sidebar-link">
+                        <i class="lni lni-user-4"></i>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                
+                
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#entre" aria-expanded="true" aria-controls="entre">
+                        <i class="lni lni-dumbbell-1"></i>
+                        <span>Entrenamientos</span>
+                    </a>
+                    <ul id="entre" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Mis entrenamientos</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Entrenamientos asignados</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" id="createWorkoutButton" class="sidebar-link">Crear entreno</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Historial</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#diarios" aria-expanded="false" aria-controls="diarios">
+                        <i class="lni lni-bookmark-1"></i>
+                        <span>Diarios</span>
+                    </a>
+                    <ul id="diarios" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link" id="class-diary-button">Diario de clases</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link" id="competition-diary-button">Diario de competiciones</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" id="attendanceButton">
+                        <i class="lni lni-check-circle-1"></i>
+                        <span>Asistencias</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Sidebar Navigation Ends -->
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span id="logoutButton">Cerrar sesión</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Sidebar Ends -->
+        <div class="main">
+            <!-- boton para el sidebar -->
+            <nav class="navbar navbar-expand">
+                <button class="toggler-btn" type="button">
+                    <i class="lni lni-align-text-left"></i>
+                </button>
+            </nav>
+            <script>
+                /* ----------------------- Sidebar -----------------------------*/
+                const toggler = document.querySelector(".toggler-btn");
+                toggler.addEventListener("click", function () {
+                document.querySelector("#sidebar").classList.toggle("collapsed");
+                });
+            </script>
+            
+            <main class="p-3" class="onPC" >
+                <!-- Perfil de tirador -->
+                <div id="profile" class="container-fluid  panel-box-auto hidden">
+                    <div class=" light-style flex-grow-1 container-p-y ">
+                        <h4 class="font-weight-bold py-3 mb-4" id="profile-title">
+                            
+                        </h4>
+                        <div class=" overflow-hidden">
+                            <div class="row no-gutters row-bordered row-border-light">
+                                <div class="col-md-3 pt-0">
+                                    <div class="list-group list-group-flush account-settings-links">
+                                        <a class="list-group-item list-group-item-action active" data-toggle="list"
+                                            href="#account-general" id="profile-general">General</a>
+                                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                                            href="#account-change-password"> Contraseña</a>
+                                        <a class="list-group-item list-group-item-action" data-toggle="list"
+                                            href="#coach" id="profile-coach">Entrenador</a>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active show" id="account-general">
+                                            <hr class="border-light m-0">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label class="form-label">Nombre de usuario</label>
+                                                    <input type="text" id="profile-username" class="form-control mb-1" value="nmaxwell">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Nombre</label>
+                                                    <input type="text" id="profile-name" class="form-control" value="Nelle Maxwell">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Primer apellido</label>
+                                                    <input type="text" id="profile-surname" class="form-control" value="Nelle Maxwell">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Segundo apellido</label>
+                                                    <input type="text" id="profile-secondsurname" class="form-control" value="Nelle Maxwell">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Fecha de nacimiento</label>
+                                                    <input type="date" id="profile-birthdate" class="form-control" value="Nelle Maxwell">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Club</label>
+                                                    <input type="text" id="profile-clubname" class="form-control" value="Nelle Maxwell">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Correo electrónico</label>
+                                                    <input type="email" id="profile-email" class="form-control" value="Nelle Maxwell">
+                                                </div>
+                                                <br>
+
+                                                <button class="btn w-20 btn-form-attendance btn-primary" id="profile-button" > Guardar </button>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="account-change-password">
+                                            <div class="card-body pb-2">
+                                                <div class="form-group">
+                                                    <label class="form-label">Contraseña actual</label>
+                                                    <input type="password" class="form-control" id="profile-current-password">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Nueva contraseña</label>
+                                                    <input type="password" class="form-control" id="profile-new-password">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Repetir la nueva contraseña</label>
+                                                    <input type="password" class="form-control" id="profile-confirm-new-password">
+                                                </div>
+                                                <br>
+                                            <button class="btn w-20 btn-primary" id="profile-password-button" > Cambiar contraseña </button>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="coach">
+                                            <div class="form-group">
+                                                <p id="currentTrainer"></p> 
+                                                <div class="form-group">
+                                                    <!-- Un desplegable con todos los entrenadores de la base de datos. -->
+                                                    <div class="mb-3" id="coachSelect" style="display: block;">
+                                                        <label for="coachName" class="form-label">¿Cambio de entrenador?</label>
+                                                        <select id="coachName" name="coachName" >
+                                                            <!-- Las opciones serán llenadas dinámicamente por el backend -->
+                                                        </select>
+                                                        <br>
+                                                        <button class="btn w-20 btn-primary" id="change-coach-button">Cambiar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mt-3">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diario de clases -->
+                <div id="diary-class" class="container-fluid hidden">
+                    <div class="row" id="diary-class-row">
+                        <!-- Columna izquierda -->
+                        <div class="col-12 col-md-6" id="left-column">
+                        <div class="panel-box-auto">
+                            <h1>Diario de clases</h1>
+                            <button id="add-class-diary" class="btn btn-primary mb-3">
+                                <i class="lni lni-plus"></i>
+                                <span>Añadir</span>
+                            </button>
+
+                            <div id="add-class-diary-form" class="border rounded p-3 hidden">
+                            <form id="diary-form">
+                                <div class="mb-3">
+                                <label for="diary-title" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="diary-title" name="diary-title">
+                                </div>
+                                <div class="mb-3">
+                                <label for="diary-date" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="diary-date" name="diary-date" required>
+                                </div>
+                                <div class="mb-3">
+                                <label for="diary-description" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="diary-description" name="diary-description" rows="4"></textarea>
+                                </div>
+                                <button id="add-class-diary-form-button" class="btn btn-primary">Guardar</button>
+                                <button id="cancel-class-diary-form-button" class="btn btn-secondary">Cancelar</button>
+                            </form>
+                            </div>
+
+                            <div class="container mt-4" id="diary-list">
+                                <ul id="class-diary-list" class="list-group mb-4"></ul>
+                                <div id="diary-class-pagination"></div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <!-- Columna derecha (detalles) oculta inicialmente -->
+                    <div class="col-12 col-md-6 d-none" id="right-column">
+                        <div class="panel-box-auto">
+                            <div id="class-diary-details" class="border rounded p-3">
+                                <h4 id="diary-detail-title"></h4>
+                                <p><strong>Fecha:</strong> <span id="diary-detail-date"></span></p>
+                                <div id="diary-detail-description" style="white-space: pre-wrap;"></div>
+                                <input type="hidden" id="diary-id" value="">
+                                <br>
+
+                                <button class="btn btn-sm btn-primary mb-2" id="close-details">Cerrar</button>
+                                <button id="delete-class-diary-button" class="btn">
+                                    <i class="lni lni-trash-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+
+                <!-- Diario de competiciones -->
+                <div id="competition-diary" class="container-fluid hidden">
+                    <div class="row" id="diary-class-row">
+                        <!-- Columna izquierda -->
+                        <div class="col-12 col-md-6" id="competition-left-column">
+                        <div class="panel-box-auto">
+                            <h1>Diario de competiciones</h1>
+                            <button id="add-competition-diary" class="btn btn-primary mb-3">
+                                <i class="lni lni-plus"></i>
+                                <span>Añadir</span>
+                            </button>
+
+                            <!-- Formualrio para añadir un nuevo diario de competiciones -->
+                            <div id="add-competition-diary-form" class="border rounded p-3 hidden">
+                            
+                                <form id="competition-diary-form">
+                                    <div class="mb-3">
+                                        <label for="competition-diary-title" class="form-label">Título</label>
+                                        <input type="text" class="form-control" id="competition-diary-title" name="competition-diary-title">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="competition-diary-date" class="form-label">Fecha</label>
+                                        <input type="date" class="form-control" id="competition-diary-date" name="competition-diary-date" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="competition-diary-location" class="form-label">Lugar</label>
+                                        <input type="text" class="form-control" id="competition-diary-location" name="competition-diary-location">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="competition-diary-final-position" class="form-label">Posición</label>
+                                        <input type="number" class="form-control" id="competition-diary-final-position" name="competition-diary-final-position">
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="competition-diary-wins-pool" class="form-label">Victorias en la poule</label>
+                                                <input type="number" class="form-control" id="competition-diary-wins-pool" name="competition-diary-wins-pool">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="competition-diary-losses-pool" class="form-label">Derrotas en la poule</label>
+                                                <input type="number" class="form-control" id="competition-diary-losses-pool" name="competition-diary-losses-pool">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- ¿Pasaste poule? -->
+                                    <div class="mb-3">
+                                        <label for="passed-pool" class="form-label">¿Pasaste poule?</label>
+                                        <select class="form-select" id="passed-pool" onchange="toggleDESection()">
+                                            <option value="" selected disabled>Selecciona una opción</option>
+                                            <option value="yes">Sí</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                    <div id="de-section" style="display: none;">
+                                        <div class="mb-3">
+                                            <label for="competition-diary-description" class="form-label">¿En qué tablón te eliminaron?</label>
+                                            <select id="new-de" multiple>
+                                                <option value="256">Tablón de 256</option>
+                                                <option value="128">Tablón de 128</option>
+                                                <option value="64">Tablón de 64</option>
+                                                <option value="32">Tablón de 32</option>
+                                                <option value="16">Tablón de 16</option>
+                                                <option value="8">Cuartos de final</option>
+                                                <option value="4">Semifinal</option>
+                                                <option value="2">Final</option>
+                                            </select>
+                                            <script>
+                                            const element = document.getElementById('new-de');
+                                            const choices = new Choices(element, {
+                                                removeItemButton: true,
+                                                placeholderValue: 'Selecciona uno o varios tablones',
+                                                searchPlaceholderValue: 'Buscar...',
+                                            });
+                                            </script>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div id="de-textareas-container"></div>
+
+                                    <div class="mb-3">
+                                        <label for="competiton-diary-feedback" class="form-label">Comentarios</label>
+                                        <textarea class="form-control" id="competition-diary-feedback" name="competition-diary-feedback" rows="4"></textarea>
+                                    </div>
+
+                                    <br>
+                                    
+                                    <button id="add-competition-diary-form-button" class="btn btn-primary">Guardar</button>
+                                    <button id="cancel-competition-diary-form-button" class="btn btn-secondary">Cancelar</button>
+                                </form>
+                            </div>
+
+                            <div class="container mt-4" id="diary-list">
+                                <ul id="competition-diary-list" class="list-group mb-4"></ul>
+                                <div id="diary-competition-pagination"></div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <!-- Columna derecha (detalles del diario) - oculta por defecto -->
+                        <div class="col-12 col-md-6 d-none" id="competition-right-column">
+                        <div class="panel-box-auto">
+                            <div id="competition-diary-details" class="border rounded p-3">
+                            <h4 id="competition-diary-detail-title"></h4>
+                            <p><strong>Fecha:</strong> <span id="competition-diary-detail-date"></span></p>
+
+                            <!-- Contenedor de contenido dinámico -->
+                            <div id="competition-diary-detail-description"></div>
+
+                            <!-- Campo oculto para guardar el ID del diario -->
+                            <input type="hidden" id="competition-diary-id" value="">
+
+                            <!-- Botones de acción -->
+                            <button class="btn btn-sm btn-primary mt-3" id="competition-close-details">Cerrar</button>
+                            <button class="btn btn-sm btn-danger mt-3" id="delete-competition-diary-button">
+                                <i class="lni lni-trash-3"></i> Eliminar
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Crear entreno -->
+                <div id="create-workout" class="container-fluid hidden">
+                    <div class="panel-box-auto">
+                        <h1 class="mb-4 text-center">Crear entreno</h1>
+                        
+                        <!-- Seleccionar fechas para el entreno -->
+                        <div class="mb-3 d-flex flex-row align-items-start">
+                            <p>Selecciona fechas para tus entrenos: </p>
+                            <!-- Selector de fechas con Flatpickr -->
+                            <input id="date-picker" class="form-control" type="text" placeholder="Selecciona fechas" />
+                        </div>
+
+                        <!-- Mostrar los entrenamientos para cada fecha -->
+                        <div id="workouts-form" class="mt-4"></div>
+
+                        <!-- Botón de envío -->
+                        <button id="submit-button-create-workout" class="btn btn-form-attendance mt-4" style="display: none;">Guardar</button>
+                    </div>
+                </div>
+
+
+                <!-- Historial de asistencias -->
+                <div id="attendance-record" class="hidden container-fluid">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <!-- Panel de tabla -->
+                        <div class="panel-box-auto">
+                            <h1 class="mb-4 text-center">Registro de asistencias</h1>
+                            
+                            <form id="filter-attendance">
+                                <div class="d-flex gap-3">
+                                    <!-- Selector de rango de fechas -->
+                                    <input type="text" id="date-range" class="form-control" placeholder="Seleccionar rango de fechas" />
+                                    
+                                    <!-- Botón para filtrar -->
+                                    <button id="filter-attendance-button" class="btn btn-form-attendance "> <i class="lni lni-search-2"></i> </button>
+                                </div>
+                            </form>
+                            <br>
+                            <div class="table-responsive">
+                                <table id="attendance-table" class="table table-striped table-bordered container-fluid">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Hora de entrada</th>
+                                            <th>Hora de salida</th>
+                                            <th>Minutos en total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="attendance-body"></tbody>
+                                </table>
+                                <!-- Contenedor para los botones de paginación -->
+                                <div id="attendance-pagination" class="mt-3"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <canvas id="attendanceChart" width="400" height="200"></canvas>
+                            Gráfico de asistencias
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido principal con los paneles -->
+                <div id="main-content" class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 col-md-6 "> 
+                            <div class="mb-3 text-center panel-box">
+                                <h1>AQUÍ VA EL ÚLTIMO ENTRENO</h1>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 ">
+                            <div class="mb-3 text-center panel-box">
+                                <h1>AQUÍ VAN LAS ÚLTIMAS 7 ASISTENCIAS</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12 col-md-4">
+                            <div class="mb-3 text-center panel-box p-4 shadow"> 
+                                <h1 class="mb-4">Nueva asistencia</h1>
+                                <form id="formAttendance">
+                                    <div class="mb-3 d-flex flex-column align-items-start">
+                                        <label for="date" class="form-label body-text-font">Fecha</label>
+                                        <input type="date" class="form-control" id="date" name="date" required> 
+                                    </div>
+                        
+                                    <div class="mb-3 d-flex flex-column flex-md-row justify-content-between gap-3">
+                                        <div class="flex-fill">
+                                            <label for="checkin" class="form-label body-text-font">Hora de entrada</label>
+                                            <input type="time" class="form-control" id="checkin" name="checkin" required>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <label for="checkout" class="form-label body-text-font">Hora de salida</label>
+                                            <input type="time" class="form-control" id="checkout" name="checkout" required>
+                                        </div>
+                                    </div>
+                        
+                                    <!-- Botón ajustado con mt-3 para margen superior y w-100 para ancho completo -->
+                                    <button type="submit" class="btn w-50 btn-form-attendance" >Guardar asistencia</button>
+                                    
+                                    <!-- mostrar mensaje de éxito o error aquí -->
+                                    <div id="messageAttendance" class="mt-3"></div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-8 ">
+                            <div class="mb-3 text-center panel-box">
+                                <h1>QUÍ VA LO ÚLTIMO ESCRITO DE DIARIO DE CLASE</h1>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Cerrar sesión -->
+    <script>
+        /* <button id="logoutButton">Cerrar sesión</button> */
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include',  // Para enviar la cookie de sesión con la solicitud
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Sesión cerrada');
+                    window.location.href = 'home.html';  // Redirige al login o a la página de inicio
+                } else {
+                    alert('Hubo un problema al cerrar la sesión');
+                }
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        });
+    </script>
+
+</body>
+</html>

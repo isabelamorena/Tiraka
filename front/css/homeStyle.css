@@ -1,0 +1,63 @@
+body{
+    padding-top: 100px; /* Compensa altura navbar */
+}
+
+/* ------------------- Botón "Hola!" ------------------- */
+.btn-no-style {
+    background-color: transparent; /* Fondo transparente */
+    border: none; /* Sin bordes */
+    cursor: pointer; /* Cambiar el cursor al estilo puntero */
+}
+
+/* ------------------- Texto principal ------------------- */
+#animatedText {
+    
+    line-height: 2; /* Espaciado entre líneas */
+}
+
+/* ------------------- Enlaces destacados ------------------- */
+.highlight {
+    
+    transition: font-weight 0.5s ease-in-out, font-size 0.5s ease-in-out; /* Transiciones suaves */
+    text-decoration: none; /* Quitar subrayado */
+    color: rgb(146, 154, 171); /* Color del texto destacado */
+}
+.highlight:hover {
+    text-decoration: underline; /* Subrayar al pasar el cursor */
+}
+
+/* ------------------- Imagen estática ------------------- */
+.static-image {
+    position: fixed; /* La imagen permanece en su lugar */
+    top: 50%; /* Centrado vertical */
+    left: 10%; /* Posición horizontal ajustable */
+    transform: translateY(-50%); /* Ajuste fino para centrar verticalmente */
+    z-index: -1; /* La imagen queda detrás del contenido */
+    width: 400px; /* Tamaño ajustable de la imagen */
+    
+}
+
+/* ------------------- Contenedor desplazable ------------------- */
+.scroll-container {
+    margin-left: 45%; /* Evitar que el contenido se superponga con la imagen estática */
+}
+@media (max-width: 768px) {
+    .scroll-container {
+        margin-left: 0%; /* Cuando es móvil se centra */
+    }
+}
+
+/* ------------------- Secciones con scroll ------------------- */
+.scroll-section {
+    margin: 50px 0; /* Espaciado entre las secciones */
+    
+}
+
+/* --------------------- Contacto ------------------------------ */
+.hover-effect {
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}

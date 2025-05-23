@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    
+    <!-- Conectar a bootstrapstrap -->
+    <link href="css/css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/js/bootstrap.min.js"></script>
+
+    <!-- Link a hoja de estilo CSS para el sitio -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
+    
+    <style>
+    body{
+        padding-top: 120px; /* Compensa altura navbar */
+    }
+    
+    .container {
+        border-radius: 0 ; /* Asegura que el borde sea cuadrado */
+        border: 2px solid #ccc; /* Puedes personalizar el color del borde */
+        width: 500px;
+        height: auto;
+        margin-bottom: 3%;
+    }
+    .btn{
+        background-color: #929AAB ;
+    }
+    @media screen and (max-width: 768px) {
+        .container-login-fencer {
+            width: 90%; /* Cambia el ancho al 90% en pantallas pequeñas */
+            height: auto; /* Permite que la altura se ajuste automáticamente */
+            margin-bottom: 8%;
+        }
+        .button-dark-mode{
+            display: none;
+        }
+        
+    }
+    </style>
+
+
+</head>
+<body>
+     <!-- Barra de navegación -->
+     <nav class="fixed-navbar title-font">
+        <div class="container-fluid d-flex align-items-center justify-content-between px-4" style="height: 100px;">
+        <div class="d-flex align-items-center">
+                <a href="home.html"><img src="img/logo.png" class="img-fluid logo" alt="Logo de EliteFencing"></a>
+            </div>
+            <div class="d-flex d-md-flex justify-content-center flex-grow-1 gap-4">
+                <a href="home.html" class="navbar-links">Tiraka</a>
+                <a href="fencer-login.html" class="navbar-links">Tirador</a>
+                <a href="trainer-login.html" class="navbar-links">Entrenador</a>
+            </div>
+            <!-- Modo oscuro -->
+            <div class="ml-4">
+                <button id="darkMode" class="btn button-dark-mode">🌙</button>
+                <script>
+                    const darkModrBtn = document.getElementById('darkMode');
+                    darkModrBtn.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-mode');
+                        /* Cambiar el icono a sol */
+                        darkModrBtn.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙' ;
+                    });
+                </script>
+            </div>
+       
+        </div>
+    </nav>
+    
+    <!-- Form de la página -->
+    <div class="container-login-fencer container mt-5 pt-5 bg-light border border-2 rounded-0 shadow-sm p-4">
+        <p class="text-center title-font">Registrate como tirador</p>
+        
+        <form id="regisForm"> 
+            <div class="mb-3">
+                <label for="username" class="form-label body-text-font">Nombre de usuario</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label body-text-font">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+           
+            <div class="mb-3">
+                <label for="name" class="form-label body-text-font">Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="surname" class="form-label body-text-font">Primer apellido</label>
+                <input type="text" class="form-control" id="surname" name="surname" required>
+            </div>
+            <div class="mb-3">
+                <label for="secondSurname" class="form-label body-text-font">Segundo apellido</label>
+                <input type="text" class="form-control" id="secondSurname" name="secondSurname" required>
+            </div>
+            <div class="mb-3">
+                <label for="birthdate" class="form-label body-text-font">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+            </div>
+            <div class="mb-3">
+                <label for="clubname" class="form-label body-text-font">Club</label>
+                <input type="text" class="form-control" id="clubname" name="clubname" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label body-text-font">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+         
+            
+            <!-- Un desplegable con todos los entrenadores de la base de datos. -->
+            <div class="mb-3" id="coachSelect" style="display: block;">
+                <label for="coachName" class="form-label body-text-font">¿Quién es tu entrenador?</label>
+                <select id="coachName" name="coachName"  class="body-text-font">
+                    <!-- Las opciones serán llenadas dinámicamente por el backend -->
+                </select>
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const coachDropdownDiv = document.getElementById('coachSelect');
+                    const coachDropdown = document.getElementById('coachName');
+            
+                    try {
+                        const response = await fetch('/getCoaches'); // hacer un get
+                        const coaches = await response.json();
+            
+                        coachDropdown.innerHTML = '<option class="body-text-font" value="">Selecciona un entrenador</option>';
+                        coaches.forEach(coach => {
+                            coachDropdown.innerHTML += `<option class="body-text-font" value="${coach.id}">${coach.fullName}</option>`;
+                        });
+            
+                        coachDropdownDiv.style.display = 'block';
+                    } catch (err) {
+                        console.error('Error al obtener entrenadores:', err);
+                    }
+                });
+            </script>
+            
+              
+              
+            <button type="submit" class="btn body-text-font">Registrarse</button>
+        </form>
+
+        <script>
+                
+        // Seleccionamos el formulario
+        const regisForm = document.getElementById('regisForm');
+
+        regisForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que la página se recargue
+            
+            // Obtener los valores del formulario
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('name').value;
+            const surname = document.getElementById('surname').value;
+            const secondSurname = document.getElementById('secondSurname').value;
+            const clubname = document.getElementById('clubname').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const email = document.getElementById('email').value;
+            const coachName = document.getElementById('coachName')?.value || '';
+
+
+            // Validación de nombre y apellidos (solo letras y espacios)
+            const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/; // Permite letras y espacios, incluyendo acentos
+            if (!nameRegex.test(name) || !nameRegex.test(surname) || !nameRegex.test(secondSurname)) {
+                alert('El nombre y apellidos solo pueden contener letras y espacios.');
+                return;
+            }
+            // Verificar que username, nombre y apellidos no tengan espacios al principio o al final
+            if (username.trim() === '' || name.trim() === '' || surname.trim() === '' || secondSurname.trim() === '') {
+                alert('El nombre de usuario, nombre y apellidos no pueden estar con espacios.');
+                return;
+            }
+            // Validación de contraseña (mínimo 8 caracteres, al menos una letra y un número)
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert('La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número.');
+                return;
+            }
+
+
+            // Validación de email
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('El correo electrónico no es válido.');
+                return;
+            }
+
+            // Verificar que la fecha de nacimiento no sea hoy o en el futuro
+            const birthDateObj1 = new Date(birthdate);
+            const today1 = new Date();   
+            if (birthDateObj1 >= today1) {
+                alert('La fecha de nacimiento no puede ser hoy o en el futuro.');
+                return;
+            }
+
+            // La primera letra del nombre, apellidos y club deben ser mayúsculas
+            const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+            const capitalizedName = capitalizeFirstLetter(name);
+            const capitalizedSurname = capitalizeFirstLetter(surname);
+            const capitalizedSecondSurname = capitalizeFirstLetter(secondSurname);
+            const capitalizedClubname = capitalizeFirstLetter(clubname);
+           
+            // Enviar los datos usando fetch (POST)
+            try {
+                const response = await fetch('/registerFencer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        name: capitalizedName,
+                        surname: capitalizedSurname,
+                        secondSurname: capitalizedSecondSurname,
+                        clubname: capitalizedClubname,
+                        birthdate: birthdate,
+                        email: email,
+                        coachName: coachName, // Enviar el ID del entrenador seleccionado
+                        
+                    }),
+                    credentials: 'include'  // Asegúrate de que se incluyan las cookies si las usas
+                });
+
+                const result = await response.json(); // Puedes manejar el resultado aquí
+                
+                // Redirige a la página de control del tirador si el registro es exitoso
+                if (result.success) {
+                    alert('¡Registro exitoso!'); // Muestra un mensaje de éxito
+                    window.location.href = 'fencer-login.html'; // Cambia a la URL de tu panel de control
+                } else {
+                    alert('Error en el registro'); // Muestra un mensaje de error si el registro falla
+                }
+            } catch (error) {
+                alert('Hubo un error al enviar los datos +: ' + error.message);
+            }
+
+        });
+
+        </script>
+        
+        <p class="mt-3 body-text-font">¿Ya tienes cuenta? <a class="body-text-font" href="fencer-login.html">Inicia sesión aquí</a></p>
+    </div>
+
+</body>
+</html>

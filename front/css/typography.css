@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'title-font';
+    src: url(../font/Cinzel-VariableFont_wght.ttf) format('truetype');
+} 
+@font-face {
+    font-family: 'subtitle-font';
+    src: url(../font/EBGaramond-VariableFont_wght.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'body-text-font';
+    src: url(../font/Lora-VariableFont_wght.ttf) format('truetype');
+}
+
+.title-font{
+    font-family: 'title-font';
+    font-size: 1.6rem; /* Tamaño grande del texto */
+    font-weight: 650;
+ }
+.subtitle-font{
+    font-family: 'subtitle-font';
+    font-size: 1.6rem; 
+ }
+.body-text-font{
+    font-family: 'body-text-font';
+    font-size: 1.2rem; 
+ }
+
+/*--------------------En móviles----------------------*/
+@media screen and (max-width: 768px) {
+    .title-font{
+        font-size: 1.3rem; /* Tamaño grande del texto */
+    }
+    .subtitle-font{
+        font-size: 1.1rem; 
+    }
+    .body-text-font{
+        font-size: 1.1rem; 
+    }
+}

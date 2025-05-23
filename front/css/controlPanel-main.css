@@ -1,0 +1,54 @@
+/* --------------- cajas del panel de control ------------------ */
+.panel-box {
+    width: auto; /* ancho fijo */
+    height: 360px; /* alto fijo */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* oculta el contenido que se salga */
+}
+
+/*Height: auto*/
+.panel-box-auto{
+    width: auto; /* ancho fijo */
+    height: auto; /* alto fijo */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* oculta el contenido que se salga */
+}
+
+.main{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/*---------------------- Ocutar contenido --------------------------*/
+.hidden {
+    display: none; 
+}
+
+/* ------------------------- botones --------------------------- */
+.btn-form-attendance{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ---------------------- en móviles --------------------------- */
+@media (max-width: 768px) {
+    
+    #left-column, #right-column { 
+        margin-bottom: 1rem; 
+    }
+    
+    .main{
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+.table-responsive {
+  width: 90%;
+  overflow-x: auto;
+}

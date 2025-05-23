@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+
+}
+
+/* ------------------- Barra de navegación ------------------- */
+.fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    z-index: 9999;
+    box-shadow: 0 0 35px 0 rgba(49, 57, 66, 0.5);
+}
+/* Estilo de los enlaces */
+.navbar-links,.navbar-link-hola {
+    text-decoration: none; /* Quitar subrayado de los enlaces */
+    color: inherit; /* Heredar el color del contenedor padre */
+    transition: color 0.3s ease, font-size 0.3s ease; /* Transiciones suaves */
+}
+/* Estilo de los enlaces al pasar el cursor */
+.navbar-links:hover {
+    color: rgb(146, 154, 171)  ; /* Color del texto destacado */
+    font-size: 1.7rem; /* Aumentar el tamaño del texto */
+
+}
+.navbar-link-hola:hover {
+    color: #474A56  ; 
+    font-weight: 700; 
+}
+
+/* ------------------- Logo ------------------- */
+.logo {
+    max-height: 90px;
+    width: auto;
+    width: auto;
+}
+/*--------------------En móviles----------------------*/
+@media screen and (max-width: 768px) {
+    /*Se elimina en móviles el dark mode*/
+       .button-dark-mode{
+           display: none;
+       }
+    .logo {
+        max-height: 45px; /* Cambia la altura máxima del logo */
+        width: auto; /* Mantiene la proporción del logo */
+       
+    }
+    .navbar-links {
+        font-size: 0.9rem; /* Cambia el tamaño de la fuente */
+    }
+    .navbar-links:hover{
+        font-size: 1.2rem; /* Cambia el tamaño de la fuente al pasar el cursor */
+    }
+    
+   }
