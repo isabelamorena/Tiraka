@@ -15,6 +15,10 @@ app.use(cors({
 
 // Middlewares
 app.use(express.static('front'));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'front', 'home.html'));
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());  // Necesario para manejar cookies
