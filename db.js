@@ -1,12 +1,12 @@
 const { Pool } = require('pg');
-
+require('dotenv').config();
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'tiraka',
-  password: '3773',
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
+
 
 pool.connect((err) => {
   if (err) {
