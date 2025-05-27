@@ -510,7 +510,8 @@ router.post('/addCompetitionDiary', isSessionValid, async (req, res) => {
         } = req.body;
         console.log("Datos recibidos:", req.body); // Para debug
         
-        const formatteTitle = title.toupperCase().trim();
+        const formattedTitle = title.toUpperCase().trim();
+
 
         try {
             const insertQuery1 = `
@@ -520,7 +521,7 @@ router.post('/addCompetitionDiary', isSessionValid, async (req, res) => {
 
             `;
 
-            const result = await pool.query(insertQuery1, [formatteTitle, date, location, final_position, wins_pool, losses_pool, passed_pool, feedback, fencerId]);
+            const result = await pool.query(insertQuery1, [formattedTitle, date, location, final_position, wins_pool, losses_pool, passed_pool, feedback, fencerId]);
             const diaryId = result.rows[0].id; // Obtener el ID del diario recién creado
             
             // Añadir las directas
