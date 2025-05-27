@@ -15,11 +15,13 @@
 
   <!-- Link a hoja de estilo CSS para el sitio -->
   <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" /> <!-- para los iconos -->
-  <link rel="stylesheet" href="css/general.css">
+  <link rel="stylesheet" href="css/generalStyle.css">
   <link rel="stylesheet" href="css/typography.css">
   <link rel="stylesheet" href="css/dark-mode.css">
   <link rel="stylesheet" href="css/sidebar-CP.css">
   <link rel="stylesheet" href="css/controlPanel-main.css">
+    <link rel="stylesheet" href="css/coach-controlPanel.css">
+
 
 
   <!-- Favicon -->
@@ -60,7 +62,7 @@
 <body>
     <div class="d-flex">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar-toggle">
+        <aside id="sidebar" class="sidebar-toggle" style="background-color: #F0E1ADff;">
             <div class="sidebar-logo title-font">
                 <a href="home.html">Tiraka</a>
             </div>
@@ -155,7 +157,7 @@
             </nav>
             <main class="p-3">
                 <!-- Perfil del entrenador -->
-                <div id="profile" class="container-fluid  panel-box-auto hidden">
+                <div id="profile" class="container-fluid  panel-box ">
                     <div class=" light-style flex-grow-1 container-p-y ">
                         <h4 class="font-weight-bold py-3 mb-4" id="profile-title">
                             
@@ -163,7 +165,7 @@
                         <div class="overflow-hidden">
                             <div class="row no-gutters row-bordered row-border-light">
                                 <div class="col-md-3 pt-0">
-                                    <div class="list-group list-group-flush account-settings-links">
+                                    <div class="list-group list-group-flush account-settings-links custom-list">
                                         <a class="list-group-item list-group-item-action active" data-toggle="list"
                                             href="#account-general" id="profile-general">General</a>
                                         <a class="list-group-item list-group-item-action" data-toggle="list"

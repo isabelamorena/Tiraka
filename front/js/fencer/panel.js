@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('date').value = now.toISOString().split('T')[0]; // Establecer la fecha actual
     }
 
-    // Función para mostrar las 7 últimas asistencias
+    // Función para mostrar las 6 últimas asistencias
     async function showLastAttendances() {
         try {
             const response = await fetch('/getLastAttendances', {
