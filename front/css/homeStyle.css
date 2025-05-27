@@ -2,12 +2,6 @@ body{
     padding-top: 100px; /* Compensa altura navbar */
 }
 
-/* ------------------- Botón "Hola!" ------------------- */
-.btn-no-style {
-    background-color: transparent; /* Fondo transparente */
-    border: none; /* Sin bordes */
-    cursor: pointer; /* Cambiar el cursor al estilo puntero */
-}
 
 /* ------------------- Texto principal ------------------- */
 #animatedText {
@@ -60,4 +54,18 @@ body{
 .hover-effect:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/*------------------------------------- Acordeón -------------------------------------------*/
+/* Cambiar fondo y borde del acordeón activo */
+.accordion-button:not(.collapsed) {
+  background-color:#F0E1ADff; /* tu color miel */
+  color:black; /* texto */
+  border-color: rgb(247, 200, 115);
+}
+
+/* Quitar el borde azul cuando se hace foco */
+.accordion-button:focus {
+  box-shadow: 3px 3px 0px 0px rgb(247, 200, 115) ;  
+  border-color: rgb(247, 200, 115);
 }

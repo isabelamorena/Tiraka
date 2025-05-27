@@ -2,10 +2,20 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../db');
 const bcrypt = require('bcryptjs');
+const { capitalizeFirstLetter } = require('../functions/string');
 
+function isSessionValid(req, res, next) {
+    if (req.session && req.session.user && req.session.user.userId) {
+        return next(); // La sesión es válida, continuar con la siguiente función
+    } else {
+        return res.status(401).json({ success: false, message: 'No autorizado' }); // La sesión no es válida, devolver un error
+    }
+}
+;
 /* ------------------------------------------ Asistencias ---------------------------------------------------------------- */
 // Añadir un registro de asistencia
 router.post('/attendanceRecord', async (req, res) => {
+    isSessionValid(req, res, () => {});
     const { date, checkin, checkout } = req.body;
     const fencerId = req.session.user.userId; // Suponiendo que el ID del tirador está almacenado en la sesión
 
@@ -27,9 +37,7 @@ router.post('/attendanceRecord', async (req, res) => {
 
 // Obtener el historial de asistencias
 router.get('/getAttendanceRecord', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
 
@@ -58,9 +66,7 @@ router.get('/getAttendanceRecord', async (req, res) => {
 
 // Obtener el historial de asistencias por rango de fecha
 router.post('/getAttendanceRecordFilter', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
     const { startDate, endDate } = req.body;
@@ -90,6 +96,7 @@ router.post('/getAttendanceRecordFilter', async (req, res) => {
 /* ----------------------------------------------- Entrenamientos -------------------------------------------------- */
 // Crear un nuevo entrenamiento
 router.post('/createWorkout', async (req, res) => {
+    isSessionValid(req, res, () => {});
     try {
         // Extraer los datos del body
         const { workouts } = req.body;
@@ -100,7 +107,7 @@ router.post('/createWorkout', async (req, res) => {
             return res.status(400).json({ success: false, message: "Datos inválidos" });
         }
 
-        // Obtener el fencerId desde la sesión (asegúrate de que esté disponible en req.session)
+        // Obtener el fencerId desde la sesión
         const fencerId = req.session.user.userId;
 
         // Consulta para insertar datos en la base de datos
@@ -151,10 +158,7 @@ router.post('/createWorkout', async (req, res) => {
 /* -------------------------------------------- Perfil ----------------------------------------------- */
 // Obtener el perfil del tirador
 router.get('/getProfile', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
-    
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
 
@@ -186,12 +190,17 @@ router.get('/getProfile', async (req, res) => {
 
 // Actualizar el perfil del tirador
 router.post('/updateProfile', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
     const {username, name, surname, secondsurname, birthdate, clubname, email} = req.body;
+
+    // Formatea los textos: primera letra en mayúscula y el resto en minúscula
+    const formattedName = capitalizeFirstLetter(name);
+    const formattedSurname = capitalizeFirstLetter(surname);
+    const formattedSecondSurname = capitalizeFirstLetter(secondsurname);
+    const formattedClub = capitalizeFirstLetter(clubname);
+    
    
     // Verifica si el username ya está en uso por otro usuario
     const userExists = await pool.query('SELECT id FROM fencer WHERE username = $1', [username]);
@@ -200,13 +209,14 @@ router.post('/updateProfile', async (req, res) => {
         return res.status(400).json({ success: false, message: 'El nombre de usuario ya está en uso' });
     }
 
+
     try {
         const updateQuery = `
             UPDATE public.fencer
             SET username = $1, name = $2, surname = $3, secondsurname = $4, birthdate = $5, clubname = $6, email = $7
             WHERE id = $8
         `;
-        const result = await pool.query(updateQuery, [username, name, surname, secondsurname, birthdate, clubname, email, fencerId]);
+        const result = await pool.query(updateQuery, [username, formattedName, formattedSurname, formattedSecondSurname, birthdate, formattedClub, email, fencerId]);
 
         return res.status(200).json({ success: true, message: 'Perfil actualizado correctamente' });
 
@@ -222,9 +232,7 @@ router.post('/updateProfile', async (req, res) => {
 
 // Cambiar la contraseña del tirador
 router.post('/updateProfilePassword', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
     const { oldPassword, newPassword } = req.body;
@@ -263,9 +271,7 @@ router.post('/updateProfilePassword', async (req, res) => {
 /* --------------------------------------------- Cambiar el entrenador de un tirador ------------------------------------------------------ */
 // Mostrar el entrenador del tirador
 router.get('/getCoach', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
 
@@ -295,9 +301,7 @@ router.get('/getCoach', async (req, res) => {
 
 // Cambiar el entrenador del tirador
 router.post('/updateCoach', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
     const { coachId } = req.body;
@@ -325,9 +329,12 @@ router.post('/updateCoach', async (req, res) => {
 /* --------------------------------------------- Diario de clases ------------------------------------------------------ */
 // Añadrir un registro al diario de clases
 router.post('/addClassDiary', async (req, res) => {
+    isSessionValid(req, res, () => {});
     const { date, title, description } = req.body;
     console.log("Datos recibidos:", req.body);
     const fencerId = req.session.user.userId; // Suponiendo que el ID del tirador está almacenado en la sesión
+
+    const formatteTitle = capitalizeFirstLetter(title);
 
     try {
         const insertQuery = `
@@ -335,7 +342,7 @@ router.post('/addClassDiary', async (req, res) => {
                 VALUES ($1, $2, $3, $4)
         `;
 
-        const result = await pool.query(insertQuery, [fencerId, date, title, description]);
+        const result = await pool.query(insertQuery, [fencerId, date, formatteTitle, description]);
 
         return res.status(201).json({ success: true, message: 'Registro de diario de clase exitoso' });
 
@@ -347,9 +354,7 @@ router.post('/addClassDiary', async (req, res) => {
 
 // Obtener los títulos del diario de clases
 router.get('/getClassDiaryTitles', async (req, res) => {
-    if (!req.session.user || !req.session.user.userId) {
-        return res.status(401).json({ success: false, message: 'No autorizado' });
-    }
+    isSessionValid(req, res, () => {});
 
     const fencerId = req.session.user.userId;
 
@@ -378,6 +383,8 @@ router.get('/getClassDiaryTitles', async (req, res) => {
 
 // Obtener la descripción de una entrada del diario por ID
 router.get('/getClassDiaryById/:id', async (req, res) => {
+
+    isSessionValid(req, res, () => {});
     const classId = req.params.id;
     console.log("ID de la entrada del diario:", classId);
 
@@ -403,7 +410,9 @@ router.get('/getClassDiaryById/:id', async (req, res) => {
     }
 });
 
+// Eliminar una entrada del diario de clases
 router.post('/deleteClassDiary/:id', async (req, res) => {
+    isSessionValid(req, res, () => {});
     const classId = req.params.id;
     console.log("ID de la entrada del diario:", classId);
     try {
@@ -420,11 +429,42 @@ router.post('/deleteClassDiary/:id', async (req, res) => {
     }
 });
 
+// Obtener el último diario de clase
+router.get('/getLastClassDiary', async (req, res) => {
+    isSessionValid(req, res, () => {});
+    const fencerId = req.session.user.userId;
+    try {
+        const query = `
+            SELECT  
+                id AS "id",
+                title AS "title",
+                description AS "description",
+                date AS "date"
+            FROM public.class_diary
+            WHERE fencer_id = $1
+            ORDER BY date DESC
+            LIMIT 1
+        `;
+        const result = await pool.query(query, [fencerId]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró ningún diario de clase' });
+        }
+        return res.status(200).json({ success: true, diary: result.rows[0] });
+
+    } catch (error) {   
+        console.error("Error obteniendo el último diario de clase:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
 /* --------------------------------------------- Diario de competiciones ------------------------------------------------------ */
 // Añadir un registro al diario de competiciones
 router.post('/addCompetitionDiary', async (req, res) => {
-    
-        const fencerId = req.session.user.userId; 
+    isSessionValid(req, res, () => {});
+    const fencerId = req.session.user.userId; 
     try {
         const {
             title,
@@ -439,6 +479,8 @@ router.post('/addCompetitionDiary', async (req, res) => {
         } = req.body;
         console.log("Datos recibidos:", req.body); // Para debug
 
+        const formatteTitle = capitalizeFirstLetter(title);
+
         try {
             const insertQuery1 = `
                 INSERT INTO public.competition_diary(
@@ -447,7 +489,7 @@ router.post('/addCompetitionDiary', async (req, res) => {
 
             `;
 
-            const result = await pool.query(insertQuery1, [title, date, location, final_position, wins_pool, losses_pool, passed_pool, feedback, fencerId]);
+            const result = await pool.query(insertQuery1, [formatteTitle, date, location, final_position, wins_pool, losses_pool, passed_pool, feedback, fencerId]);
             const diaryId = result.rows[0].id; // Obtener el ID del diario recién creado
             
             // Añadir las directas
@@ -477,6 +519,7 @@ router.post('/addCompetitionDiary', async (req, res) => {
 
 // Obtener los títulos del diario de competiciones
 router.get('/getCompetitionDiaryTitles', async (req, res) => {
+    isSessionValid(req, res, () => {});
     if (!req.session.user || !req.session.user.userId) {
         return res.status(401).json({ success: false, message: 'No autorizado' });
     }
@@ -507,6 +550,7 @@ router.get('/getCompetitionDiaryTitles', async (req, res) => {
 
 // Obtener la descripción de una entrada del diario por ID
 router.get('/getCompetitionDiaryById/:id', async (req, res) => {
+    isSessionValid(req, res, () => {});
     const diaryId = req.params.id;
 
     try {
@@ -531,6 +575,7 @@ router.get('/getCompetitionDiaryById/:id', async (req, res) => {
 
 // Eliminar una entrada del diario de competiciones
 router.post('/deleteCompetitionDiary/:id', async (req, res) => {
+    isSessionValid(req, res, () => {});
     const diaryId = req.params.id;
 
     try {
@@ -546,6 +591,5 @@ router.post('/deleteCompetitionDiary/:id', async (req, res) => {
     }
 }
 );
-
 
 module.exports = router;

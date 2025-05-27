@@ -1,9 +1,3 @@
-body {
-    margin: 0;
-    padding: 0;
-
-}
-
 /* ------------------- Barra de navegación ------------------- */
 .fixed-navbar {
     position: fixed;
@@ -12,25 +6,21 @@ body {
     right: 0;
     width: 100%;
     height: 100px;
-    background-color: white;
+    background-color: #F0E1ADff;
     z-index: 9999;
     box-shadow: 0 0 35px 0 rgba(49, 57, 66, 0.5);
 }
 /* Estilo de los enlaces */
-.navbar-links,.navbar-link-hola {
+.navbar-links{
     text-decoration: none; /* Quitar subrayado de los enlaces */
-    color: inherit; /* Heredar el color del contenedor padre */
+    color: black; /* Heredar el color del contenedor padre */
     transition: color 0.3s ease, font-size 0.3s ease; /* Transiciones suaves */
 }
 /* Estilo de los enlaces al pasar el cursor */
 .navbar-links:hover {
-    color: rgb(146, 154, 171)  ; /* Color del texto destacado */
+    color: #B59E4Cff ; /* Color del texto destacado */
     font-size: 1.7rem; /* Aumentar el tamaño del texto */
 
-}
-.navbar-link-hola:hover {
-    color: #474A56  ; 
-    font-weight: 700; 
 }
 
 /* ------------------- Logo ------------------- */
@@ -41,10 +31,6 @@ body {
 }
 /*--------------------En móviles----------------------*/
 @media screen and (max-width: 768px) {
-    /*Se elimina en móviles el dark mode*/
-       .button-dark-mode{
-           display: none;
-       }
     .logo {
         max-height: 45px; /* Cambia la altura máxima del logo */
         width: auto; /* Mantiene la proporción del logo */
@@ -58,3 +44,10 @@ body {
     }
     
    }
+
+/* ------------------- Botón "Hola!" ------------------- */
+.btn-no-style {
+    background-color: transparent; /* Fondo transparente */
+    border: none; /* Sin bordes */
+    cursor: pointer; /* Cambiar el cursor al estilo puntero */
+}

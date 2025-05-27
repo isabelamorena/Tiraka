@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
             html += `<p><strong>Lugar:</strong> ${diary.location || 'No indicado'}</p>`;
             html += `<p><strong>Posición final:</strong> ${diary.final_position || 'No indicado'}</p>`;
 
-            html += `<div class="mt-3"><strong>🎯 Poule:</strong>`;
+            html += `<div class="mt-3"><strong>Poule:</strong>`;
             html += `<ul><li>Victorias: ${diary.wins_pool || 0}</li><li>Derrotas: ${diary.losses_pool || 0}</li></ul></div>`;
 
             if (diary.passed_pool) {
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 html += `</div>`;
             }
 
-            html += `<div class="mt-3" style="white-space: pre-wrap;"><strong>💬 Comentarios:</strong><p>${diary.feedback || 'Ninguno'}</p></div>`;
+            html += `<div class="mt-3" style="white-space: pre-wrap;"><strong>Comentarios:</strong><p>${diary.feedback || 'Ninguno'}</p></div>`;
 
             document.getElementById('competition-diary-detail-description').innerHTML = html;
 
@@ -123,13 +123,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* -------------------------------------------- Formulario de diario de competiticiones ---------------------------------------------*/
-    // Mostrar el formulario de diario de competiciones
-    const competitionDiaryFormBtn = document.getElementById("add-competition-diary");   
-    competitionDiaryFormBtn.addEventListener("click", async function (e) {
-        document.getElementById("add-competition-diary-form").style.display = "block";
-        const today = new Date().toISOString().split("T")[0];
-        document.getElementById("competition-diary-date").value = today;
+    const competitionDiaryFormBtn = document.getElementById("add-competition-diary");
+    competitionDiaryFormBtn.addEventListener("click", function (e) {
+        const form = document.getElementById("add-competition-diary-form");
+        if (form.style.display === "block") {
+            form.style.display = "none";
+        } else {
+            form.style.display = "block";
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("competition-diary-date").value = today;
+        }
     });
+
     // Ocultar el formulario de diario de competiciones
     const closeCompetitionDiaryFormBtn = document.getElementById("cancel-competition-diary-form-button");
     closeCompetitionDiaryFormBtn.addEventListener("click", async function (e) {

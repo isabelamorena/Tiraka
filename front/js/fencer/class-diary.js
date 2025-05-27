@@ -90,10 +90,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("add-class-diary").addEventListener("click", function (e) {
             e.preventDefault();
-            document.getElementById("add-class-diary-form").style.display = "block";
-            document.getElementById("diary-date").value = today;
+            const form = document.getElementById("add-class-diary-form");
+            if (form.style.display === "block") {
+                form.style.display = "none";
+            } else {
+                form.style.display = "block";
+                const today = new Date().toISOString().split("T")[0];
+                document.getElementById("diary-date").value = today;
+            }
         });
+
         
+
         document.getElementById("add-class-diary-form-button").addEventListener("click", async function (e) {
             e.preventDefault();
 

@@ -24,7 +24,8 @@ router.post('/login', async (req, res) => {
             req.session.user = {
                 username: user.username,
                 role: 'tirador',
-                userId: user.id
+                userId: user.id,
+                relationCoach: user.relation_coach // Relación con el entrenador
             };
             res.status(201).json({ success: true, message: 'Login correcto' });
         } else {

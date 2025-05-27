@@ -1,0 +1,29 @@
+.btn-primary{
+    background-color:#F0E1ADff;
+    border:2px solid #F0E1ADff ;
+    color: black;
+}
+.btn-primary:hover{
+    background-color:#B59E4Cff;
+    border:2px solid #B59E4Cff ;
+}
+
+.btn-secondary{
+    background-color: white;
+    color: black;
+    border: 2px solid #423B20ff;
+}
+.btn-secondary:hover{
+    background-color: #B59E4Cff;
+    color: black;
+    border: 2px solid #B59E4Cff;
+}
+
+a.link-primary{
+    color: #FCD030ff !important;
+    text-decoration: none;
+}
+a.link-primary:hover{
+    color: #423B20ff !important;
+}
+

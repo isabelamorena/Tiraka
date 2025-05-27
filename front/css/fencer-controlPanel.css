@@ -1,24 +1,14 @@
 /* --------------- cajas del panel de control ------------------ */
 .panel-box {
-    width: auto; /* ancho fijo */
-    height: 360px; /* alto fijo */
+    width: auto;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
-    overflow: hidden; /* oculta el contenido que se salga */
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
 }
 
-/*Height: auto*/
-.panel-box-auto{
-    width: auto; /* ancho fijo */
-    height: auto; /* alto fijo */
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    overflow: hidden; /* oculta el contenido que se salga */
-}
 
 .main{
     margin-left: 10px;
