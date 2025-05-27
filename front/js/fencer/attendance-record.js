@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+
 /*---------------------------------------------------------- Mostrar asistencias -------------------------------------------------------------- */
     const attendanceButton = document.getElementById("attendanceButton");
 
@@ -128,11 +129,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
 
-            renderAttendanceWithPagination(data);
+            AttendanceWithPagination(data);
 
         } catch (error) {
             console.error('Error al filtrar el historial de asistencias:', error);
-            alert('Error al filtrar asistencias');
+            alert('Error al filtrar asistencias ' + error.message );
         }
     });
 

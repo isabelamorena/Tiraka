@@ -6,10 +6,10 @@ const pool = new Pool({
   host: 'localhost',
   database: 'tiraka',
   password: '3773',
-  port: 5432, */
-  ssl: {
+  port: 5432,  */
+  
     rejectUnauthorized: false
-  } 
+  
 });
 
 

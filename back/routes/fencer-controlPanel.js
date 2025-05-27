@@ -11,11 +11,15 @@ function isSessionValid(req, res, next) {
         return res.status(401).json({ success: false, message: 'No autorizado' }); // La sesión no es válida, devolver un error
     }
 }
+
+/* ------------------------------------------------------- Panel principal --------------------------------------------------------- */
+
+
+
 ;
 /* ------------------------------------------ Asistencias ---------------------------------------------------------------- */
 // Añadir un registro de asistencia
-router.post('/attendanceRecord', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/attendanceRecord',isSessionValid, async (req, res) => {
     const { date, checkin, checkout } = req.body;
     const fencerId = req.session.user.userId; // Suponiendo que el ID del tirador está almacenado en la sesión
 
@@ -36,8 +40,7 @@ router.post('/attendanceRecord', async (req, res) => {
 });
 
 // Obtener el historial de asistencias
-router.get('/getAttendanceRecord', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.get('/getAttendanceRecord',isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
 
@@ -65,8 +68,7 @@ router.get('/getAttendanceRecord', async (req, res) => {
 });
 
 // Obtener el historial de asistencias por rango de fecha
-router.post('/getAttendanceRecordFilter', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/getAttendanceRecordFilter',isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
     const { startDate, endDate } = req.body;
@@ -93,10 +95,47 @@ router.post('/getAttendanceRecordFilter', async (req, res) => {
     }
 });
 
+// Obtener las 5 últimas asistencias
+router.get('/getLastAttendances',isSessionValid, async (req, res) => {
+
+    const fencerId = req.session.user.userId;
+    try {
+        const selectQuery = `
+            SELECT
+                date AS "date",
+                check_in AS "checkin",
+                check_out AS "checkout"
+            FROM attendance_record
+            WHERE fencer_id = $1
+            ORDER BY date DESC
+            LIMIT 7
+        `;
+        const result = await pool.query(selectQuery, [fencerId]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron asistencias recientes' });
+        } else{
+            console.log("Últimas asistencias:", result.rows);
+            return res.status(200).json({
+                success: true,
+                attendances: result.rows
+            });
+        }
+    }
+    catch (error) {
+        console.error("Error en la consulta de últimas asistencias:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+    }
+);
+
+
 /* ----------------------------------------------- Entrenamientos -------------------------------------------------- */
 // Crear un nuevo entrenamiento
-router.post('/createWorkout', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/createWorkout',isSessionValid, async (req, res) => {
+
     try {
         // Extraer los datos del body
         const { workouts } = req.body;
@@ -157,9 +196,7 @@ router.post('/createWorkout', async (req, res) => {
 
 /* -------------------------------------------- Perfil ----------------------------------------------- */
 // Obtener el perfil del tirador
-router.get('/getProfile', async (req, res) => {
-    isSessionValid(req, res, () => {});
-
+router.get('/getProfile',isSessionValid, async (req, res) => {
     const fencerId = req.session.user.userId;
 
     try {
@@ -189,9 +226,8 @@ router.get('/getProfile', async (req, res) => {
 });
 
 // Actualizar el perfil del tirador
-router.post('/updateProfile', async (req, res) => {
-    isSessionValid(req, res, () => {});
-
+router.post('/updateProfile',isSessionValid, async (req, res) => {
+  
     const fencerId = req.session.user.userId;
     const {username, name, surname, secondsurname, birthdate, clubname, email} = req.body;
 
@@ -231,8 +267,7 @@ router.post('/updateProfile', async (req, res) => {
 });
 
 // Cambiar la contraseña del tirador
-router.post('/updateProfilePassword', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/updateProfilePassword',isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
     const { oldPassword, newPassword } = req.body;
@@ -270,8 +305,7 @@ router.post('/updateProfilePassword', async (req, res) => {
 
 /* --------------------------------------------- Cambiar el entrenador de un tirador ------------------------------------------------------ */
 // Mostrar el entrenador del tirador
-router.get('/getCoach', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.get('/getCoach', isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
 
@@ -300,8 +334,7 @@ router.get('/getCoach', async (req, res) => {
 });
 
 // Cambiar el entrenador del tirador
-router.post('/updateCoach', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/updateCoach', isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
     const { coachId } = req.body;
@@ -328,8 +361,8 @@ router.post('/updateCoach', async (req, res) => {
 
 /* --------------------------------------------- Diario de clases ------------------------------------------------------ */
 // Añadrir un registro al diario de clases
-router.post('/addClassDiary', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/addClassDiary', isSessionValid, async (req, res) => {
+
     const { date, title, description } = req.body;
     console.log("Datos recibidos:", req.body);
     const fencerId = req.session.user.userId; // Suponiendo que el ID del tirador está almacenado en la sesión
@@ -353,8 +386,7 @@ router.post('/addClassDiary', async (req, res) => {
 });
 
 // Obtener los títulos del diario de clases
-router.get('/getClassDiaryTitles', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.get('/getClassDiaryTitles', isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
 
@@ -382,9 +414,8 @@ router.get('/getClassDiaryTitles', async (req, res) => {
 });
 
 // Obtener la descripción de una entrada del diario por ID
-router.get('/getClassDiaryById/:id', async (req, res) => {
+router.get('/getClassDiaryById/:id', isSessionValid, async (req, res) => {
 
-    isSessionValid(req, res, () => {});
     const classId = req.params.id;
     console.log("ID de la entrada del diario:", classId);
 
@@ -411,8 +442,8 @@ router.get('/getClassDiaryById/:id', async (req, res) => {
 });
 
 // Eliminar una entrada del diario de clases
-router.post('/deleteClassDiary/:id', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/deleteClassDiary/:id', isSessionValid, async (req, res) => {
+
     const classId = req.params.id;
     console.log("ID de la entrada del diario:", classId);
     try {
@@ -430,8 +461,8 @@ router.post('/deleteClassDiary/:id', async (req, res) => {
 });
 
 // Obtener el último diario de clase
-router.get('/getLastClassDiary', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.get('/getLastClassDiary', isSessionValid, async (req, res) => {
+
     const fencerId = req.session.user.userId;
     try {
         const query = `
@@ -462,8 +493,8 @@ router.get('/getLastClassDiary', async (req, res) => {
 
 /* --------------------------------------------- Diario de competiciones ------------------------------------------------------ */
 // Añadir un registro al diario de competiciones
-router.post('/addCompetitionDiary', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/addCompetitionDiary', isSessionValid, async (req, res) => {
+    
     const fencerId = req.session.user.userId; 
     try {
         const {
@@ -478,8 +509,8 @@ router.post('/addCompetitionDiary', async (req, res) => {
             directes
         } = req.body;
         console.log("Datos recibidos:", req.body); // Para debug
-
-        const formatteTitle = capitalizeFirstLetter(title);
+        
+        const formatteTitle = title.toupperCase().trim();
 
         try {
             const insertQuery1 = `
@@ -518,8 +549,8 @@ router.post('/addCompetitionDiary', async (req, res) => {
 
 
 // Obtener los títulos del diario de competiciones
-router.get('/getCompetitionDiaryTitles', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.get('/getCompetitionDiaryTitles', isSessionValid, async (req, res) => {
+    
     if (!req.session.user || !req.session.user.userId) {
         return res.status(401).json({ success: false, message: 'No autorizado' });
     }
@@ -549,8 +580,8 @@ router.get('/getCompetitionDiaryTitles', async (req, res) => {
 });
 
 // Obtener la descripción de una entrada del diario por ID
-router.get('/getCompetitionDiaryById/:id', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.get('/getCompetitionDiaryById/:id', isSessionValid, async (req, res) => {
+    
     const diaryId = req.params.id;
 
     try {
@@ -574,8 +605,8 @@ router.get('/getCompetitionDiaryById/:id', async (req, res) => {
 });
 
 // Eliminar una entrada del diario de competiciones
-router.post('/deleteCompetitionDiary/:id', async (req, res) => {
-    isSessionValid(req, res, () => {});
+router.post('/deleteCompetitionDiary/:id', isSessionValid, async (req, res) => {
+    
     const diaryId = req.params.id;
 
     try {

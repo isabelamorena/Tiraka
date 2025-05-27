@@ -1,3 +1,4 @@
+/*Botones*/
 .btn-primary{
     background-color:#F0E1ADff;
     border:2px solid #F0E1ADff ;
@@ -8,9 +9,18 @@
     border:2px solid #B59E4Cff ;
 }
 
+.btn-primary:active,
+.btn-primary:focus:active,
+.btn-primary.active {
+    background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
+    border-color: #B59E4Cff !important;
+    box-shadow: none !important;
+}
+
 .btn-secondary{
     background-color: white;
     color: black;
+
     border: 2px solid #423B20ff;
 }
 .btn-secondary:hover{
@@ -18,7 +28,16 @@
     color: black;
     border: 2px solid #B59E4Cff;
 }
+.btn-secondary:active,
+.btn-secondary:focus:active,
+.btn-secondary.active {
+    background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
+    border-color: #B59E4Cff !important;
+    box-shadow: none !important;
+}
 
+
+/*Links*/
 a.link-primary{
     color: #FCD030ff !important;
     text-decoration: none;
@@ -27,3 +46,25 @@ a.link-primary:hover{
     color: #423B20ff !important;
 }
 
+/*Lista de elementos*/
+.custom-list .list-group-item:hover {
+  background-color: #B59E4Cff;
+  color: black !important;
+}
+
+.custom-list .list-group-item.active {
+  background-color: #B59E4Cff !important;
+  color: white !important;
+  border-color: #423B20ff; 
+}
+
+
+/*Línea de separación <hr class="line">*/
+.line{
+    
+  border: none;
+  height: 2px;
+  background-color: #B59E4Cff; /* gris claro */
+  margin-bottom: 15px;
+  margin-top: 0;
+}

@@ -9,6 +9,61 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('date').value = now.toISOString().split('T')[0]; // Establecer la fecha actual
     }
 
+    // Función para mostrar las 7 últimas asistencias
+    async function showLastAttendances() {
+        try {
+            const response = await fetch('/getLastAttendances', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'  // Asegúrate de que se incluyan las cookies si las usas
+            });
+            const data = await response.json();
+            if (data.success) {
+                const attendances = data.attendances;
+                const tableBody = document.getElementById('last-attendances');
+
+                if (!tableBody) {
+                    console.error("No se encontró el elemento con ID 'last-attendances'");
+                    return;
+                }
+
+                tableBody.innerHTML = ''; // Limpiar la tabla
+
+                if (attendances.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="3" class="text-center text-muted">No hay asistencias recientes</td>`;
+                    tableBody.appendChild(row);
+                    return;
+                }
+
+                attendances.forEach(attendance => {
+                    const row = document.createElement('tr');
+                    const formattedDate = new Date(attendance.date).toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                    });
+
+                    row.innerHTML = `
+                        <td>${formattedDate}</td>
+                        <td>${attendance.checkin ? attendance.checkin.slice(0, 5) : '<span class="text-danger">No registrado</span>'}</td>
+                        <td>${attendance.checkout ? attendance.checkout.slice(0, 5) : '<span class="text-danger">No registrado</span>'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+            } else {
+                const tableBody = document.getElementById('last-attendances');
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-danger">${data.message}</td></tr>`;
+            }
+        } catch (error) {
+            alert("Error al cargar las asistencias" + error);	
+        }
+    }
+
+
     // Función para el último diario de clase
     async function lastClassDiary() {
        try {
@@ -25,8 +80,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const lastDiary = data.diary;
                 const diaryContainer = document.getElementById('last-class-diary');
                 diaryContainer.innerHTML = `
+                    <h1 class="text-center" style="font-size: x-large";>${lastDiary.title}</h1>
+                    <hr class="line">
                     <p><strong>Fecha:</strong> ${new Date(lastDiary.date).toLocaleDateString()}</p>
-                    <p style="white-space: pre-wrap;"><strong>Descripción:</strong> ${lastDiary.description}</p>
+                    <p style="white-space: pre-wrap;" >${lastDiary.description}</p>
                 `;
             } else if (!data.success && data.message) {
                 const diaryContainer = document.getElementById('last-class-diary');
@@ -35,8 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         } catch (error) {
-            console.error("Error al obtener el historial de asistencias:", error);
-            alert("Error al cargar las asistencias");
+            alert("Error al cargar las asistencias" + error);
         }
     }
 
@@ -145,5 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* --------------------------------- Último diario de asistencia ---------------------------------------- */
     lastClassDiary();
+
+    /* ---------------------------------- Últimas 5 asistencias --------------------------------------------------*/
+    showLastAttendances();
 
 });

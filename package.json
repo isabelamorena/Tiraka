@@ -17,5 +17,14 @@
     "pg": "^8.16.0"
   },
   "keywords": [],
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isabelamorena/Tiraka.git"
+  },
+  "bugs": {
+    "url": "https://github.com/isabelamorena/Tiraka/issues"
+  },
+  "homepage": "https://github.com/isabelamorena/Tiraka#readme",
   "description": ""
 }
