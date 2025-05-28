@@ -210,16 +210,59 @@
                                             <div class="card-body pb-2">
                                                 <div class="form-group">
                                                     <label class="form-label">Contraseña actual</label>
-                                                    <input type="password" class="form-control" id="profile-current-password">
+                                                    <div class="input-group">
+                                                        <input type="password" class="form-control" id="profile-current-password">
+                                                        <button type="button" class="btn btn-eye" id="toggleCurrentPassword" tabindex="-1">
+                                                            <i class="lni lni-eye eye-icon" id="eye-icon-current"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
+
                                                 <div class="form-group">
                                                     <label class="form-label">Nueva contraseña</label>
-                                                    <input type="password" class="form-control" id="profile-new-password">
+                                                    <div class="input-group">
+                                                        <input type="password" class="form-control" id="profile-new-password">
+                                                        <button type="button" class="btn btn-eye" id="toggleNewPassword" tabindex="-1">
+                                                            <i class="lni lni-eye eye-icon" id="eye-icon-new"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
+
                                                 <div class="form-group">
                                                     <label class="form-label">Repetir la nueva contraseña</label>
-                                                    <input type="password" class="form-control" id="profile-confirm-new-password">
+                                                    <div class="input-group">
+                                                        <input type="password" class="form-control" id="profile-confirm-new-password">
+                                                        <button type="button" class="btn btn-eye" id="toggleConfirmPassword" tabindex="-1">
+                                                            <i class="lni lni-eye eye-icon" id="eye-icon-confirm"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
+                                                
+                                                <script>
+                                                    document.addEventListener("DOMContentLoaded", function () {
+                                                        const setupPasswordToggle = (inputId, iconId) => {
+                                                            const input = document.getElementById(inputId);
+                                                            const button = document.getElementById(iconId).parentElement;
+
+                                                            const showPassword = () => input.type = "text";
+                                                            const hidePassword = () => input.type = "password";
+
+                                                            // Para mouse
+                                                            button.addEventListener("mousedown", showPassword);
+                                                            button.addEventListener("mouseup", hidePassword);
+                                                            button.addEventListener("mouseleave", hidePassword);
+
+                                                            // Para dispositivos táctiles
+                                                            button.addEventListener("touchstart", showPassword);
+                                                            button.addEventListener("touchend", hidePassword);
+                                                        };
+
+                                                        setupPasswordToggle("profile-current-password", "eye-icon-current");
+                                                        setupPasswordToggle("profile-new-password", "eye-icon-new");
+                                                        setupPasswordToggle("profile-confirm-new-password", "eye-icon-confirm");
+                                                    });
+                                                </script>
+
                                                 <br>
                                             <button class="btn w-20 btn-primary" id="profile-password-button" > Cambiar contraseña </button>
                                             </div>

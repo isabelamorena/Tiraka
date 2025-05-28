@@ -97,9 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     
-
+    /* ----------------------------------------------- Añadir una asistencia --------------------------------------------------------------------*/
     const formAttendance = document.getElementById("formAttendance");
-    // Añadir una asistencia
     formAttendance.addEventListener("submit", async function (e) {
         e.preventDefault();
         const date = document.getElementById("date").value;
@@ -174,6 +173,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(() => {
                     successMessage.innerHTML = '';
                 }, 3000);
+
+                showLastAttendances();
+
             } else {
                 const successMessage = document.getElementById('messageAttendance');
                 successMessage.innerHTML = '<p class="text-danger fw-bold fs-6">*error en el registro de asistencia</p>';
@@ -204,5 +206,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* ---------------------------------- Últimas 5 asistencias --------------------------------------------------*/
     showLastAttendances();
+
 
 });

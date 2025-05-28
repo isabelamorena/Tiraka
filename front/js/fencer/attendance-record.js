@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Función para mostrar la tabla de asistencias con paginación
+    /* ------------------------------------ Función para mostrar la tabla de asistencias con paginación -------------------------------------------- */
     function AttendanceWithPagination(data) {
         const tableBody = document.getElementById("attendance-body");
         const paginationContainer = document.getElementById("attendance-pagination");
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* Mostrar asistencias de un rango de fechas determinado */
+    /* ---------------------------------------------- Mostrar asistencias de un rango de fechas determinado --------------------------------------------*/
     flatpickr("#date-range", {
         mode: "range",
         dateFormat: "Y-m-d"
@@ -136,7 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('Error al filtrar asistencias ' + error.message );
         }
     });
-
+    
+    
     
 
 });

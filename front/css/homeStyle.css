@@ -43,7 +43,7 @@ body{
 
 /* ------------------- Secciones con scroll ------------------- */
 .scroll-section {
-    margin: 50px 0; /* Espaciado entre las secciones */
+    margin:  0; /* Espaciado entre las secciones */
     
 }
 

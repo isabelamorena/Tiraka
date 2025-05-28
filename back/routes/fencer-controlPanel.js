@@ -97,7 +97,7 @@ router.get('/getLastAttendances',isSessionValid, async (req, res) => {
             FROM attendance_record
             WHERE fencer_id = $1
             ORDER BY date DESC
-            LIMIT 6
+            LIMIT 5 
         `;
         const result = await pool.query(selectQuery, [fencerId]);
         if (result.rows.length === 0) {

@@ -53,16 +53,16 @@
     box-shadow: none !important;
 }
 
-#eye-icon{
+.eye-icon{
     color: #F0E1ADff;
 }
-#eye-icon:hover{
+.eye-icon:hover{
     
     color: #B59E4Cff;
 }
-#eye-icon:active,
-#eye-icon:focus:active,
-#eye-icon.active {
+.eye-icon:active,
+.eye-icon:focus:active,
+.eye-icon.active {
     color: #FCD030ff;
 }
 /* -------------------------------------------------------- Links ---------------------------------------------------------------------*/
