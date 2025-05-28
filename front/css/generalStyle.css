@@ -1,4 +1,5 @@
-/*Botones*/
+/* ------------------------------------------------------------ Botones -------------------------------------------------------------------*/
+/* Botón principal*/
 .btn-primary{
     background-color:#F0E1ADff;
     border:2px solid #F0E1ADff ;
@@ -16,7 +17,7 @@
     border-color: #B59E4Cff !important;
     box-shadow: none !important;
 }
-
+/* Botón secundario*/
 .btn-secondary{
     background-color: white;
     color: black;
@@ -36,8 +37,35 @@
     box-shadow: none !important;
 }
 
+/*----------------------------------------------------- Botón de ojo ------------------------------------------------------------*/
+.btn-eye{
+    border: 1px solid #F0E1ADff;
+}
+.btn-eye:hover{
+    
+    border: 1px solid #B59E4Cff;
+}
+.btn-eye:active,
+.btn-eye:focus:active,
+.btn-eye.active {
+    background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
+    border-color: #B59E4Cff !important;
+    box-shadow: none !important;
+}
 
-/*Links*/
+#eye-icon{
+    color: #F0E1ADff;
+}
+#eye-icon:hover{
+    
+    color: #B59E4Cff;
+}
+#eye-icon:active,
+#eye-icon:focus:active,
+#eye-icon.active {
+    color: #FCD030ff;
+}
+/* -------------------------------------------------------- Links ---------------------------------------------------------------------*/
 a.link-primary{
     color: #FCD030ff !important;
     text-decoration: none;
@@ -46,7 +74,7 @@ a.link-primary:hover{
     color: #423B20ff !important;
 }
 
-/*Lista de elementos*/
+/* ------------------------------------------------ Lista de elementos ---------------------------------------------------------*/
 .custom-list .list-group-item:hover {
   background-color: #B59E4Cff;
   color: black !important;
@@ -59,7 +87,7 @@ a.link-primary:hover{
 }
 
 
-/*Línea de separación <hr class="line">*/
+/* ---------------------------------------------Línea de separación <hr class="line"> --------------------------------------------*/
 .line{
     
   border: none;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const pool = require('../../db');
-const { capitalizeFirstLetter } = require('../functions/string');
+const { capitalizeFirstLetter } = require('../functions/functions');
 
 // Ruta para registrar un entrenador
 router.post('/registerCoach', async (req, res) => {

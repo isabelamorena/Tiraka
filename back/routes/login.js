@@ -66,6 +66,7 @@ router.post('/loginTrainer', async (req, res) => {
                 role: 'entrenador', // Rol para el entrenador
                 userId: user.id // ID del entrenador
             };
+            console.log('Login exitoso para el entrenador:' + req.session.user.username + " / " + req.session.user.userId);
             return res.status(201).json({ success: true, message: 'Login correcto' });
         } else {
             return res.status(401).json({ success: false, message: 'Error en el servidor' });

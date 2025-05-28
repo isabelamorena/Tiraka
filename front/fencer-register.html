@@ -159,14 +159,14 @@
             e.preventDefault(); // Evita que la página se recargue
             
             // Obtener los valores del formulario
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
-            const name = document.getElementById('name').value;
-            const surname = document.getElementById('surname').value;
-            const secondSurname = document.getElementById('secondSurname').value;
-            const clubname = document.getElementById('clubname').value;
+            const name = document.getElementById('name').value.trim();
+            const surname = document.getElementById('surname').value.trim();
+            const secondSurname = document.getElementById('secondSurname').value.trim();
+            const clubname = document.getElementById('clubname').value.trim();
             const birthdate = document.getElementById('birthdate').value;
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const coachName = document.getElementById('coachName')?.value || '';
 
 
@@ -176,18 +176,12 @@
                 alert('El nombre y apellidos solo pueden contener letras y espacios.');
                 return;
             }
-            // Verificar que username, nombre y apellidos no tengan espacios al principio o al final
-            if (username.trim() === '' || name.trim() === '' || surname.trim() === '' || secondSurname.trim() === '') {
-                alert('El nombre de usuario, nombre y apellidos no pueden estar con espacios.');
-                return;
-            }
-            // Validación de contraseña (mínimo 8 caracteres, al menos una letra y un número)
+            // Validación de contraseña (mínimo 8 caracteres, al menos una letra y un número
             const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
             if (!passwordRegex.test(password)) {
                 alert('La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número.');
                 return;
             }
-
 
             // Validación de email
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

@@ -119,23 +119,25 @@
                 event.preventDefault(); // Evita el envío del formulario por defecto
 
                 // Obtener los valores del formulario
-                const username = document.getElementById('username').value;
+                const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value;
-                const name = document.getElementById('name').value;
-                const surname = document.getElementById('surname').value;
-                const secondSurname = document.getElementById('secondSurname').value;
+                const name = document.getElementById('name').value.trim();
+                const surname = document.getElementById('surname').value.trim();
+                const secondSurname = document.getElementById('secondSurname').value.trim();
                 const clubname = document.getElementById('clubname').value;
-                const email = document.getElementById('email').value;
+                const email = document.getElementById('email').value.trim();
 
-                // Verificar que username, nombre y apellidos no tengan espacios al principio o al final
-                if (username.trim() === '' || name.trim() === '' || surname.trim() === '' || secondSurname.trim() === '') {
-                    alert('El nombre de usuario, nombre y apellidos no pueden estar vacíos.');
-                    return;
-                }
                 // Validación de nombre y apellidos (solo letras y espacios)
                 const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/; // Permite letras y espacios, incluyendo acentos
                 if (!nameRegex.test(name) || !nameRegex.test(surname) || !nameRegex.test(secondSurname)) {
                     alert('El nombre y apellidos solo pueden contener letras y espacios.');
+                    return;
+                }
+                
+                // Validación de contraseña (mínimo 8 caracteres, al menos una letra y un número
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (!passwordRegex.test(password)) {
+                    alert('La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número.');
                     return;
                 }
 

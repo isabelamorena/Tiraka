@@ -16,7 +16,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
-
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
     <style>
 
     body{
@@ -85,12 +85,30 @@
                 <label for="username" class="form-label body-text-font">Usuario</label>
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
+            
             <div class="mb-3">
                 <label for="password" class="form-label body-text-font">Contraseña</label>
+                <div class="input-group">
                 <input type="password" class="form-control" id="password" name="password" required>
+                <button type="button" class="btn btn-eye" id="togglePassword" tabindex="-1">
+                    <i class="lni lni-eye" id="eye-icon" ></i>
+                </button>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary body-text-font">Iniciar sesión</button>
         </form>
+
+            <script>
+                const passwordInput = document.getElementById("password");
+                const toggleBtn = document.getElementById("togglePassword");
+                const eyeIcon = document.getElementById("eye-icon");
+
+                toggleBtn.addEventListener("click", () => {
+                    const isPassword = passwordInput.type === "password";
+                    passwordInput.type = isPassword ? "text" : "password";
+                });
+            </script>
+
         
         <p class="mt-3 body-text-font">¿No tienes cuenta? <a href="fencer-register.html" class="link-primary">Regístrate aquí</a></p>
     </div>

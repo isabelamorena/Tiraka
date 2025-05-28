@@ -149,8 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const capitalizedSecondSurname = capitalizeFirstLetter(secondsurname);
             const capitalizedClubname = capitalizeFirstLetter(clubname);
            
-
-        // Enviar los datos usando fetch (POST)
         try {
             const response = await fetch('/updateProfile', {
                 method: 'POST',

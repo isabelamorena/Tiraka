@@ -2,26 +2,15 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../db');
 const bcrypt = require('bcryptjs');
-const { capitalizeFirstLetter } = require('../functions/string');
-
-function isSessionValid(req, res, next) {
-    if (req.session && req.session.user && req.session.user.userId) {
-        return next(); // La sesión es válida, continuar con la siguiente función
-    } else {
-        return res.status(401).json({ success: false, message: 'No autorizado' }); // La sesión no es válida, devolver un error
-    }
-}
-
-/* ------------------------------------------------------- Panel principal --------------------------------------------------------- */
+const { capitalizeFirstLetter } = require('../functions/functions');
+const { isSessionValid } = require('../functions/functions');
 
 
-
-;
 /* ------------------------------------------ Asistencias ---------------------------------------------------------------- */
 // Añadir un registro de asistencia
 router.post('/attendanceRecord',isSessionValid, async (req, res) => {
     const { date, checkin, checkout } = req.body;
-    const fencerId = req.session.user.userId; // Suponiendo que el ID del tirador está almacenado en la sesión
+    const fencerId = req.session.user.userId; 
 
     try {
         const insertQuery = `
@@ -95,7 +84,7 @@ router.post('/getAttendanceRecordFilter',isSessionValid, async (req, res) => {
     }
 });
 
-// Obtener las 5 últimas asistencias
+// Obtener las 6 últimas asistencias
 router.get('/getLastAttendances',isSessionValid, async (req, res) => {
 
     const fencerId = req.session.user.userId;
@@ -108,7 +97,7 @@ router.get('/getLastAttendances',isSessionValid, async (req, res) => {
             FROM attendance_record
             WHERE fencer_id = $1
             ORDER BY date DESC
-            LIMIT 5
+            LIMIT 6
         `;
         const result = await pool.query(selectQuery, [fencerId]);
         if (result.rows.length === 0) {

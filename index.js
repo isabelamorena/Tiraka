@@ -48,6 +48,9 @@ app.use(registerRoute);
 const fencercontrolPanelRoute = require('./back/routes/fencer-controlPanel');
 app.use(fencercontrolPanelRoute);
 
+const coachcontrolPanelRoute = require('./back/routes/coach-controlPanel');
+app.use(coachcontrolPanelRoute);
+
 // Inicia el servidor
 app.listen(3000, function() {
   console.log('Server is running on port 3000');
