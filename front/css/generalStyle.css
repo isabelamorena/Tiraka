@@ -9,12 +9,12 @@
     background-color:#B59E4Cff;
     border:2px solid #B59E4Cff ;
 }
-
 .btn-primary:active,
 .btn-primary:focus:active,
 .btn-primary.active {
     background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
     border-color: #B59E4Cff !important;
+    border:2px solid #B59E4Cff ;
     box-shadow: none !important;
 }
 /* Botón secundario*/
@@ -35,6 +35,7 @@
     background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
     border-color: #B59E4Cff !important;
     box-shadow: none !important;
+    border: 2px solid #B59E4Cff;
 }
 
 /*----------------------------------------------------- Botón de ojo ------------------------------------------------------------*/
@@ -79,15 +80,13 @@ a.link-primary:hover{
   background-color: #B59E4Cff;
   color: black !important;
 }
-
 .custom-list .list-group-item.active {
   background-color: #B59E4Cff !important;
   color: white !important;
   border-color: #423B20ff; 
 }
 
-
-/* ---------------------------------------------Línea de separación <hr class="line"> --------------------------------------------*/
+/* --------------------------------------------- Línea de separación <hr class="line"> --------------------------------------------*/
 .line{
     
   border: none;
@@ -96,3 +95,52 @@ a.link-primary:hover{
   margin-bottom: 15px;
   margin-top: 0;
 }
+
+/* ----------------------------------------------------------- Calendario flatpickr--------------------------------------------------------------*/
+.flatpickr-day:hover {
+  background-color: #B59E4Cff !important;
+  color: white !important;
+  cursor: pointer;
+    border: none;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background-color: #B59E4Cff !important;
+  color: white !important;
+    border: none;
+}
+
+.flatpickr-day.inRange {
+  background-color: #E6E6E6 !important;
+  color: black !important;
+  border: none;
+}
+/* Quitar sombra / línea entre días del rango */
+.flatpickr-day.inRange::before,
+.flatpickr-day.inRange::after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.flatpickr-calendar {
+  color: black !important;
+  border:1px solid #F0E1ADff !important;
+}
+
+/* ----------------------------------------------------------- Texto adicional-------------------------------------------------------------------*/
+.text-success {
+  color: #B59E4Cff !important;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.text-failure {
+  color: #d9534f !important; /* rojo Bootstrap */
+  font-size: 0.9rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+

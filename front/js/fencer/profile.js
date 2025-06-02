@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     /*--------------------------------------------------------- Perfil ------------------------------------------------------------ */
-    const showProfile = document.getElementById("showProfile");
+    const showProfile = document.getElementById("profile-link");
 
     showProfile.addEventListener("click", async function (e) {
         e.preventDefault(); // Prevenir el envío del formulario

@@ -183,6 +183,46 @@ router.post('/createWorkout',isSessionValid, async (req, res) => {
     }
 });
 
+// Obtener los modelos de entrenamientos del tirador
+router.get('/getTrainingTemplates', isSessionValid, async (req, res) => {
+    const fencerId = req.session.user.userId;
+
+    try {
+        const result = await pool.query(`
+            SELECT * FROM fencer_training_templates WHERE fencer_id = $1
+        `, [fencerId]);
+
+        return res.status(200).json(result.rows);
+    } catch (error) {
+        console.error("Error al obtener plantillas de entrenamiento:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+router.post('/createTrainingTemplate', isSessionValid, async (req, res) => {
+    const fencerId = req.session.user.userId;
+
+    const { title, description, duration, number_of_sets, number_of_reps } = req.body;
+
+    try {
+        const insertQuery = `
+            INSERT INTO fencer_training_templates(
+                fencer_id, title, description, duration, number_of_sets, number_of_reps)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+
+        await pool.query(insertQuery, [fencerId, title, description, duration, number_of_sets, number_of_reps]);
+
+        return res.status(201).json({ success: true, message: 'Plantilla de entrenamiento creada exitosamente' });
+    } catch (error) {
+        console.error("Error al crear plantilla de entrenamiento:", error.message);
+        return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });
+    }
+});
+
 /* -------------------------------------------- Perfil ----------------------------------------------- */
 // Obtener el perfil del tirador
 router.get('/getProfile',isSessionValid, async (req, res) => {
@@ -610,7 +650,8 @@ router.post('/deleteCompetitionDiary/:id', isSessionValid, async (req, res) => {
         console.error("Error eliminando el diario:", error.message);
         return res.status(500).json({ success: false, message: 'Error del servidor' });
     }
-}
-);
+});
+
+
 
 module.exports = router;

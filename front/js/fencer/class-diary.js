@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------- Diario de clases----------------------------------------- */
-    document.getElementById("class-diary-button").addEventListener("click", async function (e) {
+    document.getElementById("class-diary-link").addEventListener("click", async function (e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
 
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const rightCol = document.getElementById("right-column");
 
             leftCol.classList.remove("col-12");
-            leftCol.classList.add("col-md-6");
+            leftCol.classList.add("col-md-4");
             rightCol.classList.remove("d-none");
         } catch (error) {
             alert("Error al cargar los detalles del diario: " + error.message);
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const leftCol = document.getElementById("left-column");
 
         rightCol.classList.add("d-none");
-        leftCol.classList.remove("col-md-6");
+        leftCol.classList.remove("col-md-4");
         leftCol.classList.add("col-12");
         });
 
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const rightCol = document.getElementById("right-column");
                 const leftCol = document.getElementById("left-column");
                 rightCol.classList.add("d-none");
-                leftCol.classList.remove("col-md-6");
+                leftCol.classList.remove("col-md-4");
                 leftCol.classList.add("col-12");
 
             } else {

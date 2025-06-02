@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
 /*---------------------------------------------------------- Mostrar asistencias -------------------------------------------------------------- */
-    const attendanceButton = document.getElementById("attendanceButton");
+    const attendanceButton = document.getElementById("attendance-link");
 
     attendanceButton.addEventListener("click", async function (e) {
         e.preventDefault();

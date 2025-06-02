@@ -16,7 +16,7 @@
     <script type="module" src="js/fencer/profile.js"></script> 
     <script type="module" src="js/fencer/panel.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> <!-- fechas/calendarios -->
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
   
@@ -90,7 +90,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="#" id="showProfile" class="sidebar-link" >
+                    <a href="#" id="profile-link" class="sidebar-link" >
                         <i class="lni lni-user-4"></i>
                         <span>Perfil</span>
                     </a>
@@ -99,25 +99,29 @@
                 
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                        data-bs-target="#entre" aria-expanded="true" aria-controls="entre">
+                        data-bs-target="#entre" aria-expanded="false" aria-controls="entre">
                         <i class="lni lni-dumbbell-1"></i>
                         <span>Entrenamientos</span>
                     </a>
                     <ul id="entre" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" >Mis entrenamientos</a>
+                            <a href="#" class="sidebar-link">Próximos entrenamientos</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" >Entrenamientos asignados</a>
+                            <a href="#" class="sidebar-link"> Entrenamientos completados</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" id="createWorkoutButton" class="sidebar-link" >Crear entreno</a>
+                            <a href="#" class="sidebar-link"> Estadísticas</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" >Historial</a>
+                            <a href="#" class="sidebar-link"> Mis plantillas</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link" id="create-workout-link"> Crear entrenamientos</a>
                         </li>
                     </ul>
                 </li>
+
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                         data-bs-target="#diarios" aria-expanded="false" aria-controls="diarios" >
@@ -126,16 +130,16 @@
                     </a>
                     <ul id="diarios" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" id="class-diary-button" >Diario de clases</a>
+                            <a href="#" class="sidebar-link" id="class-diary-link" >Diario de clases</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" id="competition-diary-button" >Diario de competiciones</a>
+                            <a href="#" class="sidebar-link" id="competition-diary-link" >Diario de competiciones</a>
                         </li>
                     </ul>
                 </li>
                 
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" id="attendanceButton" >
+                    <a href="#" class="sidebar-link" id="attendance-link" >
                         <i class="lni lni-check-circle-1"></i>
                         <span>Asistencias</span>
                     </a>
@@ -350,7 +354,7 @@
                         </div>
 
                         <!-- Columna derecha (detalles) oculta inicialmente -->
-                    <div class="col-12 col-md-6 d-none" id="right-column">
+                    <div class="col-12 col-md-8 d-none" id="right-column">
                         <div class="panel-box">
                             <div id="class-diary-details" class="border rounded p-3">
                                 <h4 id="diary-detail-title"></h4>
@@ -471,7 +475,7 @@
                         </div>
 
                         <!-- Columna derecha (detalles del diario) - oculta por defecto -->
-                        <div class="col-12 col-md-6 d-none" id="competition-right-column">
+                        <div class="col-12 col-md-8 d-none" id="competition-right-column">
                         <div class="panel-box">
                             <div id="competition-diary-details" class="border rounded p-3">
                             <h4 id="competition-diary-detail-title"></h4>
@@ -495,27 +499,22 @@
                     </div>
                 </div>
 
-
-                <!-- Crear entreno -->
-                <div id="create-workout" class="container-fluid hidden">
-                    <div class="panel-box">
-                        <h1 class="mb-4 text-center">Crear entreno</h1>
-                        
-                        <!-- Seleccionar fechas para el entreno -->
-                        <div class="mb-3 d-flex flex-row align-items-start">
-                            <p>Selecciona fechas para tus entrenos: </p>
-                            <!-- Selector de fechas con Flatpickr -->
-                            <input id="date-picker" class="form-control" type="text" placeholder="Selecciona fechas" />
+                <!-- Crear entrenamientos -->
+                <div id="create-workout" class="container-fluid hidden panel-box">
+                    <h1 class="mb-4 text-center">Crear entrenamientos</h1>
+                    <div class="row justify-content-center ">
+                        <!-- Selector de fechas -->
+                        <div class="col-12 d-flex flex-column align-items-center justify-content-center">
+                            <p>Selecciona un rango de fechas para crear entrenamientos:</p>
+                            <input id="dateRange" class="form-control" style="max-width: 250px;" placeholder="Selecciona un rango de fechas" />
+                            <!-- Formulario dinámico -->
+                            <div id="workouts-form" class="col-12 mt-4"></div>
+                            <div id="workout-message"></div>
                         </div>
-
-                        <!-- Mostrar los entrenamientos para cada fecha -->
-                        <div id="workouts-form" class="mt-4"></div>
-
-                        <!-- Botón de envío -->
-                        <button id="submit-button-create-workout" class="btn btn-form-attendance mt-4" style="display: none;">Guardar</button>
                     </div>
                 </div>
 
+                <div id="show-templates" class="container"></div>
 
                 <!-- Historial de asistencias -->
                 <div id="attendance-record" class="hidden container-fluid">

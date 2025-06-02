@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Mostrar el diario de competición --------------------------------------------- */
-    const competitionDiaryBtn = document.getElementById("competition-diary-button");
+    const competitionDiaryBtn = document.getElementById("competition-diary-link");
     competitionDiaryBtn.addEventListener("click", async function (e) {
         e.preventDefault();
         // Mostrar solo el panel de asistencia
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const leftCol = document.getElementById("competition-left-column");
 
             leftCol.classList.remove("col-12");
-            leftCol.classList.add("col-md-6");
+            leftCol.classList.add("col-md-4");
             rightCol.classList.remove("d-none");
 
             // Mostrar título, fecha, y guardar ID
@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const rightCol = document.getElementById("competition-right-column");
                 const leftCol = document.getElementById("competition-left-column");
                 rightCol.classList.add("d-none");
-                leftCol.classList.remove("col-md-6");
+                leftCol.classList.remove("col-md-4");
                 leftCol.classList.add("col-12");
         } else {
         alert("Error al eliminar la entrada.");
@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const rightCol = document.getElementById("competition-right-column");
         const leftCol = document.getElementById("competition-left-column");
         rightCol.classList.add("d-none");
-        leftCol.classList.remove("col-md-6");
+        leftCol.classList.remove("col-md-4");
         leftCol.classList.add("col-12");
     });
 
