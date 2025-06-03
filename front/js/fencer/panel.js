@@ -3,7 +3,6 @@ import { showPanel } from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
 
     showPanel("main-content");
-    alert("Bienvenido al panel de asistencia");
 
     document.getElementById("home-link").addEventListener("click", function (e) {
         e.preventDefault();
