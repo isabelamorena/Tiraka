@@ -121,14 +121,15 @@ document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------- Formulario de diario de competiticiones ---------------------------------------------*/
     const competitionDiaryFormBtn = document.getElementById("add-competition-diary");
     competitionDiaryFormBtn.addEventListener("click", function (e) {
+        
         const form = document.getElementById("add-competition-diary-form");
-        if (form.style.display === "block") {
-            form.style.display = "none";
-        } else {
-            form.style.display = "block";
-            const today = new Date().toISOString().split("T")[0];
-            document.getElementById("competition-diary-date").value = today;
-        }
+       if (form.classList.contains("d-none")) {
+                form.classList.remove("d-none");
+                form.style.display = "block";
+                document.getElementById("diary-date").value = today;
+            } else {
+                form.classList.add("d-none");
+            }
     });
 
     // Ocultar el formulario de diario de competiciones

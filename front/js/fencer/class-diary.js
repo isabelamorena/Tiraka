@@ -84,16 +84,14 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("add-class-diary").addEventListener("click", function (e) {
             e.preventDefault();
             const form = document.getElementById("add-class-diary-form");
-            if (form.style.display === "block") {
-                form.style.display = "none";
-            } else {
+            if (form.classList.contains("d-none")) {
+                form.classList.remove("d-none");
                 form.style.display = "block";
-                const today = new Date().toISOString().split("T")[0];
                 document.getElementById("diary-date").value = today;
+            } else {
+                form.classList.add("d-none");
             }
         });
-
-        
 
         document.getElementById("add-class-diary-form-button").addEventListener("click", async function (e) {
             e.preventDefault();
