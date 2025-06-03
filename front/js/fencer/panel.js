@@ -162,8 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (result.success) {
                 
                 const successMessage = document.getElementById('messageAttendance');
-                successMessage.innerHTML = '<p class= "fw-bold fs-6">*registro de asistencia exitoso</p>';
-                
+                successMessage.innerHTML = '<p class= "text-success">*registro de asistencia exitoso</p>';
+
                 // Limpiar el formulario y resetear hora
                 formAttendance.reset();
                 setDefaultTimes();
@@ -178,8 +178,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } else {
                 const successMessage = document.getElementById('messageAttendance');
-                successMessage.innerHTML = '<p class="text-danger fw-bold fs-6">*error en el registro de asistencia</p>';
-            
+                successMessage.innerHTML = '<p class="text-failure">*error en el registro de asistencia</p>';
+
                 setTimeout(() => {
                     successMessage.innerHTML = '';
                 }, 3000);

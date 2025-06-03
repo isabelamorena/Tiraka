@@ -15,6 +15,7 @@
     <script  type="module"src="js/fencer/workout-sessions.js"></script>
     <script type="module" src="js/fencer/profile.js"></script> 
     <script type="module" src="js/fencer/panel.js"></script>
+    <script type="module" src="js/fencer/training-templates.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> <!-- fechas/calendarios -->
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -114,7 +115,7 @@
                             <a href="#" class="sidebar-link"> Estadísticas</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link"> Mis plantillas</a>
+                            <a href="#" class="sidebar-link" id="my-templates-link"> Mis plantillas</a>
                         </li>
                         <li class="sidebar-item">
                             <a href="#" class="sidebar-link" id="create-workout-link"> Crear entrenamientos</a>
@@ -514,7 +515,18 @@
                     </div>
                 </div>
 
-                <div id="show-templates" class="container"></div>
+                <!-- Mostrar plantillas -->
+                <div id="training-templates" class="container-fluid hidden">
+                    <div class="row">
+                    <div class="col-12 col-md-12 panel-box" id="template-left-column">
+                        <h1 class="mb-4 text-center">Tus plantillas</h1>
+                        <ul id="template-list" class="list-group mb-4"></ul>
+                        <div id="template-list-pagination"></div>
+                    </div>
+                    <div class="col-12 col-md-12 panel-box hidden" id="template-right-column">
+                        <div id="template-details" class="mt-4"></div>
+                    </div>
+                </div>
 
                 <!-- Historial de asistencias -->
                 <div id="attendance-record" class="hidden container-fluid">

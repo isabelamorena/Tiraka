@@ -4,14 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
 
-    document.getElementById("competition-diary").style.display = "none";
+        document.getElementById("competition-diary").style.display = "none";
         document.getElementById("main-content").style.display = "none";
         document.getElementById("create-workout").style.display = "none";
         document.getElementById("profile").style.display = "none";
+        document.getElementById("training-templates").style.display = "none";
+        document.getElementById("competition-diary").style.display = "none";
         document.getElementById("attendance-record").style.display = "none";
-
-        const diaryClass = document.getElementById("diary-class");
-        diaryClass.style.display = "block";
+        document.getElementById("diary-class").style.display = "block";
 
         // Reset layout
         const leftCol = document.getElementById("left-column");

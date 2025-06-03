@@ -183,7 +183,6 @@ router.post('/createWorkout',isSessionValid, async (req, res) => {
     }
 });
 
-// Obtener los modelos de entrenamientos del tirador
 router.get('/getTrainingTemplates', isSessionValid, async (req, res) => {
     const fencerId = req.session.user.userId;
 
@@ -191,8 +190,12 @@ router.get('/getTrainingTemplates', isSessionValid, async (req, res) => {
         const result = await pool.query(`
             SELECT * FROM fencer_training_templates WHERE fencer_id = $1
         `, [fencerId]);
+        console.log("Plantillas de entrenamiento obtenidas:", result.rows);
+        res.status(200).json({
+            success: true,
+            templates: result.rows
+        });
 
-        return res.status(200).json(result.rows);
     } catch (error) {
         console.error("Error al obtener plantillas de entrenamiento:", error.message);
         return res.status(500).json({

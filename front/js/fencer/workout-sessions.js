@@ -4,24 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     createWorkoutButton.addEventListener("click", async function (e) {
         e.preventDefault(); // Prevenir el envío del formulario
-        document.querySelector("#sidebar").classList.toggle("collapsed");
-        const mainContent = document.getElementById("main-content");
-        mainContent.style.display = "none"; // Ocultar el contenido principal
+       document.querySelector("#sidebar").classList.toggle("collapsed");
+        document.getElementById("main-content").style.display = "none";
+        document.getElementById("diary-class").style.display = "none";
+        document.getElementById("competition-diary").style.display = "none";
+        document.getElementById("training-templates").style.display = "none";
+        document.getElementById("attendance-record").style.display = "none";
+        document.getElementById("profile").style.display = "none";
+        
+        document.getElementById("create-workout").style.display = "block";
 
-        const attendanceHistory = document.getElementById("attendance-record");
-        attendanceHistory.style.display = "none"; // Ocultar el historial de asistencias
-
-        const profile = document.getElementById("profile");
-        profile.style.display = "none"; // Ocultar el perfil
-
-        const diaryClass = document.getElementById("diary-class");
-        diaryClass.style.display = "none"; // Ocultar el diario de clases
-
-        const competitionDiary = document.getElementById("competition-diary");
-        competitionDiary.style.display = "none";
-
-        const createWorkout = document.getElementById("create-workout");
-        createWorkout.style.display = "block"; // Mostrar el crear entrenamientos
     });
 
 
@@ -47,8 +39,8 @@ flatpickr("#dateRange", {
             // Obtener plantillas antes de iniciar el wizard
             fetch('/getTrainingTemplates')
                 .then(res => res.json())
-                .then(templates => {
-                    trainingTemplates = templates;
+                .then(data => {
+                    trainingTemplates = data.templates || [];
                     startWorkoutWizard(dates);
                 });
         }

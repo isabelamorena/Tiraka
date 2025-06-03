@@ -5,21 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
     showProfile.addEventListener("click", async function (e) {
         e.preventDefault(); // Prevenir el envío del formulario
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        const mainContent = document.getElementById("main-content");
-        mainContent.style.display = "none"; // Ocultar el contenido principal
-
-        const attendanceHistory = document.getElementById("attendance-record");
-        attendanceHistory.style.display = "none"; // Ocultar el historial de asistencias
-
-        const createWorkout = document.getElementById("create-workout");
-        createWorkout.style.display = "none"; // Mostrar el crear entrenamientos
-
-        const diaryClass = document.getElementById("diary-class");
-        diaryClass.style.display = "none"; // Ocultar el diario de clases
-
+        document.getElementById("main-content").style.display = "none";
+        document.getElementById("create-workout").style.display = "none";
+        document.getElementById("diary-class").style.display = "none";
         document.getElementById("competition-diary").style.display = "none";
-        const profile = document.getElementById("profile");
-        profile.style.display = "block"; // Ocultar el perfil
+        document.getElementById("training-templates").style.display = "none";
+        document.getElementById("attendance-record").style.display = "none";
+        document.getElementById("profile").style.display = "block";
+
 
         // Obtener el perfil del usuario desde el servidor
         try {

@@ -132,15 +132,29 @@ a.link-primary:hover{
 /* ----------------------------------------------------------- Texto adicional-------------------------------------------------------------------*/
 .text-success {
   color: #B59E4Cff !important;
-  font-size: 0.9rem;
+  background: #f9f6ea;
+  border: 1.5px solid #B59E4Cff;
+  border-radius: 8px;
+  font-size: 0.95rem;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding: 10px 16px;
+  display: inline-block;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(181,158,76,0.06);
 }
 
 .text-failure {
-  color: #d9534f !important; /* rojo Bootstrap */
-  font-size: 0.9rem;
+  color: #d9534f !important;
+  background: #fff0f0;
+  border: 1.5px solid #d9534f;
+  border-radius: 8px;
+  font-size: 0.95rem;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding: 10px 16px;
+  display: inline-block;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(217,83,79,0.06);
 }
 

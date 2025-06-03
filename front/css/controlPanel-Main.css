@@ -16,7 +16,7 @@
 
 /*---------------------- Ocutar contenido --------------------------*/
 .hidden {
-    display: none; 
+    display: none !important; 
 }
 
 /* ---------------------- en móviles --------------------------- */
