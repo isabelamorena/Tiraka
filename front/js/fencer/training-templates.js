@@ -1,3 +1,4 @@
+import { showPanel } from './shared-functions.js';
 document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('my-templates-link').addEventListener('click', function(e) {

@@ -1,12 +1,10 @@
+import { showPanel } from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
 
 /*---------------------------------------------------------- Mostrar asistencias -------------------------------------------------------------- */
     const attendanceButton = document.getElementById("attendance-link");
-
     attendanceButton.addEventListener("click", async function (e) {
         e.preventDefault();
-
-        // Mostrar solo el panel de asistencia
         document.querySelector("#sidebar").classList.toggle("collapsed");
         showPanel("attendance-record");
 

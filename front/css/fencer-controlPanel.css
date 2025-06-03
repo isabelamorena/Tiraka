@@ -14,11 +14,6 @@
     margin-right: 10px;
 }
 
-/*---------------------- Ocutar contenido --------------------------*/
-.hidden {
-    display: none; 
-}
-
 
 /* ---------------------- en móviles --------------------------- */
 @media (max-width: 768px) {

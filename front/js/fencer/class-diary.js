@@ -1,3 +1,4 @@
+import { showPanel } from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------- Diario de clases----------------------------------------- */
     document.getElementById("class-diary-link").addEventListener("click", async function (e) {

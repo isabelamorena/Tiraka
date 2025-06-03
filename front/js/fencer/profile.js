@@ -1,3 +1,4 @@
+import { showPanel } from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
     /*--------------------------------------------------------- Perfil ------------------------------------------------------------ */
     const showProfile = document.getElementById("profile-link");

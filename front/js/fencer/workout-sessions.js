@@ -1,3 +1,4 @@
+import { showPanel } from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
     const createWorkoutButton = document.getElementById("create-workout-link");
@@ -5,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     createWorkoutButton.addEventListener("click", async function (e) {
         e.preventDefault(); // Prevenir el envío del formulario
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        showPanel("workout-sessions");
+        showPanel("create-workout");
 
     });
 

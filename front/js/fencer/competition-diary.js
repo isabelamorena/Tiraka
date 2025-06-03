@@ -1,3 +1,4 @@
+import { showPanel } from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Mostrar el diario de competición --------------------------------------------- */
     const competitionDiaryBtn = document.getElementById("competition-diary-link");
