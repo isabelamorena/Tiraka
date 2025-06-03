@@ -5,13 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     showProfile.addEventListener("click", async function (e) {
         e.preventDefault(); // Prevenir el envío del formulario
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        document.getElementById("main-content").style.display = "none";
-        document.getElementById("create-workout").style.display = "none";
-        document.getElementById("diary-class").style.display = "none";
-        document.getElementById("competition-diary").style.display = "none";
-        document.getElementById("training-templates").style.display = "none";
-        document.getElementById("attendance-record").style.display = "none";
-        document.getElementById("profile").style.display = "block";
+        showPanel("profile");
 
 
         // Obtener el perfil del usuario desde el servidor

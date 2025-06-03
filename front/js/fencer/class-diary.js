@@ -3,15 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("class-diary-link").addEventListener("click", async function (e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
-
-        document.getElementById("competition-diary").style.display = "none";
-        document.getElementById("main-content").style.display = "none";
-        document.getElementById("create-workout").style.display = "none";
-        document.getElementById("profile").style.display = "none";
-        document.getElementById("training-templates").style.display = "none";
-        document.getElementById("competition-diary").style.display = "none";
-        document.getElementById("attendance-record").style.display = "none";
-        document.getElementById("diary-class").style.display = "block";
+        showPanel("diary-class");
 
         // Reset layout
         const leftCol = document.getElementById("left-column");

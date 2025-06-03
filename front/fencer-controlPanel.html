@@ -9,6 +9,7 @@
   <link href="css/css/bootstrap.min.css" rel="stylesheet">
   <script src="js/js/bootstrap.min.js"></script>
 <!--   <script src="js/fencer-controlPanel.js"></script> -->
+    <script src="js/fencer/shared-functions.js"></script>
     <script type="module" src="js/fencer/competition-diary.js"></script>
     <script type="module"  src="js/fencer/attendance-record.js"></script>
     <script type="module" src="js/fencer/class-diary.js"></script>
@@ -173,7 +174,7 @@
             
             <main class="p-3">
                 <!-- Perfil de tirador -->
-                <div id="profile" class="container-fluid  panel-box hidden">
+                <div id="profile" class="container-fluid panel-box d-none">
                     <div class=" light-style flex-grow-1 container-p-y ">
                         <h4 class="font-weight-bold py-3 mb-4" id="profile-title">
                             
@@ -317,7 +318,7 @@
                 </div>
 
                 <!-- Diario de clases -->
-                <div id="diary-class" class="container-fluid hidden">
+                <div id="diary-class" class="container-fluid d-none">
                     <div class="row" id="diary-class-row">
                         <!-- Columna izquierda -->
                         <div class="col-12 col-md-6" id="left-column">
@@ -328,7 +329,7 @@
                                 <span>Añadir</span>
                             </button>
 
-                            <div id="add-class-diary-form" class="border rounded p-3 hidden">
+                            <div id="add-class-diary-form" class="border rounded p-3 d-none">
                             <form id="diary-form">
                                 <div class="mb-3">
                                 <label for="diary-title" class="form-label">Título</label>
@@ -361,7 +362,7 @@
                                 <h4 id="diary-detail-title"></h4>
                                 <p><strong>Fecha:</strong> <span id="diary-detail-date"></span></p>
                                 <div id="diary-detail-description" style="white-space: pre-wrap;"></div>
-                                <input type="hidden" id="diary-id" value="">
+                                <input type="d-none" id="diary-id" value="">
                                 <br>
 
                                 <button class="btn btn-sm btn-primary" id="close-details">Cerrar</button>
@@ -376,7 +377,7 @@
                 </div>
 
                 <!-- Diario de competiciones -->
-                <div id="competition-diary" class="container-fluid hidden">
+                <div id="competition-diary" class="container-fluid d-none">
                     <div class="row" id="diary-class-row">
                         <!-- Columna izquierda -->
                         <div class="col-12 col-md-6" id="competition-left-column">
@@ -388,7 +389,7 @@
                             </button>
 
                             <!-- Formualrio para añadir un nuevo diario de competiciones -->
-                            <div id="add-competition-diary-form" class="border rounded p-3 hidden">
+                            <div id="add-competition-diary-form" class="border rounded p-3 d-none">
                             
                                 <form id="competition-diary-form">
                                     <div class="mb-3">
@@ -486,7 +487,7 @@
                             <div id="competition-diary-detail-description"></div>
 
                             <!-- Campo oculto para guardar el ID del diario -->
-                            <input type="hidden" id="competition-diary-id" value="">
+                            <input type="d-none" id="competition-diary-id" value="">
 
                             <!-- Botones de acción -->
                             <button class="btn btn-sm btn-primary mt-3" id="competition-close-details">Cerrar</button>
@@ -501,7 +502,7 @@
                 </div>
 
                 <!-- Crear entrenamientos -->
-                <div id="create-workout" class="container-fluid hidden panel-box">
+                <div id="create-workout" class="container-fluid d-none panel-box">
                     <h1 class="mb-4 text-center">Crear entrenamientos</h1>
                     <div class="row justify-content-center ">
                         <!-- Selector de fechas -->
@@ -516,20 +517,20 @@
                 </div>
 
                 <!-- Mostrar plantillas -->
-                <div id="training-templates" class="container-fluid hidden">
+                <div id="training-templates" class="container-fluid d-none">
                     <div class="row">
                     <div class="col-12 col-md-12 panel-box" id="template-left-column">
                         <h1 class="mb-4 text-center">Tus plantillas</h1>
                         <ul id="template-list" class="list-group mb-4"></ul>
                         <div id="template-list-pagination"></div>
                     </div>
-                    <div class="col-12 col-md-12 panel-box hidden" id="template-right-column">
+                    <div class="col-12 col-md-12 panel-box d-none" id="template-right-column">
                         <div id="template-details" class="mt-4"></div>
                     </div>
                 </div>
 
                 <!-- Historial de asistencias -->
-                <div id="attendance-record" class="hidden container-fluid">
+                <div id="attendance-record" class="d-none container-fluid">
                     <div class="d-flex justify-content-between align-items-start gap-3">
                         <!-- Panel de tabla -->
                         <div class="panel-box">

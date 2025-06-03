@@ -8,12 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Mostrar solo el panel de asistencia
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        document.getElementById("main-content").style.display = "none";
-        document.getElementById("create-workout").style.display = "none";
-        document.getElementById("profile").style.display = "none";
-        document.getElementById("diary-class").style.display = "none";
-        document.getElementById("competition-diary").style.display = "none";
-        document.getElementById("attendance-record").style.display = "block";
+        showPanel("attendance-record");
 
         try {
             const response = await fetch('/getAttendanceRecord');

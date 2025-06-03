@@ -5,14 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         // Mostrar solo el panel de asistencia
         document.querySelector("#sidebar").classList.toggle("collapsed");
-
-        document.getElementById("main-content").style.display = "none";
-        document.getElementById("create-workout").style.display = "none";
-        document.getElementById("training-templates").style.display = "none";
-        document.getElementById("profile").style.display = "none";
-        document.getElementById("diary-class").style.display = "none";
-        document.getElementById("attendance-record").style.display = "none";
-        document.getElementById("competition-diary").style.display = "block";
+        showPanel("competition-diary");
+        // Cargar títulos del diario de competiciones
         loadCompetitionDiaryTitles();
 
 

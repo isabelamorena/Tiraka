@@ -3,17 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('my-templates-link').addEventListener('click', function(e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        document.getElementById("main-content").style.display = "none";
-        document.getElementById("attendance-record").style.display = "none";
-        document.getElementById("profile").style.display = "none";
-        document.getElementById("diary-class").style.display = "none";
-        document.getElementById("competition-diary").style.display = "none";
-        document.getElementById("create-workout").style.display = "none";
-        document.getElementById("training-templates").style.display = "block";
-        const leftCol = document.getElementById("template-left-column");
-        leftCol.classList.remove("col-md-6");
-        leftCol.classList.add("col-12");
-        document.getElementById("template-right-column").classList.add("d-none");
+        showPanel("training-templates");
 
         loadTrainingTemplates();
     });
