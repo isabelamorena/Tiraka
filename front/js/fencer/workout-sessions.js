@@ -1,4 +1,5 @@
 import { showPanel } from './shared-functions.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
     const createWorkoutButton = document.getElementById("create-workout-link");
@@ -41,6 +42,7 @@ flatpickr("#dateRange", {
     }
 });
 
+
 function startWorkoutWizard(dates) {
     selectedDates = dates;
     workoutsData = Array(dates.length).fill(null);
@@ -49,6 +51,8 @@ function startWorkoutWizard(dates) {
     showTemplateSelector(currentStep);
 }
 
+// Muestra el selector de plantillas para el entrenamiento
+// y permite crear un nuevo entrenamiento si no se selecciona ninguna plantilla
 function showTemplateSelector(step) {
     let options = `<option value="">Crear desde cero</option>`;
     trainingTemplates.forEach((tpl, idx) => {
@@ -78,6 +82,7 @@ function showTemplateSelector(step) {
     };
 }
 
+// Muestra el formulario de entrenamiento para el paso actual
 function showWorkoutForm(step, template) {
     const date = selectedDates[step];
     const tpl = template || {};
@@ -203,4 +208,80 @@ function showWorkoutForm(step, template) {
         };
     }
     };
+
+    /* ----------------------------------------- Calendario de entrenamientos ---------------------------------------- */
+    cargarEntrenamientosYCalendario();
+    var calendarEl = document.getElementById('calendar');
+    // Función para cargar entrenamientos y calendario
+    async function cargarEntrenamientosYCalendario() {
+    const calendarEl = document.getElementById('calendar');
+    if (!calendarEl) return;
+
+    // 1. Obtener entrenamientos de la BD
+    let eventos = [];
+    try {
+        const res = await fetch('/getWorkouts'); // Ajusta la ruta si es necesario
+        const data = await res.json();
+        if (data.success && Array.isArray(data.workouts)) {
+        eventos = data.workouts.map(w => ({
+            id: w.id,
+            title: w.title,
+            start: w.date, // Asegúrate que tu backend envía la fecha en formato ISO
+            extendedProps: {
+            description: w.description,
+            duration: w.duration,
+            number_of_sets: w.number_of_sets,
+            number_of_reps: w.number_of_reps
+            }
+        }));
+        }
+    } catch (e) {
+        console.error('Error cargando entrenamientos:', e);
+    }
+
+    // 2. Inicializar el calendario
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: eventos,
+        eventClick: function(info) {
+            info.jsEvent.stopPropagation();
+            // Mostrar detalles en un div flotante
+            const e = info.event;
+            const props = e.extendedProps;
+            const detalles = `
+                <strong>${e.title}</strong><br>
+                <b>Fecha:</b> ${e.start.toLocaleString()}<br>
+                <b>Descripción:</b> ${props.description}<br>
+                <b>Duración:</b> ${props.duration} min<br>
+                <b>Sets:</b> ${props.number_of_sets}<br>
+                <b>Repeticiones:</b> ${props.number_of_reps}
+            `;
+            const popup = document.getElementById('workout-details-popup');
+            popup.innerHTML = detalles;
+            popup.style.display = 'block';
+
+            // Posicionar el popup cerca del mouse
+            const mouseEvent = info.jsEvent;
+            popup.style.left = mouseEvent.pageX + 15 + 'px';
+            popup.style.top = mouseEvent.pageY - 10 + 'px';
+
+            // Evitar que el click en el popup lo cierre
+            popup.onclick = function(ev) { ev.stopPropagation(); };
+        }
+    });
+    calendar.render();
+
+    // Ocultar el popup al hacer click fuera
+    document.addEventListener('click', function() {
+        const popup = document.getElementById('workout-details-popup');
+        popup.style.display = 'none';
+    });
+
+}
 });

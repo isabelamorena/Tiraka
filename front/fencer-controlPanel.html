@@ -22,7 +22,8 @@
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
   
-
+<!-- Calendario -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
   <!-- Gráfica -->
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -423,7 +424,7 @@
                         </div>
                         </div>
 
-                        <!-- Columna derecha (detalles) oculta inicialmente -->
+                    <!-- Columna derecha (detalles) oculta inicialmente -->
                     <div class="col-12 col-md-8 d-none" id="right-column">
                         <div class="panel-box">
                             <div id="class-diary-details" class="border rounded p-3">
@@ -570,6 +571,30 @@
                     </div>
                 </div>
 
+                <!-- Próximos entrenamientos -->
+                <div id="upcoming-workouts" class="container-fluid panel-box">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                            <h1 class="text-center mb-4">Calendario de entrenamientos</h1>
+                            <div id="calendar"></div>
+                        </div>
+                        <div id="workout-details-popup" style="
+                        display:none;
+                        position:absolute;
+                        z-index:9999;
+                        min-width:260px;
+                        max-width:320px;
+                        background:#fffbe7;
+                        border:1px solid #e0c97f;
+                        border-radius:8px;
+                        box-shadow:0 2px 12px rgba(0,0,0,0.15);
+                        padding:18px;
+                        font-size:1rem;
+                        "></div>
+                    </div>
+                </div>
+
                 <!-- Crear entrenamientos -->
                 <div id="create-workout" class="container-fluid d-none panel-box">
                     <h1 class="mb-4 text-center">Crear entrenamientos</h1>
@@ -585,17 +610,42 @@
                     </div>
                 </div>
 
-                <!-- Mostrar plantillas -->
+                <!-- Mis plantillas -->
                 <div id="training-templates" class="container-fluid d-none">
-                    <div class="row">
-                        <div class="col-12 col-md-12 panel-box" id="template-left-column">
-                            <h1 class="mb-4 text-center">Tus plantillas</h1>
-                            <ul id="template-list" class="list-group mb-4"></ul>
-                            <div id="template-list-pagination"></div>
+                    <div class="row" id="template-class-row">
+                        <!-- Columna izquierda -->
+                        <div class="col-12 col-md-6" id="left-template-column">
+                            <div class="panel-box">
+                                <h1>Mis plantillas</h1>
+                                <div class="container mt-4">
+                                    <ul id="template-list" class="list-group mb-4"></ul>
+                                    <div id="template-pagination"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-12 panel-box d-none" id="template-right-column">
-                            <div id="template-details" class="mt-4"></div>
+
+                    <!-- Columna derecha (detalles) oculta inicialmente -->
+                    <div class="col-12 col-md-8 d-none" id="right-template-column">
+                        <div class="panel-box">
+                            <div id="template-details" class="border rounded p-3">
+                                <h4 id="template-detail-title"></h4>
+                                <div id="template-detail-description" style="white-space: pre-wrap;"></div>
+                                <p class="d-nonde"></p>
+                                <p><strong>Duración:</strong> <span id="template-detail-duration"></span></p>
+                                <p><strong>Número de series:</strong> <span id="template-detail-number-of-sets"></span></p>
+                                <p><strong>Número de repeticiones:</strong> <span id="template-detail-number-of-reps"></span></p>
+                                <!-- Campo oculto para guardar el ID del diario -->
+                                <input type="hidden" id="template-id" value="">
+                                <br>
+
+                                <button class="btn btn-sm btn-primary" id="close-template-details">Cerrar</button>
+                                <button id="delete-template-button" class="btn btn-sm btn-secondary ">
+                                    <i class="lni lni-trash-3"></i> Eliminar
+                                </button>
+                            </div>
                         </div>
+                    </div>
+
                     </div>
                 </div>
 

@@ -183,6 +183,40 @@ router.post('/createWorkout',isSessionValid, async (req, res) => {
     }
 });
 
+// Obtener los entrenamientos del tirador
+router.get('/getWorkouts', isSessionValid, async (req, res) => {
+    const fencerId = req.session.user.userId;
+    try {
+        const selectQuery = `
+            SELECT
+                id AS "id",
+                title AS "title",
+                date AS "date",
+                description AS "description",
+                duration AS "duration",
+                number_of_sets AS "number_of_sets",
+                number_of_reps AS "number_of_reps",
+                is_completed AS "is_completed"
+            FROM public.fencer_personal_sessions
+            WHERE fencer_id = $1
+            ORDER BY date DESC
+        `;
+        const result = await pool.query(selectQuery, [fencerId]);
+        console.log("Entrenamientos obtenidos:", result.rows);
+        res.status(200).json({
+            success: true,
+            workouts: result.rows
+        });
+    } catch (error) {
+        console.error("Error al obtener entrenamientos:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Obtener las plantillas de entrenamiento del tirador
 router.get('/getTrainingTemplates', isSessionValid, async (req, res) => {
     const fencerId = req.session.user.userId;
 
@@ -205,6 +239,59 @@ router.get('/getTrainingTemplates', isSessionValid, async (req, res) => {
     }
 });
 
+// Obtener una plantilla de entrenamiento por ID
+router.get('/getTrainingTemplateById/:id', isSessionValid, async (req, res) => {
+    const templateId = req.params.id;
+    const fencerId = req.session.user.userId;
+    try {
+        const result = await pool.query(`
+            SELECT * FROM fencer_training_templates
+            WHERE id = $1 AND fencer_id = $2
+        `, [templateId, fencerId]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Plantilla no encontrada' });
+        }
+        console.log("Plantilla de entrenamiento en detalle obtenida:", result.rows[0]);
+        res.status(200).json({
+            success: true,
+            template: result.rows[0]
+        });
+    } catch (error) {
+        console.error("Error al obtener plantilla de entrenamiento:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Eliminar una plantilla de entrenamiento por ID
+router.post('/deleteTrainingTemplate/:id', isSessionValid, async (req, res) => {
+    const templateId = req.params.id;
+    const fencerId = req.session.user.userId;
+    try {
+        const result = await pool.query(`
+            DELETE FROM fencer_training_templates
+            WHERE id = $1 AND fencer_id = $2
+        `, [templateId, fencerId]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ success: false, message: 'Plantilla no encontrada o no pertenece al tirador' });
+        }
+        console.log("Plantilla de entrenamiento eliminada con ID:", templateId);
+        res.status(200).json({
+            success: true,
+            message: 'Plantilla de entrenamiento eliminada correctamente'
+        });
+    } catch (error) {
+        console.error("Error al eliminar plantilla de entrenamiento:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Crear una nueva plantilla de entrenamiento
 router.post('/createTrainingTemplate', isSessionValid, async (req, res) => {
     const fencerId = req.session.user.userId;
 
@@ -225,6 +312,7 @@ router.post('/createTrainingTemplate', isSessionValid, async (req, res) => {
         return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });
     }
 });
+
 
 /* -------------------------------------------- Perfil ----------------------------------------------- */
 // Obtener el perfil del tirador
