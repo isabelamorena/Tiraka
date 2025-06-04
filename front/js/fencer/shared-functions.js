@@ -6,7 +6,8 @@ export function showPanel(panelId) {
         "create-workout",
         "training-templates",
         "attendance-record",
-        "main-content"
+        "main-content",
+        "workout-calendar"
     ];
     panels.forEach(id => {
         const el = document.getElementById(id);

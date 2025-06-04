@@ -210,6 +210,13 @@ function showWorkoutForm(step, template) {
     };
 
     /* ----------------------------------------- Calendario de entrenamientos ---------------------------------------- */
+
+    document.getElementById('upcoming-workouts-link').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevenir el envío del formulario
+        document.querySelector("#sidebar").classList.toggle("collapsed");
+        showPanel("workout-calendar");
+    });
+
     cargarEntrenamientosYCalendario();
     var calendarEl = document.getElementById('calendar');
     // Función para cargar entrenamientos y calendario
