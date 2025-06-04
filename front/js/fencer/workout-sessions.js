@@ -277,6 +277,16 @@ function showWorkoutForm(step, template) {
     });
     calendar.render();
 
+    function updateCalendarView() {
+      if (window.innerWidth < 600) {
+        calendar.changeView('listWeek');
+      } else {
+        calendar.changeView('dayGridMonth');
+      }
+    }
+    updateCalendarView();
+    window.addEventListener('resize', updateCalendarView);
+
     // Ocultar el popup al hacer click fuera
     document.addEventListener('click', function() {
         const popup = document.getElementById('workout-details-popup');
