@@ -215,9 +215,11 @@ function showWorkoutForm(step, template) {
         e.preventDefault(); // Prevenir el envío del formulario
         document.querySelector("#sidebar").classList.toggle("collapsed");
         showPanel("workout-calendar");
+        
+        cargarEntrenamientosYCalendario();
     });
 
-    cargarEntrenamientosYCalendario();
+
     var calendarEl = document.getElementById('calendar');
     // Función para cargar entrenamientos y calendario
     async function cargarEntrenamientosYCalendario() {
@@ -227,38 +229,52 @@ function showWorkoutForm(step, template) {
     // 1. Obtener entrenamientos de la BD
     let eventos = [];
     try {
-        const res = await fetch('/getWorkouts'); // Ajusta la ruta si es necesario
+        const res = await fetch('/getWorkouts');
         const data = await res.json();
         if (data.success && Array.isArray(data.workouts)) {
-        eventos = data.workouts.map(w => ({
-            id: w.id,
-            title: w.title,
-            start: w.date, // Asegúrate que tu backend envía la fecha en formato ISO
-            extendedProps: {
-            description: w.description,
-            duration: w.duration,
-            number_of_sets: w.number_of_sets,
-            number_of_reps: w.number_of_reps
-            }
-        }));
+            eventos = data.workouts.map(w => ({
+                id: w.id,
+                title: w.title,
+                start: w.date,
+                extendedProps: {
+                    description: w.description,
+                    duration: w.duration,
+                    number_of_sets: w.number_of_sets,
+                    number_of_reps: w.number_of_reps
+                }
+            }));
         }
     } catch (e) {
         console.error('Error cargando entrenamientos:', e);
+    }
+
+    // Función para obtener el headerToolbar según el ancho
+    function getHeaderToolbar() {
+        if (window.innerWidth < 600) {
+            // Solo navegación y título en móvil
+            return {
+                left: 'prev,next',
+                center: 'title',
+                right: ''
+            };
+        } else {
+            // Vista normal con botones de cambio de vista
+            return {
+                left: 'prev,next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            };
+        }
     }
 
     // 2. Inicializar el calendario
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
-        headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
+        headerToolbar: getHeaderToolbar(),
         events: eventos,
         eventClick: function(info) {
             info.jsEvent.stopPropagation();
-            // Mostrar detalles en un div flotante
             const e = info.event;
             const props = e.extendedProps;
             const detalles = `
@@ -272,33 +288,29 @@ function showWorkoutForm(step, template) {
             const popup = document.getElementById('workout-details-popup');
             popup.innerHTML = detalles;
             popup.style.display = 'block';
-
-            // Posicionar el popup cerca del mouse
             const mouseEvent = info.jsEvent;
             popup.style.left = mouseEvent.pageX + 15 + 'px';
             popup.style.top = mouseEvent.pageY - 10 + 'px';
-
-            // Evitar que el click en el popup lo cierre
             popup.onclick = function(ev) { ev.stopPropagation(); };
         }
     });
     calendar.render();
 
     function updateCalendarView() {
-      if (window.innerWidth < 600) {
-        calendar.changeView('listWeek');
-      } else {
-        calendar.changeView('dayGridMonth');
-      }
+        if (window.innerWidth < 600) {
+            calendar.changeView('listWeek');
+            calendar.setOption('headerToolbar', getHeaderToolbar());
+        } else {
+            calendar.changeView('dayGridMonth');
+            calendar.setOption('headerToolbar', getHeaderToolbar());
+        }
     }
     updateCalendarView();
     window.addEventListener('resize', updateCalendarView);
 
-    // Ocultar el popup al hacer click fuera
     document.addEventListener('click', function() {
         const popup = document.getElementById('workout-details-popup');
         popup.style.display = 'none';
     });
-
 }
 });

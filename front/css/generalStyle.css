@@ -158,3 +158,21 @@ a.link-primary:hover{
   box-shadow: 0 2px 8px rgba(217,83,79,0.06);
 }
 
+/* ----------------------------------------------------------- Calendario -------------------------------------------------------------------*/
+/* Puedes agregar esto a tu CSS general */
+/* filepath: c:\Users\isabe\OneDrive\Escritorio\Tiraka\front\css\generalStyle.css */
+#calendar {
+  width: 100% !important;
+  min-width: 0;
+}
+.fc {
+  font-size: 1rem;
+}
+@media (max-width: 600px) {
+  .fc-toolbar-title {
+    font-size: 1.1rem;
+  }
+  .fc {
+    font-size: 0.85rem;
+  }
+}
