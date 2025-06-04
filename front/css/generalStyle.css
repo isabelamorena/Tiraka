@@ -176,3 +176,24 @@ a.link-primary:hover{
     font-size: 0.85rem;
   }
 }
+@media (max-width: 600px) {
+  #workout-calendar.panel-box,
+  #workout-calendar .panel-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: -12px; /* Ajusta si tienes padding en el container */
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+  #calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: -12px; /* Ajusta si tienes padding en el container */
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+  #calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
