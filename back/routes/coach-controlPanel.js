@@ -85,4 +85,115 @@ router.post('/updateProfilePasswordCoach',isSessionValid, async (req, res) => {
     }
 });
 
+/* -------------------------------------- Obtener los tiradores vinculados al coach ------------------------------------*/
+router.get('/getFencersCoach', isSessionValid, async (req, res) => {
+    try {
+        const coachId = req.session.user.userId;
+        const result = await pool.query('SELECT fencer.id, fencer.name, fencer.surname, fencer.secondsurname FROM fencer INNER JOIN fencer_coach ON fencer.id = fencer_coach.fencer_id WHERE fencer_coach.coach_id = $1', [coachId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron tiradores vinculados al entrenador' });
+        }
+        console.log("Tiradores del coach:", result.rows);
+        return res.status(200).json({ success: true, fencers: result.rows });
+
+    } catch (error) {
+        console.error("Error al obtener los tiradores del coach:", error);
+        return res.status(500).json({ success: false, message: 'Error en el servidor al obtener los tiradores' });
+    }
+});
+
+/* ------------------------------------------------------ Entrenamientos ---------------------------------------------------*/
+// Crear un entrenamiento para uno o varios tiradores
+router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
+    try {
+        const coachId = req.session.user.userId;
+        const { fencerIds, workouts } = req.body;
+
+        if (!Array.isArray(fencerIds) || fencerIds.length === 0 || !Array.isArray(workouts) || workouts.length === 0) {
+            return res.status(400).json({ success: false, message: 'Datos incompletos' });
+        }
+
+        // Construir los valores para el INSERT
+        const values = [];
+        for (const fencerId of fencerIds) {
+            for (const workout of workouts) {
+                values.push([
+                    fencerId,
+                    coachId,
+                    workout.date,
+                    workout.description,
+                    workout.duration,
+                    workout.feedback || '',
+                    workout.number_of_sets,
+                    workout.number_of_reps,
+                    false // is_completed por defecto en false
+                ]);
+            }
+        }
+
+        // Generar la consulta dinámica para múltiples inserts
+        const insertQuery = `
+            INSERT INTO fencer_coach_sessions
+            (fencer_id, coach_id, date, description, duration, feedback, number_of_sets, number_of_reps, is_completed)
+            VALUES ${values.map(
+                (_, i) => `($${i * 9 + 1}, $${i * 9 + 2}, $${i * 9 + 3}, $${i * 9 + 4}, $${i * 9 + 5}, $${i * 9 + 6}, $${i * 9 + 7}, $${i * 9 + 8}, $${i * 9 + 9})`
+            ).join(', ')}
+        `;
+
+        // Aplanar los valores para pasarlos a la query
+        const flatValues = values.flat();
+
+        await pool.query(insertQuery, flatValues);
+
+        return res.status(200).json({ success: true, message: 'Entrenamientos guardados correctamente' });
+    } catch (error) {
+        console.error("Error al guardar entrenamientos del coach:", error);
+        return res.status(500).json({ success: false, message: 'Error en el servidor al guardar entrenamientos' });
+    }
+});
+
+// Obtener las plantillas de entrenamiento del coach
+router.get('/getTrainingTemplatesCoach', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+
+    try {
+        const result = await pool.query(`
+            SELECT * FROM coach_training_templates WHERE coach_id = $1
+        `, [coachId]);
+        console.log("Plantillas de entrenamiento obtenidas:", result.rows);
+        res.status(200).json({
+            success: true,
+            templates: result.rows
+        });
+
+    } catch (error) {
+        console.error("Error al obtener plantillas de entrenamiento:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Crear una plantilla de entrenamiento
+router.post('/createTrainingTemplateCoach', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+    const { title, description, duration, number_of_sets, number_of_reps } = req.body;
+
+    try {
+        const insertQuery = `
+            INSERT INTO coach_training_templates(
+                coach_id, title, description, duration, number_of_sets, number_of_reps)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+
+        await pool.query(insertQuery, [coachId, title, description, duration, number_of_sets, number_of_reps]);
+
+        return res.status(201).json({ success: true, message: 'Plantilla de entrenamiento creada exitosamente' });
+    } catch (error) {
+        console.error("Error al crear plantilla de entrenamiento:", error.message);
+        return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });
+    }
+});
 module.exports = router;

@@ -1,3 +1,5 @@
+import { showPanel } from './shared-functions.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     /* ------------------------------------------- Perfil ----------------------------------------------------- */
     // Función para mostrar el perfil del coach
@@ -23,10 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mostrar el perfil al hacer clic en el enlace
     const profileLink = document.getElementById('profile-link');
     profileLink.addEventListener('click', function(e) {
-        const profileSection = document.getElementById('profile');
-        profileSection.classList.remove('hidden'); // Muestra la sección del perfil
         e.preventDefault(); 
         showProfile(); // Llama a la función para mostrar el perfil
+        showPanel('profile'); // Llama a la función para mostrar el panel del perfil
     });
 
     // Mostrar el perfil cuando pinchas en general
@@ -154,5 +155,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
     });
+
+    /* ---------------------------------------------------- Ojo de la contraseña -------------------------------------------------- */
+    document.addEventListener("DOMContentLoaded", function () {
+        const setupPasswordToggle = (inputId, iconId) => {
+        const input = document.getElementById(inputId);
+        const button = document.getElementById(iconId).parentElement;
+
+        const showPassword = () => input.type = "text";
+        const hidePassword = () => input.type = "password";
+
+        // Para mouse
+        button.addEventListener("mousedown", showPassword);
+        button.addEventListener("mouseup", hidePassword);
+        button.addEventListener("mouseleave", hidePassword);
+
+        // Para dispositivos táctiles
+        button.addEventListener("touchstart", showPassword);
+        button.addEventListener("touchend", hidePassword);
+        };
+
+        setupPasswordToggle("profile-current-password", "eye-icon-current");
+        setupPasswordToggle("profile-new-password", "eye-icon-new");
+        setupPasswordToggle("profile-confirm-new-password", "eye-icon-confirm");
+        });
 
 });
