@@ -108,14 +108,15 @@
                     </a>
                     <ul id="entre" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" id="upcoming-workouts-link">Próximos entrenamientos</a>
+                            <a href="#" class="sidebar-link" id="todays-session-link"> ¿Qué tengo para hoy?</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link" id="upcoming-workouts-link">Calendario</a>
                         </li>
                         <li class="sidebar-item">
                             <a href="#" class="sidebar-link"> Entrenamientos completados</a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link"> Estadísticas</a>
-                        </li>
+                        
                         <li class="sidebar-item">
                             <a href="#" class="sidebar-link" id="my-templates-link"> Mis plantillas</a>
                         </li>
@@ -571,7 +572,7 @@
                     </div>
                 </div>
 
-                <!-- Próximos entrenamientos -->
+                <!-- Calendario entrenamientos -->
                 <div id="workout-calendar" class="container-fluid panel-box d-none">
                     <div class="row">
                         <div class="col-12">
@@ -580,19 +581,31 @@
                             <div id="calendar"></div>
                             </div>
                         </div>
-                        <div id="workout-details-popup" style="
-                                                                display:none;
-                                                                position:absolute;
-                                                                z-index:9999;
-                                                                min-width:460px;
-                                                                max-width:520px;
-                                                                background:#fffbe7;
-                                                                border:1px solid #e0c97f;
-                                                                border-radius:8px;
-                                                                box-shadow:0 2px 12px rgba(0,0,0,0.15);
-                                                                padding:18px;
-                                                                font-size:1rem;
-                        "></div>
+                        <div id="workout-details-popup" class="calendar-popup"></div>
+                    </div>
+                </div>
+
+                <!-- ¿Qué hay para hoy? -->
+                <div id="todays-session" class="container-fluid d-none">
+                    <div class="row">
+                        <div id="coachSession" class="col-12 col-md-6">
+                            <div class="panel-box">
+                                <h1 class="mb-4 text-center">¿Qué hay para hoy?</h1>
+                                <div id="todays-session-content" class="text-center">
+                                    <!-- Aquí se mostrará el contenido de la sesión de hoy -->
+                                    <p id="todays-session-message">No hay entrenamientos programados para hoy.</p>
+                                </div>
+                            </div>
+                        </div> 
+                        <div id="personalSession" class="col-12 col-md-6">
+                            <div class="panel-box">
+                                <h1 class="mb-4 text-center">Últimos entrenamientos</h1>
+                                <div id="last-workouts" class="text-center">
+                                    <!-- Aquí se mostrarán los últimos entrenamientos -->
+                                    <p id="last-workouts-message">No hay entrenamientos recientes.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

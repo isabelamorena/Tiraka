@@ -119,7 +119,7 @@ router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
         for (const fencerId of fencerIds) {
             for (const workout of workouts) {
                 values.push([
-                    workout.title || 'Entrenamiento sin título', // Título del entrenamiento
+                    workout.title || 'Entrenamiento sin título',
                     fencerId,
                     coachId,
                     workout.date,
@@ -128,7 +128,8 @@ router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
                     workout.feedback || '',
                     workout.number_of_sets,
                     workout.number_of_reps,
-                    false // is_completed por defecto en false
+                    false, // is_completed por defecto en false
+                    workout.template_id || null // <-- Añadido aquí
                 ]);
             }
         }
@@ -136,8 +137,8 @@ router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
         // Generar la consulta dinámica para múltiples inserts
         const insertQuery = `
             INSERT INTO fencer_coach_sessions(
-                title, fencer_id, coach_id, date, description, duration, feedback, number_of_sets, number_of_reps, is_completed)
-            VALUES ${values.map((_, i) => `($${i * 10 + 1}, $${i * 10 + 2}, $${i * 10 + 3}, $${i * 10 + 4}, $${i * 10 + 5}, $${i * 10 + 6}, $${i * 10 + 7}, $${i * 10 + 8}, $${i * 10 + 9}, $${i * 10 + 10})`).join(', ')}
+                title, fencer_id, coach_id, date, description, duration, feedback, number_of_sets, number_of_reps, is_completed, template_id)
+            VALUES ${values.map((_, i) => `($${i * 11 + 1}, $${i * 11 + 2}, $${i * 11 + 3}, $${i * 11 + 4}, $${i * 11 + 5}, $${i * 11 + 6}, $${i * 11 + 7}, $${i * 11 + 8}, $${i * 11 + 9}, $${i * 11 + 10}, $${i * 11 + 11})`).join(', ')}
         `;
 
         // Aplanar los valores para pasarlos a la query
@@ -185,11 +186,13 @@ router.post('/createTrainingTemplateCoach', isSessionValid, async (req, res) => 
             INSERT INTO coach_training_templates(
                 coach_id, title, description, duration, number_of_sets, number_of_reps)
             VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id;
         `;
 
-        await pool.query(insertQuery, [coachId, title, description, duration, number_of_sets, number_of_reps]);
+        const result = await pool.query(insertQuery, [coachId, title, description, duration, number_of_sets, number_of_reps]);
 
-        return res.status(201).json({ success: true, message: 'Plantilla de entrenamiento creada exitosamente' });
+        // Devuelve el id de la plantilla creada
+        return res.status(201).json({ success: true, message: 'Plantilla de entrenamiento creada exitosamente', id: result.rows[0].id });
     } catch (error) {
         console.error("Error al crear plantilla de entrenamiento:", error.message);
         return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });

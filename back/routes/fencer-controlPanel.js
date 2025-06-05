@@ -123,62 +123,51 @@ router.get('/getLastAttendances',isSessionValid, async (req, res) => {
 
 /* ----------------------------------------------- Entrenamientos -------------------------------------------------- */
 // Crear un nuevo entrenamiento
-router.post('/createWorkout',isSessionValid, async (req, res) => {
+router.post('/createPersonalWorkout',isSessionValid, async (req, res) => {
 
     try {
-        // Extraer los datos del body
         const { workouts } = req.body;
-
-        console.log("Datos recibidos:", workouts);
-        // Validar si workouts es un array
         if (!workouts || !Array.isArray(workouts)) {
             return res.status(400).json({ success: false, message: "Datos inválidos" });
         }
-
-        // Obtener el fencerId desde la sesión
         const fencerId = req.session.user.userId;
 
-        // Consulta para insertar datos en la base de datos
+        // Consulta para insertar datos en la base de datos (ahora incluye template_id)
         const query = `
             INSERT INTO public.fencer_personal_sessions(
-                fencer_id, title, date, description, duration, number_of_sets, number_of_reps, is_completed)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;
+                fencer_id, title, date, description, duration, number_of_sets, number_of_reps, is_completed, template_id)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;
         `;
-        // Insertar cada entrenamiento en la base de datos
-        for (const workout of workouts) {
-            // Verificar si workout.date es una fecha válida
-            const workoutDate = new Date(workout.date);
 
-            // Si no es una fecha válida, devolver error
+        for (const workout of workouts) {
+            const workoutDate = new Date(workout.date);
             if (isNaN(workoutDate.getTime())) {
                 return res.status(400).json({ success: false, message: "Fecha de entrenamiento inválida" });
             }
+            const formattedDate = workoutDate.toISOString().split('T')[0];
 
-            // Formatear la fecha en formato 'YYYY-MM-DD'
-            const formattedDate = workoutDate.toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
+            // Si no viene template_id, pon null
+            const templateId = workout.template_id || null;
 
             const values = [
-                fencerId, // fencer_id
-                workout.title, // title
-                formattedDate, // date (aseguramos formato correcto)
-                workout.description, // description
-                workout.duration, // duration
-                workout.number_of_sets, // number_of_sets
-                workout.number_of_reps, // number_of_reps
-                false // is_completes por defecto es false
+                fencerId,
+                workout.title,
+                formattedDate,
+                workout.description,
+                workout.duration,
+                workout.number_of_sets,
+                workout.number_of_reps,
+                false, // is_completed por defecto es false
+                templateId
             ];
-            console.log("Valores a insertar:", values);
-            // Ejecutar la consulta para insertar el entrenamiento
             const result = await pool.query(query, values);
             console.log(`Entrenamiento guardado con ID: ${result.rows[0].id}`);
         }
 
-        // Responder al front-end indicando que todo fue exitoso
         res.status(201).json({ success: true, message: "Entrenamientos guardados correctamente" });
 
     } catch (error) {
         console.error("Error al guardar entrenamientos:", error.message);
-        // Responder con un error 500
         res.status(500).json({ success: false, message: "Error en el servidor" });
     }
 });
@@ -294,7 +283,6 @@ router.post('/deleteTrainingTemplate/:id', isSessionValid, async (req, res) => {
 // Crear una nueva plantilla de entrenamiento
 router.post('/createTrainingTemplate', isSessionValid, async (req, res) => {
     const fencerId = req.session.user.userId;
-
     const { title, description, duration, number_of_sets, number_of_reps } = req.body;
 
     try {
@@ -302,11 +290,12 @@ router.post('/createTrainingTemplate', isSessionValid, async (req, res) => {
             INSERT INTO fencer_training_templates(
                 fencer_id, title, description, duration, number_of_sets, number_of_reps)
             VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id;
         `;
 
-        await pool.query(insertQuery, [fencerId, title, description, duration, number_of_sets, number_of_reps]);
-
-        return res.status(201).json({ success: true, message: 'Plantilla de entrenamiento creada exitosamente' });
+        const result = await pool.query(insertQuery, [fencerId, title, description, duration, number_of_sets, number_of_reps]);
+        // Devuelve el id de la plantilla creada
+        return res.status(201).json({ success: true, message: 'Plantilla de entrenamiento creada exitosamente', id: result.rows[0].id });
     } catch (error) {
         console.error("Error al crear plantilla de entrenamiento:", error.message);
         return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });
@@ -338,6 +327,38 @@ router.get('/getFencerCoachSessions', isSessionValid, async (req, res) => {
         });
     } catch (error) {
         console.error("Error al obtener entrenamientos del coach:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Entrenamiento para hoy del entrenador
+router.get('/getCoachWorkoutToday', isSessionValid, async (req, res) => {
+    const fencerId = req.session.user.userId;
+    try {
+        const selectQuery = `
+            SELECT
+                title AS "title",
+                date AS "date",
+                description AS "description",
+                duration AS "duration",
+                number_of_sets AS "number_of_sets",
+                number_of_reps AS "number_of_reps",
+                is_completed AS "is_completed",
+                template_id AS "template_id"
+            FROM public.fencer_coach_sessions
+            WHERE fencer_id = $1 AND date = CURRENT_DATE
+        `;
+        const result = await pool.query(selectQuery, [fencerId]);
+        console.log("Entrenamientos del coach para hoy obtenidos:", result.rows);
+        res.status(200).json({
+            success: true,
+            workout: result.rows
+        });
+    } catch (error) {
+        console.error("Error al obtener entrenamientos del coach para hoy:", error.message);
         return res.status(500).json({
             success: false,
             message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'

@@ -1,10 +1,10 @@
+
 import { showPanel, fencersCoach } from './shared-functions.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
-    const createWorkoutButton = document.getElementById("create-workout-link");
-
-    createWorkoutButton.addEventListener("click", async function (e) {
+    const createWorkoutLink = document.getElementById("create-workout-link");
+    createWorkoutLink.addEventListener("click", async function (e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
         showPanel("create-workout");
@@ -171,55 +171,69 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentStep++;
                 showTemplateSelector(currentStep);
             } else {
-                // Obtener IDs de tiradores seleccionados
-                const fencerSelect = document.getElementById("fencerSelector");
-                const selectedFencers = Array.from(fencerSelect.selectedOptions).map(opt => opt.value);
-
-                if (selectedFencers.length === 0) {
-                    document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Selecciona al menos un tirador.</div>';
-                    return;
-                }
-
-                // Guardar todos los entrenamientos para cada tirador seleccionado
-                fetch('/createCoachWorkout', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        fencerIds: selectedFencers,
-                        workouts: workoutsData
-                    })
-                })
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        // Guardar como plantilla todos los entrenos creados desde cero o editados
-                        workoutsData.forEach((tplData, idx) => {
-                            if (!usedTemplateIds[idx]) {
-                                fetch('/createTrainingTemplateCoach', {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify({
-                                        title: tplData.title,
-                                        description: tplData.description,
-                                        duration: tplData.duration,
-                                        number_of_sets: tplData.number_of_sets,
-                                        number_of_reps: tplData.number_of_reps
-                                    })
-                                });
-                            }
+                // 1. Crear primero las plantillas para los entrenos nuevos o editados y obtener sus IDs
+                const plantillaPromises = workoutsData.map(async (tplData, idx) => {
+                    if (!usedTemplateIds[idx]) {
+                        // Crear plantilla y devolver el id
+                        const res = await fetch('/createTrainingTemplateCoach', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                title: tplData.title,
+                                description: tplData.description,
+                                duration: tplData.duration,
+                                number_of_sets: tplData.number_of_sets,
+                                number_of_reps: tplData.number_of_reps
+                            })
                         });
+                        const result = await res.json();
+                        usedTemplateIds[idx] = result.id;
+                        tplData.template_id = result.id;
+                    } else {
+                        tplData.template_id = usedTemplateIds[idx];
+                    }
+                    return tplData;
+                });
+
+                // Esperar a que todas las plantillas estén creadas y los template_id asignados
+                Promise.all(plantillaPromises).then(async (workoutsWithTemplates) => {
+                    // Obtener IDs de tiradores seleccionados
+                    const fencerSelect = document.getElementById("fencerSelector");
+                    const selectedFencers = Array.from(fencerSelect.selectedOptions).map(opt => opt.value);
+
+                    if (selectedFencers.length === 0) {
+                        document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Selecciona al menos un tirador.</div>';
+                        return;
+                    }
+
+                    // 2. Guardar todos los entrenamientos para cada tirador seleccionado, con su template_id
+                    const res = await fetch('/createCoachWorkout', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            fencerIds: selectedFencers,
+                            workouts: workoutsWithTemplates
+                        })
+                    });
+                    const result = await res.json();
+                    if (result.success) {
                         document.getElementById('workout-message').innerHTML = '<div class="text-success mt-3">Entrenamientos guardados correctamente.</div>';
+                        setTimeout(() => {
+                            document.getElementById('workout-message').innerHTML = '';
+                        }, 3000);
                         document.getElementById('workouts-form').innerHTML = '';
                         selectedDates = [];
                         workoutsData = [];
                         usedTemplateIds = [];
                         currentStep = 0;
                         document.getElementById('dateRange')._flatpickr.clear();
+                        document.getElementById('fencerSelector').innerHTML = '';
+
+
                     } else {
                         document.getElementById('workout-message').innerHTML = '<div class="text-failure mt-3">Error al guardar entrenamientos.</div>';
                     }
-                })
-                .catch(() => {
+                }).catch(() => {
                     document.getElementById('workout-message').innerHTML = '<div class="text-failure mt-3">Error de conexión.</div>';
                 });
             }

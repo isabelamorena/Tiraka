@@ -139,6 +139,8 @@ function showWorkoutForm(step, template) {
         for (let [key, value] of formData.entries()) {
             data[key] = value;
         }
+        // Añadir el template_id correspondiente a este paso
+        data.template_id = usedTemplateIds[step] || null;
         workoutsData[step] = data;
 
         // Marcar si hay cambios respecto a la plantilla original
@@ -158,47 +160,54 @@ function showWorkoutForm(step, template) {
             currentStep++;
             showTemplateSelector(currentStep);
         } else {
-            // Guardar todos los entrenamientos y plantillas nuevas
-            fetch('/createWorkout', {
+            // 1. Crear primero las plantillas para los entrenos nuevos o editados y obtener sus IDs
+    const plantillaPromises = workoutsData.map(async (tplData, idx) => {
+        if (!usedTemplateIds[idx]) {
+            // Crear plantilla y devolver el id
+            const res = await fetch('/createTrainingTemplate', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({workouts: workoutsData})
-            })
-            .then(res => res.json())
-            .then(result => {
-                if (result.success) {
-                    // Guardar como plantilla todos los entrenos creados desde cero o editados
-                    workoutsData.forEach((tplData, idx) => {
-                        if (!usedTemplateIds[idx]) {
-                            fetch('/createTrainingTemplate', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({
-                                    title: tplData.title,
-                                    description: tplData.description,
-                                    duration: tplData.duration,
-                                    number_of_sets: tplData.number_of_sets,
-                                    number_of_reps: tplData.number_of_reps
-                                })
-                            });
-                        }
-                    });
-                    document.getElementById('workout-message').innerHTML = '<div class="alert alert-success mt-3">Entrenamientos guardados correctamente.</div>';
-                    // Resetear el formulario
-                    document.getElementById('workouts-form').innerHTML = '';
-                    selectedDates = [];
-                    workoutsData = [];
-                    usedTemplateIds = [];
-                    currentStep = 0;
-                    document.getElementById('dateRange')._flatpickr.clear(); // Limpiar el selector de fechas
-
-                } else {
-                    document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error al guardar entrenamientos.</div>';
-                }
-            })
-            .catch(() => {
-                document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error de conexión.</div>';
+                body: JSON.stringify({
+                    title: tplData.title,
+                    description: tplData.description,
+                    duration: tplData.duration,
+                    number_of_sets: tplData.number_of_sets,
+                    number_of_reps: tplData.number_of_reps
+                })
             });
+            const result = await res.json();
+            // Guarda el id de la plantilla creada
+            usedTemplateIds[idx] = result.id;
+            tplData.template_id = result.id;
+        } else {
+            tplData.template_id = usedTemplateIds[idx];
+        }
+        return tplData;
+    });
+
+    // Esperar a que todas las plantillas estén creadas y los template_id asignados
+    Promise.all(plantillaPromises).then(async (workoutsWithTemplates) => {
+        // 2. Guardar todos los entrenamientos con su template_id
+        const res = await fetch('/createPersonalWorkout', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({workouts: workoutsWithTemplates})
+        });
+        const result = await res.json();
+        if (result.success) {
+            document.getElementById('workout-message').innerHTML = '<div class="alert alert-success mt-3">Entrenamientos guardados correctamente.</div>';
+            document.getElementById('workouts-form').innerHTML = '';
+            selectedDates = [];
+            workoutsData = [];
+            usedTemplateIds = [];
+            currentStep = 0;
+            document.getElementById('dateRange')._flatpickr.clear();
+        } else {
+            document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error al guardar entrenamientos.</div>';
+        }
+    }).catch(() => {
+        document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error de conexión.</div>';
+    });
         }
     }
     if (step > 0) {
@@ -336,4 +345,70 @@ function showWorkoutForm(step, template) {
         popup.style.display = 'none';
     });
 }
+});
+
+/* ----------------------------------------- ¿Qué hay para hoy? ---------------------------------------- */
+document.getElementById('todays-session-link').addEventListener('click', async function(e) {
+    e.preventDefault(); // Prevenir el envío del formulario
+    document.querySelector("#sidebar").classList.toggle("collapsed");
+    showPanel("todays-session");
+
+    try {
+        const getPersonalWorkoutToday = await fetch('/getPersonalWorkoutToday');
+        const dataPersonal = await getPersonalWorkoutToday.json();
+
+        const getCoachWorkoutToday = await fetch('/getCoachWorkoutToday');
+        const dataCoach = await getCoachWorkoutToday.json();
+        
+
+        // Referencias a los contenedores
+        const coachSession = document.getElementById('coachSession');
+        const personalSession = document.getElementById('personalSession');
+
+        // Mostrar/ocultar según haya datos
+        if (!dataCoach || !dataCoach.success || !dataCoach.workout) {
+            coachSession.classList.add('d-none');
+            personalSession.classList.remove('col-md-6');
+            personalSession.classList.add('col-md-12');
+        } else {
+            coachSession.classList.remove('d-none');
+            coachSession.classList.add('col-md-6');
+            personalSession.classList.add('col-md-6');
+            // Rellena el contenido de coach aquí si quieres
+        }
+
+        if (!dataPersonal || !dataPersonal.success || !dataPersonal.workout) {
+            personalSession.classList.add('d-none');
+            coachSession.classList.remove('col-md-6');
+            coachSession.classList.add('col-md-12');
+        } else {
+            personalSession.classList.remove('d-none');
+            personalSession.classList.add('col-md-6');
+            coachSession.classList.add('col-md-6');
+            // Rellena el contenido de personal aquí si quieres
+        }
+
+        // Si ambos faltan, puedes mostrar un mensaje
+        if (
+            (!dataCoach || !dataCoach.success || !dataCoach.workout) &&
+            (!dataPersonal || !dataPersonal.success || !dataPersonal.workout)
+        ) {
+            alert('No hay sesiones disponibles para hoy.');
+        }
+
+        const coachWorkout = Array.isArray(dataCoach.workout) && dataCoach.workout.length > 0 ? dataCoach.workout[0] : null;
+        if (coachWorkout) {
+            coachSession.innerHTML = `
+                <h5>Sesión del Coach</h5>
+                <p><strong>Fecha:</strong> ${coachWorkout.date}</p>
+                <p><strong>Descripción:</strong> ${coachWorkout.description}</p>
+                <p><strong>Duración:</strong> ${coachWorkout.duration} minutos</p>
+                <p><strong>Sets:</strong> ${coachWorkout.number_of_sets}</p>
+                <p><strong>Repeticiones:</strong> ${coachWorkout.number_of_reps}</p>
+            `;
+        }
+
+    } catch (error) {
+        alert('Error al cargar las sesiones de hoy: ' + error.message);
+    }
 });
