@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 });
                             }
                         });
-                        document.getElementById('workout-message').innerHTML = '<div class="alert alert-success mt-3">Entrenamientos guardados correctamente.</div>';
+                        document.getElementById('workout-message').innerHTML = '<div class="text-success mt-3">Entrenamientos guardados correctamente.</div>';
                         document.getElementById('workouts-form').innerHTML = '';
                         selectedDates = [];
                         workoutsData = [];
@@ -216,11 +216,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         currentStep = 0;
                         document.getElementById('dateRange')._flatpickr.clear();
                     } else {
-                        document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error al guardar entrenamientos.</div>';
+                        document.getElementById('workout-message').innerHTML = '<div class="text-failure mt-3">Error al guardar entrenamientos.</div>';
                     }
                 })
                 .catch(() => {
-                    document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error de conexión.</div>';
+                    document.getElementById('workout-message').innerHTML = '<div class="text-failure mt-3">Error de conexión.</div>';
                 });
             }
         }

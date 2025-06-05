@@ -119,6 +119,7 @@ router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
         for (const fencerId of fencerIds) {
             for (const workout of workouts) {
                 values.push([
+                    workout.title || 'Entrenamiento sin título', // Título del entrenamiento
                     fencerId,
                     coachId,
                     workout.date,
@@ -134,11 +135,9 @@ router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
 
         // Generar la consulta dinámica para múltiples inserts
         const insertQuery = `
-            INSERT INTO fencer_coach_sessions
-            (fencer_id, coach_id, date, description, duration, feedback, number_of_sets, number_of_reps, is_completed)
-            VALUES ${values.map(
-                (_, i) => `($${i * 9 + 1}, $${i * 9 + 2}, $${i * 9 + 3}, $${i * 9 + 4}, $${i * 9 + 5}, $${i * 9 + 6}, $${i * 9 + 7}, $${i * 9 + 8}, $${i * 9 + 9})`
-            ).join(', ')}
+            INSERT INTO fencer_coach_sessions(
+                title, fencer_id, coach_id, date, description, duration, feedback, number_of_sets, number_of_reps, is_completed)
+            VALUES ${values.map((_, i) => `($${i * 10 + 1}, $${i * 10 + 2}, $${i * 10 + 3}, $${i * 10 + 4}, $${i * 10 + 5}, $${i * 10 + 6}, $${i * 10 + 7}, $${i * 10 + 8}, $${i * 10 + 9}, $${i * 10 + 10})`).join(', ')}
         `;
 
         // Aplanar los valores para pasarlos a la query

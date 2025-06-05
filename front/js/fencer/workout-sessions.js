@@ -226,9 +226,9 @@ function showWorkoutForm(step, template) {
     const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return;
 
-    // 1. Obtener entrenamientos de la BD
     let eventos = [];
     try {
+        // 1. Entrenamientos personales
         const res = await fetch('/getWorkouts');
         const data = await res.json();
         if (data.success && Array.isArray(data.workouts)) {
@@ -236,13 +236,37 @@ function showWorkoutForm(step, template) {
                 id: w.id,
                 title: w.title,
                 start: w.date,
+                backgroundColor: '#007bff',
+                borderColor: '#007bff',
                 extendedProps: {
                     description: w.description,
                     duration: w.duration,
                     number_of_sets: w.number_of_sets,
-                    number_of_reps: w.number_of_reps
+                    number_of_reps: w.number_of_reps,
+                    tipo: 'personal'
                 }
             }));
+        }
+
+        // 2. Entrenamientos del coach
+        const resCoach = await fetch('/getFencerCoachSessions');
+        const dataCoach = await resCoach.json();
+        if (dataCoach.success && Array.isArray(dataCoach.workouts)) {
+            const coachEvents = dataCoach.workouts.map(w => ({
+                id: `coach-${w.date}-${w.title}`,
+                title: w.title ? `Coach: ${w.title}` : 'Entrenamiento coach',
+                start: w.date,
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                extendedProps: {
+                    description: w.description,
+                    duration: w.duration,
+                    number_of_sets: w.number_of_sets,
+                    number_of_reps: w.number_of_reps,
+                    tipo: 'coach'
+                }
+            }));
+            eventos = eventos.concat(coachEvents);
         }
     } catch (e) {
         console.error('Error cargando entrenamientos:', e);
@@ -251,23 +275,21 @@ function showWorkoutForm(step, template) {
     // Función para obtener el headerToolbar según el ancho
     function getHeaderToolbar() {
         if (window.innerWidth < 600) {
-            // Solo navegación y título en móvil
             return {
                 left: 'prev,next',
                 center: 'title',
                 right: ''
             };
         } else {
-            // Vista normal con botones de cambio de vista
             return {
                 left: 'prev,next',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: ''
             };
         }
     }
 
-    // 2. Inicializar el calendario
+    // Inicializar el calendario
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
@@ -279,8 +301,9 @@ function showWorkoutForm(step, template) {
             const props = e.extendedProps;
             const detalles = `
                 <strong>${e.title}</strong><br>
-                <b>Fecha:</b> ${e.start.toLocaleString()}<br>
-                <b>Descripción:</b> ${props.description}<br>
+                <b>Fecha:</b> ${e.start.toLocaleDateString()}<br>
+                <b>Descripción:</b><br>
+                <div style="white-space: pre-wrap; margin-bottom:8px;">${props.description}</div>
                 <b>Duración:</b> ${props.duration} min<br>
                 <b>Sets:</b> ${props.number_of_sets}<br>
                 <b>Repeticiones:</b> ${props.number_of_reps}
