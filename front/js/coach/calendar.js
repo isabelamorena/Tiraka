@@ -28,8 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Puedes usar solo el nombre o el nombre completo:
                     title: `${w.name} ${w.surname} ${w.secondsurname}`,
                     start: w.date,
-                    backgroundColor: '#007bff',
-                    borderColor: '#007bff',
+                    color: colorPorFencerId(w.fencer_id), // <-- Aquí el color depende del tirador
                     extendedProps: {
                         description: w.description,
                         duration: w.duration,
@@ -108,5 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const popup = document.getElementById('workout-details-popup');
             if (popup) popup.style.display = 'none';
         });
+    }
+
+    function colorPorFencerId(id) {
+        // Puedes usar un array de colores o una función hash sencilla
+        const colores = ['#007bff', '#e67e22', '#16a085', '#8e44ad', '#c0392b'];
+        return colores[id % colores.length];
     }
 });
