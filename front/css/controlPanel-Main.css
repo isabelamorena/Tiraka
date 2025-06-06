@@ -26,6 +26,10 @@
         margin-left: 0;
         margin-right: 0;
     }
+
+    .panel-box {
+        padding: 15px; /* menos padding en móviles */
+    }
 }
 .table-responsive {
   width: 90%;

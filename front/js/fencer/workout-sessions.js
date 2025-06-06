@@ -1,4 +1,5 @@
 import { showPanel } from './shared-functions.js';
+import { formatDateYYYYMMDD } from './shared-functions.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
@@ -18,6 +19,7 @@ let selectedDates = [];
 let trainingTemplates = [];
 let usedTemplateIds = [];
 
+
 flatpickr("#dateRange", {
     mode: "range",
     dateFormat: "Y-m-d",
@@ -26,9 +28,10 @@ flatpickr("#dateRange", {
             const start = selectedDatesArr[0];
             const end = selectedDatesArr[1];
             const dates = [];
-            let current = new Date(start);
-            while (current <= end) {
-                dates.push(new Date(current));
+            let current = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+            const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+            while (current <= endDate) {
+                dates.push(formatDateYYYYMMDD(current)); // Guardar como string YYYY-MM-DD
                 current.setDate(current.getDate() + 1);
             }
             // Obtener plantillas antes de iniciar el wizard
@@ -44,7 +47,7 @@ flatpickr("#dateRange", {
 
 
 function startWorkoutWizard(dates) {
-    selectedDates = dates;
+    selectedDates = dates; // ahora son strings YYYY-MM-DD
     workoutsData = Array(dates.length).fill(null);
     usedTemplateIds = Array(dates.length).fill(null);
     currentStep = 0;
@@ -60,7 +63,7 @@ function showTemplateSelector(step) {
     });
     const html = `
         <form id="template-select-form">
-            <h4>Entrenamiento para el ${selectedDates[step].toLocaleDateString()}</h4>
+            <h4>Entrenamiento para el ${new Date(selectedDates[step]).toLocaleDateString()}</h4>
             <div class="mb-3">
                 <label>Usar plantilla:</label>
                 <select class="form-select" id="template-select">${options}</select>
@@ -84,7 +87,7 @@ function showTemplateSelector(step) {
 
 // Muestra el formulario de entrenamiento para el paso actual
 function showWorkoutForm(step, template) {
-    const date = selectedDates[step];
+    const date = selectedDates[step]; // string YYYY-MM-DD
     const tpl = template || {};
     const originalTemplate = template ? { ...template } : null;
 
@@ -96,14 +99,14 @@ function showWorkoutForm(step, template) {
 
     let formHtml = `
         <form id="workout-form">
-            <h4>Entrenamiento para el ${date.toLocaleDateString()}</h4>
+            <h4>Entrenamiento para el ${new Date(date).toLocaleDateString()}</h4>
             <div class="mb-3">
                 <label>Título</label>
                 <input type="text" class="form-control" name="title" value="${tpl.title || ''}" required>
             </div>
             <div class="mb-3">
                 <label>Fecha</label>
-                <input type="date" class="form-control" name="date" value="${date.toISOString().slice(0,10)}" required readonly>
+                <input type="date" class="form-control" name="date" value="${date}" required readonly>
             </div>
             <div class="mb-3">
                 <label>Descripción</label>
@@ -300,10 +303,12 @@ function showWorkoutForm(step, template) {
 
     // Inicializar el calendario
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
+        initialView: window.innerWidth < 600 ? 'listDay' : 'dayGridMonth',
+        initialDate: new Date(),
         locale: 'es',
         headerToolbar: getHeaderToolbar(),
         events: eventos,
+        height: 'auto',
         eventClick: function(info) {
             info.jsEvent.stopPropagation();
             const e = info.event;

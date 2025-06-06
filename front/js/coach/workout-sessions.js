@@ -1,15 +1,10 @@
-
 import { showPanel, fencersCoach } from './shared-functions.js';
+import { formatDateYYYYMMDD } from './shared-functions.js';
 
-document.addEventListener("DOMContentLoaded", function () {
-    /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
-    const createWorkoutLink = document.getElementById("create-workout-link");
-    createWorkoutLink.addEventListener("click", async function (e) {
-        e.preventDefault();
-        document.querySelector("#sidebar").classList.toggle("collapsed");
-        showPanel("create-workout");
-
-        // Cargar tiradores vinculados
+// Función para cargar los tiradores vinculados al entrenador
+// y crear el selector de Choices
+async function fencerChoices() {
+    // Cargar tiradores vinculados
         const dataFencers = await fencersCoach();
         const fencerSelect = document.getElementById("fencerSelector");
         fencerSelect.innerHTML = "";
@@ -29,6 +24,18 @@ document.addEventListener("DOMContentLoaded", function () {
             itemSelectText: 'Seleccionar',
             shouldSort: false
         });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
+    const createWorkoutLink = document.getElementById("create-workout-link");
+    createWorkoutLink.addEventListener("click", async function (e) {
+        e.preventDefault();
+        document.querySelector("#sidebar").classList.toggle("collapsed");
+        showPanel("create-workout");
+
+        // Cargar tiradores vinculados
+        fencerChoices();
     });
 
     let workoutsData = [];
@@ -45,9 +52,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const start = selectedDatesArr[0];
                 const end = selectedDatesArr[1];
                 const dates = [];
-                let current = new Date(start);
-                while (current <= end) {
-                    dates.push(new Date(current));
+                let current = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+                const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+                while (current <= endDate) {
+                    dates.push(formatDateYYYYMMDD(current)); // Guardar como string YYYY-MM-DD
                     current.setDate(current.getDate() + 1);
                 }
                 fetch('/getTrainingTemplatesCoach')
@@ -61,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function startWorkoutWizard(dates) {
-        selectedDates = dates;
+        selectedDates = dates; // ahora son strings YYYY-MM-DD
         workoutsData = Array(dates.length).fill(null);
         usedTemplateIds = Array(dates.length).fill(null);
         currentStep = 0;
@@ -75,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         const html = `
             <form id="template-select-form">
-                <h4>Entrenamiento para el ${selectedDates[step].toLocaleDateString()}</h4>
+                <h4>Entrenamiento para el ${new Date(selectedDates[step]).toLocaleDateString()}</h4>
                 <div class="mb-3">
                     <label>Usar plantilla:</label>
                     <select class="form-select" id="template-select">${options}</select>
@@ -98,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function showWorkoutForm(step, template) {
-        const date = selectedDates[step];
+        const date = selectedDates[step]; // string YYYY-MM-DD
         const tpl = template || {};
         const originalTemplate = template ? { ...template } : null;
 
@@ -110,14 +118,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let formHtml = `
             <form id="workout-form">
-                <h4>Entrenamiento para el ${date.toLocaleDateString()}</h4>
+                <h4>Entrenamiento para el ${new Date(date).toLocaleDateString()}</h4>
                 <div class="mb-3">
                     <label>Título</label>
                     <input type="text" class="form-control" name="title" value="${tpl.title || ''}" required>
                 </div>
                 <div class="mb-3">
                     <label>Fecha</label>
-                    <input type="date" class="form-control" name="date" value="${date.toISOString().slice(0,10)}" required readonly>
+                    <input type="date" class="form-control" name="date" value="${date}" required readonly>
                 </div>
                 <div class="mb-3">
                     <label>Descripción</label>
@@ -227,7 +235,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         usedTemplateIds = [];
                         currentStep = 0;
                         document.getElementById('dateRange')._flatpickr.clear();
+                        // Limpia las opciones del selector
                         document.getElementById('fencerSelector').innerHTML = '';
+
+                        // Limpia Choices visualmente
+                        if (window.fencerChoices) {
+                            window.fencerChoices.clearStore(); // Limpia las selecciones y opciones
+                            window.fencerChoices.destroy();    // Destruye la instancia
+                            window.fencerChoices = null;
+                        }
+                        // Vuelve a inicializar Choices si es necesario
+                        fencerChoices();
 
 
                     } else {
@@ -246,13 +264,128 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    /* ----------------------------------------- Calendario de entrenamientos ---------------------------------------- */
-    document.getElementById('upcoming-workouts-link').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelector("#sidebar").classList.toggle("collapsed");
-        showPanel("workout-calendar");
-        cargarEntrenamientosYCalendario();
+    /* ---------------------------------------------------- Plantillas ---------------------------------------------------------- */
+
+   document.getElementById("my-templates-link").addEventListener("click", async function (e) {
+       e.preventDefault();
+       document.querySelector("#sidebar").classList.toggle("collapsed");
+       showPanel("my-templates");
+        
+       // Reset layout
+        const leftCol = document.getElementById("left-template-column");
+        leftCol.classList.remove("col-md-6");
+        leftCol.classList.add("col-12");
+        document.getElementById("right-template-column").classList.add("d-none");
+
+        loadClassTemplatesTitles();
+
+   });
+
+    // Función para cargar títulos
+    async function loadClassTemplatesTitles() {
+        try {
+            const response = await fetch('/getTemplatesCoach');
+            const data = await response.json();
+
+            $('#template-pagination').pagination({
+            dataSource: data.templates,
+            pageSize: 10,
+            callback: function(entries, pagination) {
+                const list = document.getElementById('template-list');
+                list.innerHTML = '';
+                entries.forEach(entry => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item', 'list-group-item-action');
+                li.textContent = `${entry.title}`;
+                li.style.cursor = 'pointer';
+                li.onclick = () => loadTemplateDetails(entry.id);
+                list.appendChild(li);
+                });
+            }
+            });
+        } catch (error) {
+            alert("Error cargando las plantillas: " + error.message);
+        }
+    }
+
+    // Función para cargar detalles de una plantilla
+     async function loadTemplateDetails(id) {
+        try {
+            const response = await fetch(`/getTemplateCoach/${id}`);
+
+            const data = await response.json();
+
+            document.getElementById('template-detail-title').textContent = data.template.title;
+            document.getElementById('template-detail-description').textContent = data.template.description;
+            document.getElementById("template-id").value = data.template.id;
+            document.getElementById('template-detail-duration').textContent = data.template.duration + ' minutos';
+            document.getElementById('template-detail-number-of-sets').textContent = data.template.number_of_sets;
+            document.getElementById('template-detail-number-of-reps').textContent = data.template.number_of_reps;
+
+            // Cambiar layout
+            const leftCol = document.getElementById("left-template-column");
+            const rightCol = document.getElementById("right-template-column");
+
+            leftCol.classList.remove("col-12");
+            leftCol.classList.add("col-md-4");
+            rightCol.classList.remove("d-none");
+        } catch (error) {
+            alert("Error al cargar los detalles de la plantilla: " + error.message);
+        }
+    }
+
+    // Cerrar los detalles de las plantillas 
+    document.getElementById("close-template-details").addEventListener("click", () => {
+        const rightCol = document.getElementById("right-template-column");
+        const leftCol = document.getElementById("left-template-column");
+
+        rightCol.classList.add("d-none");
+        leftCol.classList.remove("col-md-4");
+        leftCol.classList.add("col-12");
     });
 
-    // ... Puedes copiar la lógica del calendario igual que en el de fencer ...
+    //Eliminar una plantilla según id
+    const deleteTemplateButton = document.getElementById("delete-template-button");
+    deleteTemplateButton.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        const templateId = document.getElementById("template-id").value;
+
+        if (!templateId) {
+            alert("Por favor, selecciona una plantilla.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/deleteTemplateCoach/${templateId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Plantilla eliminada correctamente');
+                loadClassTemplatesTitles();
+
+                // Limpiar detalles y el id seleccionado tras borrar
+                document.getElementById('template-detail-title').textContent = '';
+                document.getElementById('template-detail-description').textContent = '';
+                document.getElementById('template-id').value = '';
+
+                // Volver al layout sin detalles
+                const rightCol = document.getElementById("right-template-column");
+                const leftCol = document.getElementById("left-template-column");
+                rightCol.classList.add("d-none");
+                leftCol.classList.remove("col-md-4");
+                leftCol.classList.add("col-12");
+
+            } else {
+                alert('Error al eliminar: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error al enviar datos: ' + error.message);
+        }
+    });
+
 });

@@ -2,8 +2,9 @@
 export function showPanel(panelId) {
     const panels = [
         "profile",
-        "create-workout"
-        
+        "create-workout",
+        "my-templates",
+        "workout-calendar"
     ];
     panels.forEach(id => {
         const el = document.getElementById(id);
@@ -29,4 +30,12 @@ export async function fencersCoach() {
         console.log('Error obteniendo tiradores del coach:', error);
         return [];
     }
+}
+
+// Formatea una fecha en el formato YYYY-MM-DD
+export function formatDateYYYYMMDD(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }

@@ -297,10 +297,28 @@ a.link-primary:hover{
     box-shadow: 0 -2px 16px rgba(0,0,0,0.18);
     animation: popupBottomIn 0.22s;
   }
+  /* Oculta la hora en la vista lista */
+  .fc-list-event-time {
+    display: none !important;
+  }
+#calendar, .fc {
+  width: 100% !important;
+  max-width: 100vw !important;
+  box-sizing: border-box;
+}
+  .fc-event {
+  background-color: #fff !important; /* tu color */
+  color: black !important;               /* color del texto */
+  border: none !important;
+}
 }
 
 /* Animación opcional para entrada suave */
 @keyframes popupBottomIn {
   from { transform: translateY(100%);}
   to { transform: translateY(0);}
+}
+#calendar, .fc {
+  height: 100% !important;
+  min-height: 400px; /* o el mínimo que prefieras */
 }

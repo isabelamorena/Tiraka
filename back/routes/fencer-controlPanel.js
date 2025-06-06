@@ -131,6 +131,7 @@ router.post('/createPersonalWorkout',isSessionValid, async (req, res) => {
             return res.status(400).json({ success: false, message: "Datos inválidos" });
         }
         const fencerId = req.session.user.userId;
+        console.log("PARÁMETROS RECIBIDOS:", workouts);
 
         // Consulta para insertar datos en la base de datos (ahora incluye template_id)
         const query = `

@@ -198,4 +198,106 @@ router.post('/createTrainingTemplateCoach', isSessionValid, async (req, res) => 
         return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });
     }
 });
+
+/* -------------------------------------------------------- Plantillas ------------------------------------------- */
+// Obtener las plantillas del coach
+router.get('/getTemplatesCoach', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+
+    try {
+        const result = await pool.query(`
+            SELECT * FROM coach_training_templates WHERE coach_id = $1
+        `, [coachId]);
+        console.log("Plantillas obtenidas:", result.rows);
+        res.status(200).json({
+            success: true,
+            templates: result.rows
+        });
+
+    } catch (error) {
+        console.error("Error al obtener plantillas:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Obtener una plantilla específica del coach
+router.get('/getTemplateCoach/:templateId', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+    const templateId = req.params.templateId;
+
+    try {
+        const result = await pool.query(`
+            SELECT * FROM coach_training_templates WHERE id = $1 AND coach_id = $2
+        `, [templateId, coachId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Plantilla no encontrada' });
+        }
+
+        res.status(200).json({
+            success: true,
+            template: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Error al obtener plantilla:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+// Eliminar una plantilla del coach
+router.post('/deleteTemplateCoach/:templateId', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+    const templateId = req.params.templateId;
+
+    try {
+        const result = await pool.query(`
+            DELETE FROM coach_training_templates WHERE id = $1 AND coach_id = $2
+        `, [templateId, coachId]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ success: false, message: 'Plantilla no encontrada o no pertenece al coach' });
+        }
+
+        res.status(200).json({ success: true, message: 'Plantilla eliminada correctamente' });
+
+    } catch (error) {
+        console.error("Error al eliminar plantilla:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+        });
+    }
+});
+
+/*-------------------------------------------------------- Calendario --------------------------------------------------- */
+// Obtener todos los entrenamientos del coach
+router.get('/getCoachWorkouts', isSessionValid, async (req, res) => {
+    try {
+        const coachId = req.session.user.userId;
+        const result = await pool.query(`
+        SELECT fencer.name, fencer.surname, fencer.secondsurname, fencer_coach_sessions.date, fencer_coach_sessions.description,
+	        fencer_coach_sessions.duration, fencer_coach_sessions.number_of_sets,fencer_coach_sessions.number_of_reps,
+		        fencer_coach_sessions.title FROM fencer_coach_sessions INNER JOIN fencer ON fencer.id = fencer_coach_sessions.fencer_id 
+			        WHERE fencer_coach_sessions.coach_id = $1
+        `, [coachId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron entrenamientos para este coach' });
+        }
+        console.log("Entrenamientos del coach:", result.rows);
+         // Asegúrate de que las fechas estén en el formato correcto
+        return res.status(200).json({ success: true, workouts: result.rows });
+
+    } catch (error) {
+        console.error("Error al obtener los entrenamientos del coach:", error);
+        return res.status(500).json({ success: false, message: 'Error en el servidor al obtener los entrenamientos' });
+    }
+});
 module.exports = router;
