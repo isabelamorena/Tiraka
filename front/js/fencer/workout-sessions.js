@@ -171,8 +171,8 @@ function showWorkoutForm(step, template) {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    title: tplData.title,
-                    description: tplData.description,
+                    title: tplData.title.trim(),
+                    description: tplData.description.trim(),
                     duration: tplData.duration,
                     number_of_sets: tplData.number_of_sets,
                     number_of_reps: tplData.number_of_reps
@@ -235,101 +235,101 @@ function showWorkoutForm(step, template) {
     var calendarEl = document.getElementById('calendar');
     // Función para cargar entrenamientos y calendario
     async function cargarEntrenamientosYCalendario() {
-    const calendarEl = document.getElementById('calendar');
-    if (!calendarEl) return;
+        const calendarEl = document.getElementById('calendar');
+        if (!calendarEl) return;
 
-    let eventos = [];
-    try {
-        // 1. Entrenamientos personales
-        const res = await fetch('/getWorkouts');
-        const data = await res.json();
-        if (data.success && Array.isArray(data.workouts)) {
-            eventos = data.workouts.map(w => ({
-                id: w.id,
-                title: w.title,
-                start: w.date,
-                backgroundColor: '#007bff',
-                borderColor: '#007bff',
-                extendedProps: {
-                    description: w.description,
-                    duration: w.duration,
-                    number_of_sets: w.number_of_sets,
-                    number_of_reps: w.number_of_reps,
-                    tipo: 'personal'
-                }
-            }));
+        let eventos = [];
+        try {
+            // 1. Entrenamientos personales
+            const res = await fetch('/getWorkouts');
+            const data = await res.json();
+            if (data.success && Array.isArray(data.workouts)) {
+                eventos = data.workouts.map(w => ({
+                    id: w.id,
+                    title: w.title,
+                    start: w.date,
+                    backgroundColor: '#007bff',
+                    borderColor: '#007bff',
+                    extendedProps: {
+                        description: w.description.trim(),
+                        duration: w.duration,
+                        number_of_sets: w.number_of_sets,
+                        number_of_reps: w.number_of_reps,
+                        tipo: 'personal'
+                    }
+                }));
+            }
+
+            // 2. Entrenamientos del coach
+            const resCoach = await fetch('/getFencerCoachSessions');
+            const dataCoach = await resCoach.json();
+            if (dataCoach.success && Array.isArray(dataCoach.workouts)) {
+                const coachEvents = dataCoach.workouts.map(w => ({
+                    id: `coach-${w.date}-${w.title}`,
+                    title: w.title ? `Coach: ${w.title}` : 'Entrenamiento coach',
+                    start: w.date,
+                    backgroundColor: '#28a745',
+                    borderColor: '#28a745',
+                    extendedProps: {
+                        description: w.description.trim(),
+                        duration: w.duration,
+                        number_of_sets: w.number_of_sets,
+                        number_of_reps: w.number_of_reps,
+                        tipo: 'coach'
+                    }
+                }));
+                eventos = eventos.concat(coachEvents);
+            }
+        } catch (e) {
+            console.error('Error cargando entrenamientos:', e);
         }
 
-        // 2. Entrenamientos del coach
-        const resCoach = await fetch('/getFencerCoachSessions');
-        const dataCoach = await resCoach.json();
-        if (dataCoach.success && Array.isArray(dataCoach.workouts)) {
-            const coachEvents = dataCoach.workouts.map(w => ({
-                id: `coach-${w.date}-${w.title}`,
-                title: w.title ? `Coach: ${w.title}` : 'Entrenamiento coach',
-                start: w.date,
-                backgroundColor: '#28a745',
-                borderColor: '#28a745',
-                extendedProps: {
-                    description: w.description,
-                    duration: w.duration,
-                    number_of_sets: w.number_of_sets,
-                    number_of_reps: w.number_of_reps,
-                    tipo: 'coach'
-                }
-            }));
-            eventos = eventos.concat(coachEvents);
+        // Función para obtener el headerToolbar según el ancho
+        function getHeaderToolbar() {
+            if (window.innerWidth < 600) {
+                return {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                };
+            } else {
+                return {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                };
+            }
         }
-    } catch (e) {
-        console.error('Error cargando entrenamientos:', e);
-    }
 
-    // Función para obtener el headerToolbar según el ancho
-    function getHeaderToolbar() {
-        if (window.innerWidth < 600) {
-            return {
-                left: 'prev,next',
-                center: 'title',
-                right: ''
-            };
-        } else {
-            return {
-                left: 'prev,next',
-                center: 'title',
-                right: ''
-            };
-        }
-    }
-
-    // Inicializar el calendario
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: window.innerWidth < 600 ? 'listDay' : 'dayGridMonth',
-        initialDate: new Date(),
-        locale: 'es',
-        headerToolbar: getHeaderToolbar(),
-        events: eventos,
-        height: 'auto',
-        eventClick: function(info) {
-            info.jsEvent.stopPropagation();
-            const e = info.event;
-            const props = e.extendedProps;
-            const detalles = `
-                <strong>${e.title}</strong><br>
-                <b>Fecha:</b> ${e.start.toLocaleDateString()}<br>
-                <b>Descripción:</b><br>
-                <div style="white-space: pre-wrap; margin-bottom:8px;">${props.description}</div>
-                <b>Duración:</b> ${props.duration} min<br>
-                <b>Sets:</b> ${props.number_of_sets}<br>
-                <b>Repeticiones:</b> ${props.number_of_reps}
-            `;
-            const popup = document.getElementById('workout-details-popup');
-            popup.innerHTML = detalles;
-            popup.style.display = 'block';
-            const mouseEvent = info.jsEvent;
-            popup.style.left = mouseEvent.pageX + 15 + 'px';
-            popup.style.top = mouseEvent.pageY - 10 + 'px';
-            popup.onclick = function(ev) { ev.stopPropagation(); };
-        }
+        // Inicializar el calendario
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: window.innerWidth < 600 ? 'listDay' : 'dayGridMonth',
+            initialDate: new Date(),
+            locale: 'es',
+            headerToolbar: getHeaderToolbar(),
+            events: eventos,
+            height: 'auto',
+            eventClick: function(info) {
+                info.jsEvent.stopPropagation();
+                const e = info.event;
+                const props = e.extendedProps;
+                const detalles = `
+                    <strong>${e.title}</strong><br>
+                    <b>Fecha:</b> ${e.start.toLocaleDateString()}<br>
+                    <b>Descripción:</b><br>
+                    <div style="white-space: pre-wrap; margin-bottom:8px;">${props.description}</div>
+                    <b>Duración:</b> ${props.duration} min<br>
+                    <b>Sets:</b> ${props.number_of_sets}<br>
+                    <b>Repeticiones:</b> ${props.number_of_reps}
+                `;
+                const popup = document.getElementById('workout-details-popup');
+                popup.innerHTML = detalles;
+                popup.style.display = 'block';
+                const mouseEvent = info.jsEvent;
+                popup.style.left = mouseEvent.pageX + 15 + 'px';
+                popup.style.top = mouseEvent.pageY - 10 + 'px';
+                popup.onclick = function(ev) { ev.stopPropagation(); };
+            }
     });
     calendar.render();
 
@@ -352,9 +352,10 @@ function showWorkoutForm(step, template) {
 }
 });
 
-/* ----------------------------------------- ¿Qué hay para hoy? ---------------------------------------- */
+/* ----------------------------------------------- ¿Qué hay para hoy? ---------------------------------------------- */
+
 document.getElementById('todays-session-link').addEventListener('click', async function(e) {
-    e.preventDefault(); // Prevenir el envío del formulario
+    e.preventDefault();
     document.querySelector("#sidebar").classList.toggle("collapsed");
     showPanel("todays-session");
 
@@ -364,55 +365,130 @@ document.getElementById('todays-session-link').addEventListener('click', async f
 
         const getCoachWorkoutToday = await fetch('/getCoachWorkoutToday');
         const dataCoach = await getCoachWorkoutToday.json();
-        
 
         // Referencias a los contenedores
         const coachSession = document.getElementById('coachSession');
         const personalSession = document.getElementById('personalSession');
 
+        if (!coachSession || !personalSession) {
+            alert('Error: No se encontraron los contenedores de sesión en la página.');
+            return;
+        }
+
+        /* Si solo hay sesión del coach, solo se muestra ese contenedor y ocupa todo el ancho.
+        Si solo hay sesión personal, solo se muestra ese contenedor y ocupa todo el ancho.
+        Si hay ambas, se muestran ambos al 50%.
+        Si no hay ninguna, ambos desaparecen. */
+
+        // Limpia clases antes de añadir nuevas
+        coachSession.classList.remove('d-none', 'col-md-6', 'col-md-12', 'col-12');
+        personalSession.classList.remove('d-none', 'col-md-6', 'col-md-12', 'col-12');
+
         // Mostrar/ocultar según haya datos
-        if (!dataCoach || !dataCoach.success || !dataCoach.workout) {
-            coachSession.classList.add('d-none');
-            personalSession.classList.remove('col-md-6');
-            personalSession.classList.add('col-md-12');
-        } else {
+        let showCoach = dataCoach && dataCoach.success && dataCoach.workout && dataCoach.workout.length > 0;
+        let showPersonal = dataPersonal && dataPersonal.success && dataPersonal.workout && dataPersonal.workout.length > 0;
+
+        if (showCoach && showPersonal) {
+            coachSession.classList.add('col-12');
+            personalSession.classList.add('col-12');
             coachSession.classList.remove('d-none');
-            coachSession.classList.add('col-md-6');
-            personalSession.classList.add('col-md-6');
-            // Rellena el contenido de coach aquí si quieres
-        }
-
-        if (!dataPersonal || !dataPersonal.success || !dataPersonal.workout) {
-            personalSession.classList.add('d-none');
-            coachSession.classList.remove('col-md-6');
-            coachSession.classList.add('col-md-12');
-        } else {
             personalSession.classList.remove('d-none');
-            personalSession.classList.add('col-md-6');
-            coachSession.classList.add('col-md-6');
-            // Rellena el contenido de personal aquí si quieres
-        }
 
-        // Si ambos faltan, puedes mostrar un mensaje
-        if (
-            (!dataCoach || !dataCoach.success || !dataCoach.workout) &&
-            (!dataPersonal || !dataPersonal.success || !dataPersonal.workout)
-        ) {
+        } else if (showCoach) {
+            coachSession.classList.add('col-12');
+            coachSession.classList.remove('d-none');
+            personalSession.classList.add('d-none');
+        } else if (showPersonal) {
+            personalSession.classList.add('col-12');
+            personalSession.classList.remove('d-none');
+            coachSession.classList.add('d-none');
+        } else {
+            coachSession.classList.add('d-none');
+            personalSession.classList.add('d-none');
             alert('No hay sesiones disponibles para hoy.');
         }
 
-        const coachWorkout = Array.isArray(dataCoach.workout) && dataCoach.workout.length > 0 ? dataCoach.workout[0] : null;
-        if (coachWorkout) {
-            coachSession.innerHTML = `
-                <h5>Sesión del Coach</h5>
-                <p><strong>Fecha:</strong> ${coachWorkout.date}</p>
-                <p><strong>Descripción:</strong> ${coachWorkout.description}</p>
-                <p><strong>Duración:</strong> ${coachWorkout.duration} minutos</p>
-                <p><strong>Sets:</strong> ${coachWorkout.number_of_sets}</p>
-                <p><strong>Repeticiones:</strong> ${coachWorkout.number_of_reps}</p>
-            `;
+        // Rellenar contenido
+        // Mostrar todos los workouts del coach
+        if (showCoach) {
+        coachSession.innerHTML = dataCoach.workout.map(coachWorkout => `
+            <div class="panel-box-today-sessions">
+                <h2 style="color:#B59E4Cff;">${coachWorkout.title}</h2>
+                <p class="mb-1"><strong>Sesión del Coach</strong></p>
+                <p class="mb-1"><strong>Duración:</strong> ${coachWorkout.duration} minutos</p>
+                <p class="mb-1"><strong>Sets:</strong> ${coachWorkout.number_of_sets}</p>
+                <p class="mb-1"><strong>Repeticiones:</strong> ${coachWorkout.number_of_reps}</p>
+                <p class="mb-1 mt-4" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${coachWorkout.description.trim()}</p>
+                <input type="hidden" name="template_id" value="${coachWorkout.template_id || ''}">
+                ${
+                    coachWorkout.is_completed
+                    ? `<button class="btn btn-secondary mt-4" disabled>Completado</button>`
+                    : `<button class="btn btn-primary mt-4 btn-completar-coach" data-id="${coachWorkout.id}">No completado</button>`
+                }
+            </div>
+        `).join('');
+
+        // Solo añade listeners a los botones "No completado" del coach
+        document.querySelectorAll('.btn-completar-coach').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const workoutId = this.getAttribute('data-id');
+                this.textContent = 'Completado';
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-secondary');
+                this.disabled = true;
+                // Aquí tu fetch para marcar como completado en el backend
+                const res = await fetch('/completeCoachWorkout', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ workoutId: workoutId })
+                });
+                const result = await res.json();
+                alert(result.success ? 'Sesión del coach marcada como completada.' : 'Error al marcar la sesión del coach como completada.');
+            });
+        });
+        } else {
+            coachSession.innerHTML = '';
         }
 
+        if (showPersonal) {
+        personalSession.innerHTML = dataPersonal.workout.map(personalWorkout => `
+            <div class="panel-box-today-sessions"> 
+                <h2 style="color:#B59E4Cff;">${personalWorkout.title}</h2>
+                <p class="mb-1"><strong>Sesión personal</strong></p>
+                <p class="mb-1"><strong>Duración:</strong> ${personalWorkout.duration} minutos</p>
+                <p class="mb-1"><strong>Sets:</strong> ${personalWorkout.number_of_sets}</p>
+                <p class="mb-1"><strong>Repeticiones:</strong> ${personalWorkout.number_of_reps}</p>
+                <p class="mb-1" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${personalWorkout.description.trim()}</p>
+                <input type="hidden" name="personal_workout_id" value="${personalWorkout.id || ''}">
+                <input type="hidden" name="template_id" value="${personalWorkout.template_id || ''}">
+                ${
+                    personalWorkout.is_completed
+                    ? `<button class="btn btn-secondary mt-4" disabled>Completado</button>`
+                    : `<button class="btn btn-primary mt-4 btn-completar" data-id="${personalWorkout.id}">No completado</button>`
+                }
+            </div>
+        `).join('');
+
+        // Solo añade listeners a los botones "No completado"
+        document.querySelectorAll('.btn-completar').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const workoutId = this.getAttribute('data-id');
+                this.textContent = 'Completado';
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-secondary');
+                this.disabled = true;
+                const res = await fetch('/completeWorkout', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ workoutId: workoutId })
+                });
+                const result = await res.json();
+                alert(result.success ? 'Sesión marcada como completada.' : 'Error al marcar la sesión como completada.');
+            });
+        });
+        } else {
+            personalSession.innerHTML = '';
+        }
     } catch (error) {
         alert('Error al cargar las sesiones de hoy: ' + error.message);
     }

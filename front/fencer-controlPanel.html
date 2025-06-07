@@ -588,24 +588,22 @@
 
                 <!-- ¿Qué hay para hoy? -->
                 <div id="todays-session" class="container-fluid d-none">
+                    <h1 class="mb-4 text-center " style="color: #B59E4Cff;"></h1>
+                    <script>
+                        // Mostrar el día de hoy en el título
+                        const today = new Date();
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                        const formattedDate = today.toLocaleDateString('es-ES', options);
+                        document.querySelector('#todays-session h1').textContent = `Para hoy ${formattedDate} hay:`;
+
+                    </script>
+
                     <div class="row">
-                        <div id="coachSession" class="col-12 col-md-6">
-                            <div class="panel-box">
-                                <h1 class="mb-4 text-center">¿Qué hay para hoy?</h1>
-                                <div id="todays-session-content" class="text-center">
-                                    <!-- Aquí se mostrará el contenido de la sesión de hoy -->
-                                    <p id="todays-session-message">No hay entrenamientos programados para hoy.</p>
-                                </div>
-                            </div>
+                        <div id="coachSession" class="col-12 col-md-6 " >
+                           
                         </div> 
-                        <div id="personalSession" class="col-12 col-md-6">
-                            <div class="panel-box">
-                                <h1 class="mb-4 text-center">Últimos entrenamientos</h1>
-                                <div id="last-workouts" class="text-center">
-                                    <!-- Aquí se mostrarán los últimos entrenamientos -->
-                                    <p id="last-workouts-message">No hay entrenamientos recientes.</p>
-                                </div>
-                            </div>
+                        <div id="personalSession" class="col-12 col-md-6 ">
+                            
                         </div>
                     </div>
                 </div>

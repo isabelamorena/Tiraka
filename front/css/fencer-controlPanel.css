@@ -14,6 +14,16 @@
     margin-right: 10px;
 }
 
+.panel-box-today-sessions {
+    width: 100%;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
+}
+
 
 /* ---------------------- en móviles --------------------------- */
 @media (max-width: 768px) {

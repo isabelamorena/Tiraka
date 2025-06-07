@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Puedes usar solo el nombre o el nombre completo:
                     title: `${w.name} ${w.surname} ${w.secondsurname}`,
                     start: w.date,
-                    color: colorPorFencerId(w.fencer_id), // <-- Aquí el color depende del tirador
+                    color: colorPorFencerId(w.fencer_id),
                     extendedProps: {
                         description: w.description,
                         duration: w.duration,
@@ -110,8 +110,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function colorPorFencerId(id) {
-        // Puedes usar un array de colores o una función hash sencilla
-        const colores = ['#007bff', '#e67e22', '#16a085', '#8e44ad', '#c0392b'];
-        return colores[id % colores.length];
+        // Convierte el id a un color HSL único y agradable
+        const hue = (parseInt(id, 10) * 137) % 360; // 137 da buena dispersión de colores
+        return `hsl(${hue}, 65%, 55%)`;
     }
 });
