@@ -255,6 +255,47 @@ router.get('/getTrainingTemplateById/:id', isSessionValid, async (req, res) => {
     }
 });
 
+// Obtener el historial de entrenamientos de una plantilla por ID
+router.get('/getCoachTemplateHistory', async (req, res) => {
+    try {
+        const templateId = req.query.templateId;
+        if (!templateId) {
+            return res.status(400).json({ success: false, message: 'templateId requerido' });
+        }
+        const result = await pool.query(
+            `SELECT id, title, date, feedback
+             FROM public.fencer_coach_sessions
+             WHERE template_id = $1 AND feedback IS NOT NULL AND date <> CURRENT_DATE
+             ORDER BY date DESC
+             LIMIT 4`,
+            [templateId]
+        );
+        res.json({
+            success: true,
+            workouts: result.rows
+        });
+    } catch (error) {
+        res.json({ success: false, message: 'Error al obtener historial del coach' });
+    }
+});
+
+// Escribir el feedback del coach en un entrenamiento
+router.post('/saveCoachSessionFeedback', isSessionValid, async (req, res) => {
+    const { workoutId, feedback } = req.body;
+    if (!workoutId || !feedback) {
+        return res.json({ success: false, message: 'Faltan datos' });
+    }
+    try {
+        await pool.query(
+            'UPDATE public.fencer_coach_sessions SET feedback = $1 WHERE id = $2',
+            [feedback, workoutId]
+        );
+        res.json({ success: true });
+    } catch (error) {
+        res.json({ success: false, message: 'Error al guardar feedback' });
+    }
+});
+
 // Eliminar una plantilla de entrenamiento por ID
 router.post('/deleteTrainingTemplate/:id', isSessionValid, async (req, res) => {
     const templateId = req.params.id;
@@ -300,6 +341,54 @@ router.post('/createTrainingTemplate', isSessionValid, async (req, res) => {
     } catch (error) {
         console.error("Error al crear plantilla de entrenamiento:", error.message);
         return res.status(500).json({ success: false, message: 'Hubo un error en el servidor' });
+    }
+});
+
+router.post('/savePersonalFeedback', async (req, res) => {
+    try {
+        const { workoutId, feedback } = req.body;
+        if (!workoutId || !feedback) {
+            return res.json({ success: false, message: 'Faltan datos' });
+        }
+        await pool.query(
+            'UPDATE public.fencer_personal_sessions SET feedback = $1 WHERE id = $2',
+            [feedback, workoutId]
+        );
+        res.json({ success: true });
+    } catch (error) {
+        res.json({ success: false, message: 'Error al guardar feedback' });
+    }
+});
+
+// Obtener el historial de entrenamientos de una plantilla
+router.get('/getPersonalTemplateId', async (req, res) => {
+    try {
+        // Si usas query string: /getPersonalTemplateId?templateId=123
+        const templateId = req.query.templateId;
+        console.log("ID de la plantilla:", templateId);
+        // Si usas body (GET no suele llevar body): const templateId = req.body.template_id;
+
+        if (!templateId) {
+            return res.status(400).json({ success: false, message: 'templateId requerido' });
+        }
+
+        const result = await pool.query(
+            `SELECT id, title, date, feedback
+             FROM public.fencer_personal_sessions
+             WHERE template_id = $1 AND feedback IS NOT NULL AND date <> CURRENT_DATE 
+             ORDER BY date DESC
+             LIMIT 4`,
+            [templateId]
+        );
+
+        console.log("Historial de la plantilla obtenido:", result.rows);
+        res.json({
+            success: true,
+            workouts: result.rows // [{id, title, date, feedback}, ...]
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error al obtener historial de la plantilla' });
     }
 });
 

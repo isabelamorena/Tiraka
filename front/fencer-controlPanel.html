@@ -77,6 +77,8 @@
 
 </head>
 <body>
+    
+   
     <div class="d-flex">
         <!-- Sidebar -->
         <aside id="sidebar" class="sidebar-toggle" style="background-color: #F0E1ADff;">
@@ -217,13 +219,7 @@
                     </div>
 
                     <div class="row">
-                        
-                        <div class="col-12 col-md-6 ">
-                            <div class="mb-3  panel-box"> 
-                                <div id="last-class-diary"></div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 ">
+                        <div class="col-12 col-md-4 ">
                             <div class="mb-3 text-center panel-box" >
                                <table class="table table-striped table-hover">
                                 <h1 class="text-center" style="font-size: x-large;">Últimas asistencias</h1>
@@ -240,7 +236,11 @@
 
                             </div>
                         </div>
-                        
+                        <div class="col-12 col-md-8 ">
+                            <div class="mb-3  panel-box"> 
+                                <div id="last-class-diary"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -375,7 +375,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                
+                                  
                                         </div>
                                         
                                         
@@ -586,7 +586,7 @@
                     </div>
                 </div>
 
-                <!-- ¿Qué hay para hoy? -->
+                <!-- ¿Qué tengo para hoy? -->
                 <div id="todays-session" class="container-fluid d-none">
                     <h1 class="mb-4 text-center " style="color: #B59E4Cff;"></h1>
                     <script>
@@ -594,16 +594,20 @@
                         const today = new Date();
                         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                         const formattedDate = today.toLocaleDateString('es-ES', options);
-                        document.querySelector('#todays-session h1').textContent = `Para hoy ${formattedDate} hay:`;
+                        document.querySelector('#todays-session h1').textContent = `Para hoy ${formattedDate} tengo:`;
 
                     </script>
 
+                    <div class="row" id="personal-sessions-row">
+                        <div id="personalSession" class="col-12"></div>
+                        <div id="personal-history-feedback" class="d-none"></div>
+                    </div>
                     <div class="row">
-                        <div id="coachSession" class="col-12 col-md-6 " >
-                           
-                        </div> 
-                        <div id="personalSession" class="col-12 col-md-6 ">
-                            
+                        <div id="coachSession" class="col-12 col-md-6">
+                            <!-- Aquí van los entrenamientos personales -->
+                        </div>
+                        <div id="coach-history-feedback" class="col-12 col-md-6 d-none">
+                            <!-- Aquí se muestra el historial -->
                         </div>
                     </div>
                 </div>
@@ -728,6 +732,6 @@
             }
         });
     </script>
-
+    
 </body>
 </html>

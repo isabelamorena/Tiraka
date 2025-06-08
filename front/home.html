@@ -19,6 +19,53 @@
     <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
 </head>
 <body>
+    <div id="cookie-banner" style="position:fixed;bottom:0;left:0;width:100%;background:#222;color:#fff;padding:20px;z-index:9999;display:none;">
+    <div style="max-width:900px;margin:auto;display:flex;flex-direction:column;align-items:center;">
+        <span>
+            Utilizamos cookies para mejorar tu experiencia y cumplir con la normativa GDPR. Al continuar navegando aceptas nuestra <a href="politica-cookies.html" target="_blank" style="color:#FFD700;text-decoration:underline;">política de cookies</a>.
+        </span>
+        <div style="margin-top:10px;">
+            <button id="accept-cookies" class="btn btn-primary mt-2">Aceptar</button>
+            <button id="reject-cookies" class="btn btn-secondary mt-2" style="margin-left:10px;">Rechazar</button>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function simpleHash(str) {
+        let hash = 0, i, chr;
+        if (str.length === 0) return hash;
+        for (i = 0; i < str.length; i++) {
+            chr   = str.charCodeAt(i);
+            hash  = ((hash << 5) - hash) + chr;
+            hash |= 0;
+        }
+        return hash;
+    }
+
+    const consent = localStorage.getItem('cookieConsentHash');
+    const reject = localStorage.getItem('cookieConsentReject');
+    const banner = document.getElementById('cookie-banner');
+    const btnAccept = document.getElementById('accept-cookies');
+    const btnReject = document.getElementById('reject-cookies');
+
+    // Mostrar solo si no hay consentimiento ni rechazo
+    if (!consent && !reject && banner && btnAccept && btnReject) {
+        banner.style.display = 'block';
+
+        btnAccept.onclick = function() {
+            const hash = simpleHash(Date.now() + navigator.userAgent);
+            localStorage.setItem('cookieConsentHash', hash);
+            banner.style.display = 'none';
+        };
+
+        btnReject.onclick = function() {
+            localStorage.setItem('cookieConsentReject', 'true');
+            banner.style.display = 'none';
+        };
+    }
+});
+</script>
     <!-- Barra de navegación -->
     <nav class="fixed-navbar ">
         <div class="container-fluid d-flex align-items-center justify-content-between px-4" style="height: 100px;">

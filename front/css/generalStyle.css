@@ -17,6 +17,7 @@
     border:2px solid #B59E4Cff ;
     box-shadow: none !important;
 }
+
 /* Botón secundario*/
 .btn-secondary{
     background-color: white;
@@ -36,6 +37,46 @@
     border-color: #B59E4Cff !important;
     box-shadow: none !important;
     border: 2px solid #B59E4Cff;
+}
+
+/* Botón tercero*/
+.btn-tertiary {
+    background-color: #fff;
+    color: #B59E4Cff;
+    font-weight: 600;
+}
+.btn-tertiary:hover,
+.btn-tertiary:focus {
+    background-color: #B59E4Cff;
+    color: #fff;
+    border: 2px solid #B59E4Cff;
+}
+.btn-tertiary:active,
+.btn-tertiary.active {
+    background-color: #F0E1ADff !important;
+    color: #423B20ff !important;
+    border: 2px solid #F0E1ADff !important;
+    box-shadow: none !important;
+}
+
+.disabled{
+    background-color: #F0E1ADff !important;
+    color: black !important;
+    border: 2px solid #F0E1ADff !important;
+    cursor: not-allowed;
+}
+/*------------------------------------- Acordeón -------------------------------------------*/
+/* Cambiar fondo y borde del acordeón activo */
+.accordion-button:not(.collapsed) {
+  background-color:#F0E1ADff; /* tu color miel */
+  color:black; /* texto */
+  border-color: rgb(247, 200, 115);
+}
+
+/* Quitar el borde azul cuando se hace foco */
+.accordion-button:focus {
+  box-shadow: 3px 3px 0px 0px rgb(247, 200, 115) ;  
+  border-color: rgb(247, 200, 115);
 }
 
 /*----------------------------------------------------- Botón de ojo ------------------------------------------------------------*/

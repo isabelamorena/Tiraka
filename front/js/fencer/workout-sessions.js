@@ -342,154 +342,367 @@ function showWorkoutForm(step, template) {
             calendar.setOption('headerToolbar', getHeaderToolbar());
         }
     }
-    updateCalendarView();
-    window.addEventListener('resize', updateCalendarView);
+        updateCalendarView();
+        window.addEventListener('resize', updateCalendarView);
 
-    document.addEventListener('click', function() {
-        const popup = document.getElementById('workout-details-popup');
-        popup.style.display = 'none';
-    });
-}
-});
-
-/* ----------------------------------------------- ¿Qué hay para hoy? ---------------------------------------------- */
-
-document.getElementById('todays-session-link').addEventListener('click', async function(e) {
-    e.preventDefault();
-    document.querySelector("#sidebar").classList.toggle("collapsed");
-    showPanel("todays-session");
-
-    try {
-        const getPersonalWorkoutToday = await fetch('/getPersonalWorkoutToday');
-        const dataPersonal = await getPersonalWorkoutToday.json();
-
-        const getCoachWorkoutToday = await fetch('/getCoachWorkoutToday');
-        const dataCoach = await getCoachWorkoutToday.json();
-
-        // Referencias a los contenedores
-        const coachSession = document.getElementById('coachSession');
-        const personalSession = document.getElementById('personalSession');
-
-        if (!coachSession || !personalSession) {
-            alert('Error: No se encontraron los contenedores de sesión en la página.');
-            return;
-        }
-
-        /* Si solo hay sesión del coach, solo se muestra ese contenedor y ocupa todo el ancho.
-        Si solo hay sesión personal, solo se muestra ese contenedor y ocupa todo el ancho.
-        Si hay ambas, se muestran ambos al 50%.
-        Si no hay ninguna, ambos desaparecen. */
-
-        // Limpia clases antes de añadir nuevas
-        coachSession.classList.remove('d-none', 'col-md-6', 'col-md-12', 'col-12');
-        personalSession.classList.remove('d-none', 'col-md-6', 'col-md-12', 'col-12');
-
-        // Mostrar/ocultar según haya datos
-        let showCoach = dataCoach && dataCoach.success && dataCoach.workout && dataCoach.workout.length > 0;
-        let showPersonal = dataPersonal && dataPersonal.success && dataPersonal.workout && dataPersonal.workout.length > 0;
-
-        if (showCoach && showPersonal) {
-            coachSession.classList.add('col-12');
-            personalSession.classList.add('col-12');
-            coachSession.classList.remove('d-none');
-            personalSession.classList.remove('d-none');
-
-        } else if (showCoach) {
-            coachSession.classList.add('col-12');
-            coachSession.classList.remove('d-none');
-            personalSession.classList.add('d-none');
-        } else if (showPersonal) {
-            personalSession.classList.add('col-12');
-            personalSession.classList.remove('d-none');
-            coachSession.classList.add('d-none');
-        } else {
-            coachSession.classList.add('d-none');
-            personalSession.classList.add('d-none');
-            alert('No hay sesiones disponibles para hoy.');
-        }
-
-        // Rellenar contenido
-        // Mostrar todos los workouts del coach
-        if (showCoach) {
-        coachSession.innerHTML = dataCoach.workout.map(coachWorkout => `
-            <div class="panel-box-today-sessions">
-                <h2 style="color:#B59E4Cff;">${coachWorkout.title}</h2>
-                <p class="mb-1"><strong>Sesión del Coach</strong></p>
-                <p class="mb-1"><strong>Duración:</strong> ${coachWorkout.duration} minutos</p>
-                <p class="mb-1"><strong>Sets:</strong> ${coachWorkout.number_of_sets}</p>
-                <p class="mb-1"><strong>Repeticiones:</strong> ${coachWorkout.number_of_reps}</p>
-                <p class="mb-1 mt-4" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${coachWorkout.description.trim()}</p>
-                <input type="hidden" name="template_id" value="${coachWorkout.template_id || ''}">
-                ${
-                    coachWorkout.is_completed
-                    ? `<button class="btn btn-secondary mt-4" disabled>Completado</button>`
-                    : `<button class="btn btn-primary mt-4 btn-completar-coach" data-id="${coachWorkout.id}">No completado</button>`
-                }
-            </div>
-        `).join('');
-
-        // Solo añade listeners a los botones "No completado" del coach
-        document.querySelectorAll('.btn-completar-coach').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const workoutId = this.getAttribute('data-id');
-                this.textContent = 'Completado';
-                this.classList.remove('btn-primary');
-                this.classList.add('btn-secondary');
-                this.disabled = true;
-                // Aquí tu fetch para marcar como completado en el backend
-                const res = await fetch('/completeCoachWorkout', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ workoutId: workoutId })
-                });
-                const result = await res.json();
-                alert(result.success ? 'Sesión del coach marcada como completada.' : 'Error al marcar la sesión del coach como completada.');
-            });
+        document.addEventListener('click', function() {
+            const popup = document.getElementById('workout-details-popup');
+            popup.style.display = 'none';
         });
-        } else {
-            coachSession.innerHTML = '';
-        }
-
-        if (showPersonal) {
-        personalSession.innerHTML = dataPersonal.workout.map(personalWorkout => `
-            <div class="panel-box-today-sessions"> 
-                <h2 style="color:#B59E4Cff;">${personalWorkout.title}</h2>
-                <p class="mb-1"><strong>Sesión personal</strong></p>
-                <p class="mb-1"><strong>Duración:</strong> ${personalWorkout.duration} minutos</p>
-                <p class="mb-1"><strong>Sets:</strong> ${personalWorkout.number_of_sets}</p>
-                <p class="mb-1"><strong>Repeticiones:</strong> ${personalWorkout.number_of_reps}</p>
-                <p class="mb-1" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${personalWorkout.description.trim()}</p>
-                <input type="hidden" name="personal_workout_id" value="${personalWorkout.id || ''}">
-                <input type="hidden" name="template_id" value="${personalWorkout.template_id || ''}">
-                ${
-                    personalWorkout.is_completed
-                    ? `<button class="btn btn-secondary mt-4" disabled>Completado</button>`
-                    : `<button class="btn btn-primary mt-4 btn-completar" data-id="${personalWorkout.id}">No completado</button>`
-                }
-            </div>
-        `).join('');
-
-        // Solo añade listeners a los botones "No completado"
-        document.querySelectorAll('.btn-completar').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const workoutId = this.getAttribute('data-id');
-                this.textContent = 'Completado';
-                this.classList.remove('btn-primary');
-                this.classList.add('btn-secondary');
-                this.disabled = true;
-                const res = await fetch('/completeWorkout', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ workoutId: workoutId })
-                });
-                const result = await res.json();
-                alert(result.success ? 'Sesión marcada como completada.' : 'Error al marcar la sesión como completada.');
-            });
-        });
-        } else {
-            personalSession.innerHTML = '';
-        }
-    } catch (error) {
-        alert('Error al cargar las sesiones de hoy: ' + error.message);
     }
+
+    /* ----------------------------------------------- ¿Qué hay para hoy? ---------------------------------------------- */
+
+    document.getElementById('todays-session-link').addEventListener('click', async function(e) {
+        e.preventDefault();
+        document.querySelector("#sidebar").classList.toggle("collapsed");
+        showPanel("todays-session");
+
+        try {
+            const getPersonalWorkoutToday = await fetch('/getPersonalWorkoutToday');
+            const dataPersonal = await getPersonalWorkoutToday.json();
+
+            const getCoachWorkoutToday = await fetch('/getCoachWorkoutToday');
+            const dataCoach = await getCoachWorkoutToday.json();
+
+            // Referencias a los contenedores
+            const coachSession = document.getElementById('coachSession');
+            const personalSession = document.getElementById('personalSession');
+
+            if (!coachSession || !personalSession) {
+                alert('Error: No se encontraron los contenedores de sesión en la página.');
+                return;
+            }
+
+            /* Si solo hay sesión del coach, solo se muestra ese contenedor y ocupa todo el ancho.
+            Si solo hay sesión personal, solo se muestra ese contenedor y ocupa todo el ancho.
+            Si hay ambas, se muestran ambos al 50%.
+            Si no hay ninguna, ambos desaparecen. */
+
+            // Limpia clases antes de añadir nuevas
+            coachSession.classList.remove('d-none', 'col-md-6', 'col-md-12', 'col-12');
+            personalSession.classList.remove('d-none', 'col-md-6', 'col-md-12', 'col-12');
+
+            // Mostrar/ocultar según haya datos
+            let showCoach = dataCoach && dataCoach.success && dataCoach.workout && dataCoach.workout.length > 0;
+            let showPersonal = dataPersonal && dataPersonal.success && dataPersonal.workout && dataPersonal.workout.length > 0;
+
+            if (showCoach && showPersonal) {
+                coachSession.classList.add('col-12');
+                personalSession.classList.add('col-12');
+                coachSession.classList.remove('d-none');
+                personalSession.classList.remove('d-none');
+
+            } else if (showCoach) {
+                coachSession.classList.add('col-12');
+                coachSession.classList.remove('d-none');
+                personalSession.classList.add('d-none');
+            } else if (showPersonal) {
+                personalSession.classList.add('col-12');
+                personalSession.classList.remove('d-none');
+                coachSession.classList.add('d-none');
+            } else {
+                coachSession.classList.add('d-none');
+                personalSession.classList.add('d-none');
+                alert('No hay sesiones disponibles para hoy.');
+            }
+            const historyFeedback = document.getElementById('personal-history-feedback');
+            historyFeedback.classList.add('d-none');
+
+            // Rellenar contenido
+            // Mostrar todos los workouts del coach
+            if (showCoach) {
+            coachSession.innerHTML = dataCoach.workout.map(coachWorkout => `
+                <div class="panel-box-today-sessions">
+                    <h2 style="color:#B59E4Cff;">${coachWorkout.title}</h2>
+                    <p class="mb-1"><strong>Sesión del Coach</strong></p>
+                    <p class="mb-1"><strong>Duración:</strong> ${coachWorkout.duration} minutos</p>
+                    <p class="mb-1"><strong>Sets:</strong> ${coachWorkout.number_of_sets}</p>
+                    <p class="mb-1"><strong>Repeticiones:</strong> ${coachWorkout.number_of_reps}</p>
+                    <p class="mb-1 mt-4" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${coachWorkout.description.trim()}</p>
+                    ${
+                        coachWorkout.is_completed
+                        ? `<button class="btn mt-4" disabled>Completado</button>`
+                        : `<button class="btn btn-secondary mt-4 btn-completar-coach" data-id="${coachWorkout.id}">No completado</button>`
+                    }
+                    <button class="btn btn-tertiary mt-4 btn-view-coach-feedbacks" data-template-id="${coachWorkout.template_id}">Ver historial</button>
+                    <button class="btn btn-tertiary mt-4 btn-write-feedback" data-id="${coachWorkout.id}">Escribir feedback</button>
+                    <div class="coach-feedbacks-container"></div>
+
+                </div>
+            `).join('');
+            // Botón para escribir feedback
+            document.querySelectorAll('.btn-write-feedback').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const workoutId = this.getAttribute('data-id');
+                    // Evita múltiples formularios
+                    if (this.nextElementSibling && this.nextElementSibling.classList.contains('feedback-form-container')) return;
+
+                    const feedbackFormHtml = `
+                        <div class="feedback-form-container mt-3">
+                            <form class="feedback-form">
+                                <div class="mb-2">
+                                    <label for="feedback-text-${workoutId}" class="form-label">Escribe tu feedback:</label>
+                                    <textarea class="form-control" id="feedback-text-${workoutId}" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Guardar feedback</button>
+                                <button type="button" class="btn btn-secondary btn-sm btn-cancel-feedback">Cancelar</button>
+                            </form>
+                        </div>
+                    `;
+                    this.insertAdjacentHTML('afterend', feedbackFormHtml);
+                    this.disabled = true;
+
+                    // Cancelar
+                    this.nextElementSibling.querySelector('.btn-cancel-feedback').onclick = () => {
+                        this.nextElementSibling.remove();
+                        this.disabled = false;
+                    };
+
+                    // Enviar feedback
+                    this.nextElementSibling.querySelector('.feedback-form').onsubmit = async (ev) => {
+                        ev.preventDefault();
+                        const feedback = document.getElementById(`feedback-text-${workoutId}`).value;
+                        const res = await fetch('/saveCoachSessionFeedback', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ workoutId, feedback })
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                            this.nextElementSibling.innerHTML = `<div class="alert alert-success mt-2">Feedback guardado correctamente.</div>`;
+                        } else {
+                            this.nextElementSibling.innerHTML = `<div class="alert alert-danger mt-2">Error al guardar feedback.</div>`;
+                        }
+                        setTimeout(() => {
+                            if (this.nextElementSibling) this.nextElementSibling.remove();
+                            this.disabled = false;
+                        }, 2000);
+                    };
+                });
+            });
+            // Botón para ver feedbacks del coach
+            document.querySelectorAll('.btn-view-coach-feedbacks').forEach(btn => {
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const templateId = this.getAttribute('data-template-id');
+                const parentPanel = this.closest('.panel-box-today-sessions');
+                const feedbacksContainer = parentPanel.querySelector('.coach-feedbacks-container');
+
+                // Toggle: si ya está visible, ocultar
+                if (feedbacksContainer.innerHTML.trim() !== '') {
+                    feedbacksContainer.innerHTML = '';
+                    return;
+                }
+
+                // Fetch de los entrenamientos del coach de la misma plantilla (ajusta el endpoint si es necesario)
+                const res = await fetch('/getCoachTemplateHistory?templateId=' + encodeURIComponent(templateId), {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                const result = await res.json();
+
+                const workouts = Array.isArray(result.workouts) ? result.workouts : [];
+                let accordionHtml = '';
+                if (workouts.length === 0) {
+                    accordionHtml = `<div class="alert alert-info mt-3 feedback-accordion-container">No hay feedbacks para esta plantilla.</div>`;
+                } else {
+                    accordionHtml = `
+                        <div class="feedback-accordion-container mt-3">
+                            <h5>Feedbacks de ${workouts[0] && workouts[0].title ? workouts[0].title : ''}</h5>
+                            <div class="accordion" id="coachFeedbackAccordion-${templateId}">
+                                ${workouts.map((item, idx) => `
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="coachHeading${templateId}-${idx}">
+                                            <button class="accordion-button ${idx !== 0 ? 'collapsed' : ''}" type="button" data-bs-toggle="collapse" data-bs-target="#coachCollapse${templateId}-${idx}" aria-expanded="${idx === 0 ? 'true' : 'false'}" aria-controls="coachCollapse${templateId}-${idx}">
+                                                Fecha: ${item.date ? new Date(item.date).toLocaleDateString() : 'Sin fecha'}
+                                            </button>
+                                        </h2>
+                                        <div id="coachCollapse${templateId}-${idx}" class="accordion-collapse collapse ${idx === 0 ? 'show' : ''}" aria-labelledby="coachHeading${templateId}-${idx}" data-bs-parent="#coachFeedbackAccordion-${templateId}">
+                                            <div class="accordion-body">
+                                                <strong>Feedback:</strong><br>
+                                                ${item.feedback ? item.feedback : '<em>Sin feedback</em>'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                feedbacksContainer.innerHTML = accordionHtml;
+            });
+        });
+            // Botón para completar sesión del coach
+            document.querySelectorAll('.btn-completar-coach').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const workoutId = this.getAttribute('data-id');
+                    this.textContent = 'Completado';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-secondary');
+                    this.disabled = true;
+                    // Aquí tu fetch para marcar como completado en el backend
+                    const res = await fetch('/completeCoachWorkout', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ workoutId: workoutId })
+                    });
+                    const result = await res.json();
+                });
+            });
+            } else {
+                coachSession.innerHTML = '';
+            }
+
+
+            if (showPersonal) {
+                personalSession.innerHTML = dataPersonal.workout.map(personalWorkout => `
+                    <div class="panel-box-today-sessions">
+                        <h2 style="color:#B59E4Cff;">${personalWorkout.title}</h2>
+                        <p class="mb-1"><strong>Sesión Personal</strong></p>
+                        <p class="mb-1"><strong>Duración:</strong> ${personalWorkout.duration} minutos</p>
+                        <p class="mb-1"><strong>Sets:</strong> ${personalWorkout.number_of_sets}</p>
+                        <p class="mb-1"><strong>Repeticiones:</strong> ${personalWorkout.number_of_reps}</p>
+                        <p class="mb-1 mt-4" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${personalWorkout.description.trim()}</p>
+                        ${
+                            personalWorkout.is_completed
+                            ? `<button class="btn mt-4" disabled>Completado</button>`
+                            : `<button class="btn btn-secondary mt-4 btn-completar" data-id="${personalWorkout.id}">No completado</button>`
+                        }
+                        <button class="btn btn-tertiary mt-4 btn-view-feedbacks" data-template-id="${personalWorkout.template_id}">Ver feedbacks</button>
+                        <button class="btn btn-tertiary mt-4 btn-write-feedback" data-id="${personalWorkout.id}">Escribir feedback</button>
+                        <div class="feedbacks-container"></div>
+                    </div>
+                `).join('');
+
+                // Botón para ver feedbacks
+                document.querySelectorAll('.btn-view-feedbacks').forEach(btn => {
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                const templateId = this.getAttribute('data-template-id');
+                const parentPanel = this.closest('.panel-box-today-sessions');
+                const feedbacksContainer = parentPanel.querySelector('.feedbacks-container');
+
+                // Si ya hay feedbacks visibles, ocultar (toggle)
+                if (feedbacksContainer.innerHTML.trim() !== '') {
+                    feedbacksContainer.innerHTML = '';
+                    return;
+                }
+
+                // Fetch de los entrenamientos de la misma plantilla
+                const res = await fetch('/getPersonalTemplateId?templateId=' + encodeURIComponent(templateId), {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                const result = await res.json();
+
+                const workouts = Array.isArray(result.workouts) ? result.workouts : [];
+                let accordionHtml = '';
+                if (workouts.length === 0) {
+                    accordionHtml = `<div class="text-failure mt-3 feedback-accordion-container">No hay feedbacks para esta plantilla.</div>`;
+                } else {
+                    accordionHtml = `
+                        <div class="feedback-accordion-container mt-3">
+                            <h5>Feedbacks de ${workouts[0] && workouts[0].title ? ' ' + workouts[0].title : ''}</h5>
+                            <div class="accordion" id="feedbackAccordion-${templateId}">
+                                ${workouts.map((item, idx) => `
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading${templateId}-${idx}">
+                                            <button class="accordion-button ${idx !== 0 ? 'collapsed' : ''}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${templateId}-${idx}" aria-expanded="${idx === 0 ? 'true' : 'false'}" aria-controls="collapse${templateId}-${idx}">
+                                                Fecha: ${item.date ? new Date(item.date).toLocaleDateString() : 'Sin fecha'}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse${templateId}-${idx}" class="accordion-collapse collapse ${idx === 0 ? 'show' : ''}" aria-labelledby="heading${templateId}-${idx}" data-bs-parent="#feedbackAccordion-${templateId}">
+                                            <div class="accordion-body">
+                                                <strong>Feedback:</strong><br>
+                                                ${item.feedback ? item.feedback : '<em>Sin feedback</em>'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                feedbacksContainer.innerHTML = accordionHtml;
+            });
+        });
+                // Botón para escribir feedback
+                document.querySelectorAll('.btn-write-feedback').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const workoutId = this.getAttribute('data-id');
+                        // Evita múltiples formularios
+                        if (this.nextElementSibling && this.nextElementSibling.classList.contains('feedback-form-container')) return;
+
+                        const feedbackFormHtml = `
+                            <div class="feedback-form-container mt-3">
+                                <form class="feedback-form">
+                                    <div class="mb-2">
+                                        <label for="feedback-text-${workoutId}" class="form-label">Escribe tu feedback:</label>
+                                        <textarea class="form-control" id="feedback-text-${workoutId}" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm">Guardar feedback</button>
+                                    <button type="button" class="btn btn-secondary btn-sm btn-cancel-feedback">Cancelar</button>
+                                </form>
+                            </div>
+                        `;
+                        this.insertAdjacentHTML('afterend', feedbackFormHtml);
+                        this.disabled = true;
+
+                        // Cancelar
+                        this.nextElementSibling.querySelector('.btn-cancel-feedback').onclick = () => {
+                            this.nextElementSibling.remove();
+                            this.disabled = false;
+                        };
+
+                        // Enviar feedback
+                        this.nextElementSibling.querySelector('.feedback-form').onsubmit = async (ev) => {
+                            ev.preventDefault();
+                            const feedback = document.getElementById(`feedback-text-${workoutId}`).value;
+                            const res = await fetch('/savePersonalFeedback', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({ workoutId, feedback })
+                            });
+                            const result = await res.json();
+                            if (result.success) {
+                                this.nextElementSibling.innerHTML = `<div class="alert alert-success mt-2">Feedback guardado correctamente.</div>`;
+                            } else {
+                                this.nextElementSibling.innerHTML = `<div class="alert alert-danger mt-2">Error al guardar feedback.</div>`;
+                            }
+                            setTimeout(() => {
+                                if (this.nextElementSibling) this.nextElementSibling.remove();
+                                this.disabled = false;
+                            }, 2000);
+                        };
+                    });
+                });
+                // Botón para marcar como completado
+                document.querySelectorAll('.btn-completar').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const workoutId = this.getAttribute('data-id');
+                        this.textContent = 'Completado';
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-secondary');
+                        this.disabled = true;
+                        const res = await fetch('/completeWorkout', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ workoutId: workoutId })
+                        });
+                        const result = await res.json();
+                    });
+                });
+            } else {
+                personalSession.innerHTML = '';
+            }
+            
+        } catch (error) {
+            alert('Error al cargar las sesiones de hoy: ' + error.message);
+        }
+    });
 });
