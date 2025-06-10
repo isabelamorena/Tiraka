@@ -1,4 +1,5 @@
 import { showPanel } from './shared-functions.js';
+import { showAlert } from './shared-functions.js';
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 tableBody.innerHTML = `<tr><td colspan="4" class="text-danger">${data.message}</td></tr>`;
             }
         } catch (error) {
-            alert("Error al cargar las asistencias" + error);	
+            showAlert("Error al cargar las asistencias" + error);	
         }
     }
 
@@ -103,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         } catch (error) {
-            alert("Error al cargar las asistencias" + error);
+            showAlert("Error al cargar las asistencias" + error);
         }
     }
 
@@ -119,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Verificar que no esten vacíos
         if (!date || !checkin || !checkout) {
             e.preventDefault(); // Evitar el envío del formulario
-            alert("Por favor, completa todos los campos.");
+            showAlert("Por favor, completa todos los campos.");
             return;
         }
 
@@ -128,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedDate = new Date(date);
         if (selectedDate > today) {
             e.preventDefault(); // Evitar el envío del formulario
-            alert("La fecha no puede ser mayor a la actual.");
+            showAlert("La fecha no puede ser mayor a la actual.");
             return;
         }
 
@@ -148,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (checkoutTime <= checkinTime) {
             e.preventDefault(); // Evitar el envío del formulario
-            alert("La hora de salida debe ser posterior a la hora de entrada.");
+            showAlert("La hora de salida debe ser posterior a la hora de entrada.");
             return;
         }
 
@@ -198,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            alert('Hubo un error al enviar los datos!');
+            showAlert('Hubo un error al enviar los datos!');
         }
     });
 

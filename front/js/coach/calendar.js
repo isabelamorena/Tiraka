@@ -1,4 +1,6 @@
 import { showPanel } from "./shared-functions.js";
+import { showAlert } from "./shared-functions.js";
+import {showConfirm} from "./shared-functions.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.success && Array.isArray(data.workouts)) {
                 eventos = data.workouts.map(w => ({
                     // Puedes usar solo el nombre o el nombre completo:
+                    id: w.id,
                     title: `${w.name} ${w.surname} ${w.secondsurname}`,
                     start: w.date,
                     color: colorPorFencerId(w.fencer_id),
@@ -39,8 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }));
             }
+
         } catch (e) {
             console.error('Error cargando entrenamientos:', e);
+            showAlert('Error al cargar los entrenamientos del coach');
         }
 
         function getHeaderToolbar() {
@@ -70,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 info.jsEvent.stopPropagation();
                 const e = info.event;
                 const props = e.extendedProps;
-                const detalles = `
+                let detalles = `
                     <strong>${e.title}</strong><br>
                     <b>Título entrenamiento:</b> ${props.workoutTitle || ''}<br>
                     <b>Fecha:</b> ${e.start.toLocaleDateString()}<br>
@@ -80,6 +85,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     <b>Sets:</b> ${props.number_of_sets}<br>
                     <b>Repeticiones:</b> ${props.number_of_reps}
                 `;
+
+                // Botón de borrar
+                    detalles += `<br><button id="delete-personal-workout" class="btn btn-sm mt-2"><i class="lni lni-trash-3"></i></button>`;
+
                 const popup = document.getElementById('workout-details-popup');
                 popup.innerHTML = detalles;
                 popup.style.display = 'block';
@@ -87,6 +96,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 popup.style.left = mouseEvent.pageX + 15 + 'px';
                 popup.style.top = mouseEvent.pageY - 10 + 'px';
                 popup.onclick = function(ev) { ev.stopPropagation(); };
+
+                // Listener para borrar
+                setTimeout(() => {
+                    const btn = document.getElementById('delete-coach-workout');
+                    if (btn) {
+                        btn.onclick = function() {
+                            showConfirm('¿Seguro que quieres borrar este entrenamiento?', async function() {
+                                const res = await fetch('/deleteCoachWorkout', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({ workoutId: e.id })
+                                });
+                                const result = await res.json();
+                                if (result.success) {
+                                    showAlert('Entrenamiento borrado.');
+                                    popup.style.display = 'none';
+                                    cargarEntrenamientosYCalendarioCoach(); // Recarga el calendario
+                                } else {
+                                    showAlert('Error al borrar entrenamiento.');
+                                }
+                            });
+                        };
+                    }
+                }, 100);
             }
         });
         window.coachCalendar.render();

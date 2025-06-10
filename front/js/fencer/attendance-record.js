@@ -1,8 +1,14 @@
 import { showPanel } from './shared-functions.js';
+import { showAlert } from './shared-functions.js';      
+let selectedStart = null;
+let selectedEnd = null;
+
 document.addEventListener("DOMContentLoaded", function () {
 
 /*---------------------------------------------------------- Mostrar asistencias -------------------------------------------------------------- */
     const attendanceButton = document.getElementById("attendance-link");
+    let attendanceDataGlobal = [];
+
     attendanceButton.addEventListener("click", async function (e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
@@ -11,12 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch('/getAttendanceRecord');
             const data = await response.json();
-
-            AttendanceWithPagination(data);
+            attendanceDataGlobal = data;
+            AttendanceWithPagination(attendanceDataGlobal);
+            renderAttendanceAreaChartByDay(attendanceDataGlobal);
 
         } catch (error) {
             console.error("Error al obtener el historial de asistencias:", error);
-            alert("Error al cargar las asistencias");
+            showAlert("Error al cargar las asistencias");
         }
     });
 
@@ -85,52 +92,125 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ---------------------------------------------- Mostrar asistencias de un rango de fechas determinado --------------------------------------------*/
     flatpickr("#date-range", {
         mode: "range",
-        dateFormat: "Y-m-d"
+        dateFormat: "Y-m-d",
+        onChange: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                selectedStart = selectedDates[0];
+                selectedEnd = selectedDates[1];
+            }
+        }
     });
 
-    document.getElementById("filter-attendance-button").addEventListener("click", async function (e) {
+    document.getElementById("filter-attendance-button").addEventListener("click", function(e) {
         e.preventDefault();
 
-        const selectedDates = document.getElementById("date-range").value;
-
-        if (!selectedDates) {
-            alert("Por favor, selecciona un rango de fechas.");
-            return;
-        }
-
-        const [startDateStr, endDateStr] = selectedDates.split(" to ");
-        if (!startDateStr || !endDateStr) {
-            alert("Por favor, selecciona un rango válido con dos fechas.");
-            return;
-        }
-
-        const today = new Date();
-        const startDate = new Date(startDateStr);
-        const endDate = new Date(endDateStr);
-        if (startDate > today || endDate > today) {
-            alert("Las fechas no pueden ser mayores a la actual.");
-            return;
-        }
-
-        try {
-            const response = await fetch('/getAttendanceRecordFilter', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ startDate: startDateStr, endDate: endDateStr }),
-                credentials: 'include'
+        let filtered = attendanceDataGlobal;
+        if (selectedStart && selectedEnd) {
+            filtered = attendanceDataGlobal.filter(record => {
+                const d = new Date(record.date.split('T')[0]);
+                return d >= selectedStart && d <= selectedEnd;
             });
-
-            const data = await response.json();
-
-            AttendanceWithPagination(data);
-
-        } catch (error) {
-            console.error('Error al filtrar el historial de asistencias:', error);
-            alert('Error al filtrar asistencias ' + error.message );
         }
+        AttendanceWithPagination(filtered);
+        renderAttendanceAreaChartByDay(filtered);
     });
     
-    
-    
+    /* -------------------------------------------------- Gráfica --------------------------------------------- */
+    function renderAttendanceAreaChartByDay(data) {
+        // 1. Genera todos los días del rango seleccionado
+        let start = selectedStart;
+        let end = selectedEnd;
+        if (!start || !end) {
+            // Si no hay rango, usa el rango de los datos
+            const allDates = data.map(r => new Date(r.date.split('T')[0]));
+            if (allDates.length === 0) return;
+            start = new Date(Math.min(...allDates));
+            end = new Date(Math.max(...allDates));
+        }
+
+        // Crea un array con todos los días del rango
+        const days = [];
+        let d = new Date(start);
+        d.setHours(0,0,0,0);
+        end = new Date(end);
+        end.setHours(0,0,0,0);
+        while (d <= end) {
+            days.push(new Date(d));
+            d.setDate(d.getDate() + 1);
+        }
+
+        // 2. Agrupa minutos trabajados por día
+        const workedByDate = {};
+        data.forEach(record => {
+            const dateStr = record.date.split('T')[0];
+            let minutesWorked = 0;
+            if (record.checkin && record.checkout) {
+                const [inH, inM] = record.checkin.split(":").map(Number);
+                const [outH, outM] = record.checkout.split(":").map(Number);
+                const inMinutes = inH * 60 + inM;
+                const outMinutes = outH * 60 + outM;
+                minutesWorked = outMinutes - inMinutes;
+            }
+            workedByDate[dateStr] = (workedByDate[dateStr] || 0) + minutesWorked;
+        });
+
+        // 3. Prepara labels y datos para todos los días del rango
+        const labels = days.map(dateObj => {
+            return `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth()+1).toString().padStart(2, '0')}`;
+        });
+        const dataPoints = days.map(dateObj => {
+            const dateStr = dateObj.toISOString().split('T')[0];
+            return (workedByDate[dateStr] || 0) / 60; // Horas
+        });
+
+        // 4. Dibuja la gráfica
+        const ctx = document.getElementById('attendanceAreaChart').getContext('2d');
+        if (window.attendanceChart) window.attendanceChart.destroy();
+        window.attendanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Horas trabajadas por día',
+                    data: dataPoints,
+                    fill: true,
+                    borderColor: '#B59E4C',
+                    backgroundColor: 'rgba(181,158,76,0.15)',
+                    tension: 0.3,
+                    pointBackgroundColor: '#B59E4C',
+                    pointBorderColor: '#B59E4C',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    title: { display: true, text: 'Horas trabajadas por día' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        // stepSize de 0.25 para 15 minutos (0.25 horas)
+                        ticks: {
+                            stepSize: 0.25,
+                            callback: function(value) {
+                                // Muestra en formato "h:mm"
+                                const hours = Math.floor(value);
+                                const minutes = Math.round((value - hours) * 60);
+                                return `${hours}h${minutes > 0 ? ' ' + minutes + 'm' : ''}`;
+                            }
+                        },
+                        title: { display: true, text: 'Horas' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Día' }
+                    }
+                }
+            }
+        });
+    }
 
 });

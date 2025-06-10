@@ -39,3 +39,54 @@ export function formatDateYYYYMMDD(date) {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
+
+export function showAlert(msg) {
+    const alertBox = document.getElementById('custom-alert');
+    const messageEl = document.getElementById('custom-alert-message');
+
+    messageEl.textContent = msg;
+    
+    // Reset clases por si ya estaba animado
+    alertBox.classList.remove('hide');
+    alertBox.classList.add('show');
+
+    // Ocultar con transición después de 3.5s
+    setTimeout(() => {
+        alertBox.classList.remove('show');
+        alertBox.classList.add('hide');
+    }, 3000);
+}
+
+export function showConfirm(message, onConfirm, onCancel) {
+    let modal = document.getElementById('custom-confirm-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'custom-confirm-modal';
+        modal.style = 'display:flex; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); align-items:center; justify-content:center;';
+        modal.innerHTML = `
+          <div style="background:#fff; padding:30px 20px; border-radius:8px; max-width:90vw; min-width:250px; text-align:center; margin:auto;">
+            <div id="custom-confirm-message" style="margin-bottom:20px;"></div>
+            <button id="custom-confirm-ok" class="btn btn-primary">Sí</button>
+            <button id="custom-confirm-cancel" class="btn btn-secondary ms-2">No</button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    document.getElementById('custom-confirm-message').textContent = message;
+    modal.style.display = 'flex';
+
+    function cleanup() {
+        modal.style.display = 'none';
+        document.getElementById('custom-confirm-ok').onclick = null;
+        document.getElementById('custom-confirm-cancel').onclick = null;
+    }
+
+    document.getElementById('custom-confirm-ok').onclick = function() {
+        cleanup();
+        if (onConfirm) onConfirm();
+    };
+    document.getElementById('custom-confirm-cancel').onclick = function() {
+        cleanup();
+        if (onCancel) onCancel();
+    };
+}

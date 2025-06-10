@@ -276,13 +276,25 @@ router.post('/deleteTemplateCoach/:templateId', isSessionValid, async (req, res)
     }
 });
 
+//Eliminar un entrenamiento específico del coach
+router.post('/deleteCoachWorkout', isSessionValid, async (req, res) => {
+    const { workoutId } = req.body;
+    console.log("ID del entrenamiento a borrar:", workoutId);
+    try {
+        await pool.query('DELETE FROM fencer_coach_sessions WHERE id = $1', [workoutId]);
+        res.json({ success: true });
+    } catch (err) {
+        res.json({ success: false, error: err.message });
+    }
+});
+
 /*-------------------------------------------------------- Calendario --------------------------------------------------- */
 // Obtener todos los entrenamientos del coach
 router.get('/getCoachWorkouts', isSessionValid, async (req, res) => {
     try {
         const coachId = req.session.user.userId;
         const result = await pool.query(`
-        SELECT fencer.name, fencer.surname, fencer.secondsurname, fencer_coach_sessions.date, fencer_coach_sessions.description,
+        SELECT fencer_coach_sessions.id, fencer.name, fencer.surname, fencer.secondsurname, fencer_coach_sessions.date, fencer_coach_sessions.description,
 	        fencer_coach_sessions.duration, fencer_coach_sessions.number_of_sets,fencer_coach_sessions.number_of_reps,
 		        fencer_coach_sessions.title FROM fencer_coach_sessions INNER JOIN fencer ON fencer.id = fencer_coach_sessions.fencer_id 
 			        WHERE fencer_coach_sessions.coach_id = $1

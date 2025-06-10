@@ -1,4 +1,4 @@
-import { showPanel, fencersCoach } from './shared-functions.js';
+import { showPanel, fencersCoach, showAlert } from './shared-functions.js';
 import { formatDateYYYYMMDD } from './shared-functions.js';
 
 // Función para cargar los tiradores vinculados al entrenador
@@ -27,6 +27,7 @@ async function fencerChoices() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    fencerChoices();
     /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
     const createWorkoutLink = document.getElementById("create-workout-link");
     createWorkoutLink.addEventListener("click", async function (e) {
@@ -210,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const selectedFencers = Array.from(fencerSelect.selectedOptions).map(opt => opt.value);
 
                     if (selectedFencers.length === 0) {
-                        document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Selecciona al menos un tirador.</div>';
+                        showAlert('Por favor, selecciona al menos un tirador.');
                         return;
                     }
 
@@ -225,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                     const result = await res.json();
                     if (result.success) {
-                        document.getElementById('workout-message').innerHTML = '<div class="text-success mt-3">Entrenamientos guardados correctamente.</div>';
+                        showAlert('Entrenamientos guardados correctamente.');
                         setTimeout(() => {
                             document.getElementById('workout-message').innerHTML = '';
                         }, 3000);
@@ -249,10 +250,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                     } else {
-                        document.getElementById('workout-message').innerHTML = '<div class="text-failure mt-3">Error al guardar entrenamientos.</div>';
+                        showAlert('Error al guardar los entrenamientos: ' + result.message);
                     }
                 }).catch(() => {
-                    document.getElementById('workout-message').innerHTML = '<div class="text-failure mt-3">Error de conexión.</div>';
+                    showAlert('Error de conexión.');
                 });
             }
         }
@@ -304,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             });
         } catch (error) {
-            alert("Error cargando las plantillas: " + error.message);
+            showAlert("Error cargando las plantillas: " + error.message);
         }
     }
 
@@ -330,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
             leftCol.classList.add("col-md-4");
             rightCol.classList.remove("d-none");
         } catch (error) {
-            alert("Error al cargar los detalles de la plantilla: " + error.message);
+            showAlert("Error al cargar los detalles de la plantilla: " + error.message);
         }
     }
 
@@ -352,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const templateId = document.getElementById("template-id").value;
 
         if (!templateId) {
-            alert("Por favor, selecciona una plantilla.");
+            showAlert("Por favor, selecciona una plantilla.");
             return;
         }
 
@@ -365,7 +366,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
             if (result.success) {
-                alert('Plantilla eliminada correctamente');
+                showAlert('Plantilla eliminada correctamente');
                 loadClassTemplatesTitles();
 
                 // Limpiar detalles y el id seleccionado tras borrar
@@ -381,10 +382,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftCol.classList.add("col-12");
 
             } else {
-                alert('Error al eliminar: ' + result.message);
+                showAlert('Error al eliminar: ' + result.message);
             }
         } catch (error) {
-            alert('Error al enviar datos: ' + error.message);
+            showAlert('Error al enviar datos: ' + error.message);
         }
     });
 

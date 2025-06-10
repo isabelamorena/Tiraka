@@ -1,4 +1,6 @@
 import { showPanel } from './shared-functions.js';
+import { showAlert } from './shared-functions.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Mostrar el diario de competición --------------------------------------------- */
     const competitionDiaryBtn = document.getElementById("competition-diary-link");
@@ -41,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             });
         } catch (error) {
-            alert("Error cargando el diario: " + error.message);
+            showAlert("Error cargando el diario: " + error.message);
         } 
     }
 
@@ -112,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('competition-diary-detail-description').innerHTML = html;
 
         } catch (err) {
-            alert('Error cargando detalles del diario: ' + err.message);
+            showAlert('Error cargando detalles del diario: ' + err.message);
             console.error(err);
         }
     }
@@ -201,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------- Guardar el diario de competiciones ---------------------------------------------*/
     document.getElementById("add-competition-diary-form-button").addEventListener("click", async function (e) {
         e.preventDefault();
-        alert("Guardando el diario de competiciones...");
 
         const pp = document.getElementById("passed-pool").value;
         let passedPool = false;
@@ -232,8 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 diaryData.directes.push({ stage, description });
             }
         });
-        alert("Titulo: " + diaryData.title + "\nFecha: " + diaryData.date + "\nUbicación: " + diaryData.location + "\nComentarios: " + diaryData.feedback + "\nPosición final: " + diaryData.end_position + "\nVictorias en poule: " + diaryData.wins_pool + "\nDerrotas en poule: " + diaryData.losses_pool + "\nDirectas recogidas:\n" + diaryData.directes.map(d => `Stage: ${d.stage}, Descripción: ${d.description}`).join("\n"));
-        // Enviar por fetch
+       // Enviar por fetch
         try {
             const response = await fetch('/addCompetitionDiary', {
                 method: 'POST',
@@ -247,16 +247,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const result = await response.json();
 
             if (result.success) {
-                alert("Diario de competición guardado correctamente.");
                 // Opcional: resetear el formulario
                 document.getElementById("add-competition-diary-form").style.display = "none";
                 document.getElementById("competition-diary-form").reset();
                 loadCompetitionDiaryTitles();
             } else {
-                alert("Error al guardar: " + result.message);
+                showAlert("Error al guardar: " + result.message);
             }
         } catch (error) {
-            alert("Error en el envío: " + error.message);
+            showAlert("Error en el envío: " + error.message);
         }
     });
 
@@ -273,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const result = await res.json();
 
         if (result.success) {
-        alert("Entrada eliminada.");
+        showAlert("Entrada eliminada.");
         loadCompetitionDiaryTitles(); // recargar la lista
         // Volver al layout sin detalles
                 const rightCol = document.getElementById("competition-right-column");
@@ -282,10 +281,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftCol.classList.remove("col-md-4");
                 leftCol.classList.add("col-12");
         } else {
-        alert("Error al eliminar la entrada.");
+        showAlert("Error al eliminar la entrada.");
         }
     } catch (err) {
-        alert("Error: " + err.message);
+        showAlert("Error: " + err.message);
     }
     });
 

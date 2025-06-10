@@ -1,4 +1,6 @@
 import { showPanel } from './shared-functions.js';
+import { showAlert } from "./shared-functions.js";
+
 
 document.addEventListener('DOMContentLoaded', function() {
     /* ------------------------------------------- Perfil ----------------------------------------------------- */
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("profile-clubname").value = data.clubname ?? "Nombre del club no disponible";
             document.getElementById("profile-email").value = data.email ?? "Email no disponible";
         } catch (error) {
-            alert("Error al cargar el perfil" + error);
+            showAlert("Error al cargar el perfil" + error);
         }
     };
 
@@ -51,21 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Verificar que no estén vacíos
         if (!username || !name || !surname || !secondsurname || !clubname || !email) {
-            alert("Por favor, completa todos los campos.");
+            showAlert("Por favor, completa todos los campos.");
             return;
         }
 
         // Validación de nombre y apellidos (solo letras y espacios)
         const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/;
         if (![name, surname, secondsurname].every(val => nameRegex.test(val))) {
-            alert('El nombre y apellidos solo pueden contener letras y espacios.');
+            showAlert('El nombre y apellidos solo pueden contener letras y espacios.');
             return;
         }
 
         // Validación de email
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
-            alert('El correo electrónico no es válido.');
+            showAlert('El correo electrónico no es válido.');
             return;
         }
            
@@ -89,13 +91,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             
             if (result.success) {
-                alert('Perfil actualizado correctamente');
+                showAlert('Perfil actualizado correctamente');
                 showProfile();
             } else {
-                alert('Error al actualizar el perfil: ' + result.message);
+                showAlert('Error al actualizar el perfil: ' + result.message);
             }
         } catch (error) {
-            alert('Hubo un error al enviar los datos: ' + error.message);
+            showAlert('Hubo un error al enviar los datos: ' + error.message);
         }
 
     });
@@ -111,20 +113,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Verificar que no estén vacíos
         if (!oldPassword || !newPassword || !confirmNewPassword) {
-            alert("Por favor, completa todos los campos.");
+            showAlert("Por favor, completa todos los campos.");
             return;
         }
 
         // Validación de la nueva contraseña (mínimo 8 caracteres, al menos una letra y un número)
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         if (!passwordRegex.test(newPassword)) {
-            alert('La nueva contraseña debe tener al menos 8 caracteres, incluyendo letras y números.');
+            showAlert('La nueva contraseña debe tener al menos 8 caracteres, incluyendo letras y números.');
             return;
         }
 
         // Verificar que las contraseñas coincidan
         if (newPassword !== confirmNewPassword) {
-            alert('Las contraseñas no coinciden.');
+            showAlert('Las contraseñas no coinciden.');
             return;
         }
 
@@ -145,13 +147,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             
             if (result.success) {
-                alert('Contraseña actualizada correctamente');
-                window.location.reload()
+                showAlert('Contraseña actualizada correctamente');
+                
+                // Limpiar los campos de contraseña
+                document.getElementById("profile-current-password").value = '';
+                document.getElementById("profile-new-password").value = '';
+                document.getElementById("profile-confirm-new-password").value = '';
             } else {
-                alert('Error al actualizar la contraseña: ' + result.message);
+                showAlert('Error al actualizar la contraseña: ' + result.message);
             }
         } catch (error) {
-            alert('Hubo un error al enviar los datos: ' + error.message);
+            showAlert('Hubo un error al enviar los datos: ' + error.message);
         }
 
     });

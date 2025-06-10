@@ -23,10 +23,69 @@
     overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
 }
 
+.panel-box-only-attendance{
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 730px; 
+}
+#attendance-chart{
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 730px; 
+}
 
+/* Gráfica responsive */
+#attendanceAreaChart {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100vw;
+    min-width: 0;
+    padding: 20px;
+
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .panel-box-only-attendance {
+        padding: 15px;
+    }
+    #attendanceAreaChart {
+        max-width: 100vw;
+        /* height: 220px !important; */ /* <-- Elimina o comenta esta línea */
+    }
+    #attendance-chart{
+    height: auto !important; /* Ajusta la altura automáticamente en móviles */
+    
+}
+}
+@media (max-width: 768px) {
+  #attendance-record .row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    display: flex;
+  }
+  #attendance-record .col-12 {
+    min-width: auto;
+    flex: 0 0 auto;
+  }
+  #attendance-record .col-md-4,
+  #attendance-record .col-md-8 {
+    min-width: auto;
+    flex: 0 0 auto;
+  }
+  .panel-box-only-attendance {
+        height: auto; /* en tablet/móvil, altura automática */
+    }
+}
 /* ---------------------- en móviles --------------------------- */
 @media (max-width: 768px) {
-    
+   
     #left-column, #right-column { 
         margin-bottom: 1rem; 
     }

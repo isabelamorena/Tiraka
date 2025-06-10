@@ -206,6 +206,73 @@ router.get('/getWorkouts', isSessionValid, async (req, res) => {
     }
 });
 
+// Obtener los entrenamientos del tirador posteriores a hoy
+    router.get('/getHistoryWorkouts', isSessionValid, async (req, res) => {
+        const fencerId = req.session.user.userId;
+        try {
+            const selectQuery = `
+                SELECT
+                    id AS "id",
+                    title AS "title",
+                    date AS "date",
+                    description AS "description",
+                    duration AS "duration",
+                    number_of_sets AS "number_of_sets",
+                    number_of_reps AS "number_of_reps",
+                    is_completed AS "is_completed"
+                FROM public.fencer_personal_sessions
+                WHERE fencer_id = $1 AND date < CURRENT_DATE
+                ORDER BY date DESC
+            `;
+            const result = await pool.query(selectQuery, [fencerId]);
+            console.log("Entrenamientos pasados obtenidos personales:", result.rows);
+            res.status(200).json({
+                success: true,
+                workouts: result.rows
+            });
+        } catch (error) {
+            console.error("Error al obtener entrenamientos pasados personales:", error.message);
+            res.status(500).json({
+                success: false,
+                message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+            });
+        }
+    });
+
+// Obtener los entrenamientos del entrenador posteriores a hoy
+ router.get('/getHistoryWorkoutsCoach', isSessionValid, async (req, res) => {
+        const fencerId = req.session.user.userId;
+        try {
+            const selectQuery = `
+                SELECT
+                    id AS "id",
+                    title AS "title",
+                    date AS "date",
+                    description AS "description",
+                    duration AS "duration",
+                    number_of_sets AS "number_of_sets",
+                    number_of_reps AS "number_of_reps",
+                    is_completed AS "is_completed"
+                FROM public.fencer_coach_sessions
+                WHERE fencer_id = $1 AND date < CURRENT_DATE
+                ORDER BY date DESC
+            `;
+            const result = await pool.query(selectQuery, [fencerId]);
+            console.log("Entrenamientos pasados obtenidos del coach:", result.rows);
+            res.status(200).json({
+                success: true,
+                workouts: result.rows
+            });
+        } catch (error) {
+            console.error("Error al obtener entrenamientos pasados del coach:", error.message);
+            res.status(500).json({
+                success: false,
+                message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.'
+            });
+        }
+    });
+
+
 // Obtener las plantillas de entrenamiento del tirador
 router.get('/getTrainingTemplates', isSessionValid, async (req, res) => {
     const fencerId = req.session.user.userId;
@@ -510,6 +577,16 @@ router.post('/completeWorkout', isSessionValid, async (req, res) => {
     }
 });
 
+// Eliminar un entrenamiento personal
+router.post('/deletePersonalWorkout', isSessionValid, async (req, res) => {
+    const { workoutId } = req.body;
+    try {
+        await pool.query('DELETE FROM fencer_personal_sessions WHERE id = $1', [workoutId]);
+        res.json({ success: true });
+    } catch (err) {
+        res.json({ success: false, error: err.message });
+    }
+});
 /* -------------------------------------------- Perfil ----------------------------------------------- */
 // Obtener el perfil del tirador
 router.get('/getProfile',isSessionValid, async (req, res) => {

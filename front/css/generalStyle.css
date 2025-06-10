@@ -364,3 +364,34 @@ a.link-primary:hover{
   height: 100% !important;
   min-height: 400px; /* o el mínimo que prefieras */
 }
+
+/* ----------------------------------------------------------- alert -------------------------------------------------------------------*/
+
+#custom-alert {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  
+  color: black;
+  border: 1px solid black;
+  padding: 10px 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  font-size: 1.1em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#custom-alert.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+#custom-alert.hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+  pointer-events: none;
+}

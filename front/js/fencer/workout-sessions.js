@@ -1,5 +1,7 @@
 import { showPanel } from './shared-functions.js';
 import { formatDateYYYYMMDD } from './shared-functions.js';
+import { showAlert } from './shared-functions.js';
+import { showConfirm } from './shared-functions.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     /* ----------------------------------------- Crear entrenamientos ---------------------------------------- */
@@ -198,7 +200,7 @@ function showWorkoutForm(step, template) {
         });
         const result = await res.json();
         if (result.success) {
-            document.getElementById('workout-message').innerHTML = '<div class="alert alert-success mt-3">Entrenamientos guardados correctamente.</div>';
+            showAlert("Entrenamientos guardados correctamente.");
             document.getElementById('workouts-form').innerHTML = '';
             selectedDates = [];
             workoutsData = [];
@@ -206,10 +208,10 @@ function showWorkoutForm(step, template) {
             currentStep = 0;
             document.getElementById('dateRange')._flatpickr.clear();
         } else {
-            document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error al guardar entrenamientos.</div>';
+            showAlert("Error al guardar entrenamientos.");
         }
     }).catch(() => {
-        document.getElementById('workout-message').innerHTML = '<div class="alert alert-danger mt-3">Error de conexión.</div>';
+        showAlert("Error de conexión.");
     });
         }
     }
@@ -250,6 +252,7 @@ function showWorkoutForm(step, template) {
                     start: w.date,
                     backgroundColor: '#007bff',
                     borderColor: '#007bff',
+                    deletable: true, 
                     extendedProps: {
                         description: w.description.trim(),
                         duration: w.duration,
@@ -313,7 +316,7 @@ function showWorkoutForm(step, template) {
                 info.jsEvent.stopPropagation();
                 const e = info.event;
                 const props = e.extendedProps;
-                const detalles = `
+                let detalles = `
                     <strong>${e.title}</strong><br>
                     <b>Fecha:</b> ${e.start.toLocaleDateString()}<br>
                     <b>Descripción:</b><br>
@@ -322,6 +325,12 @@ function showWorkoutForm(step, template) {
                     <b>Sets:</b> ${props.number_of_sets}<br>
                     <b>Repeticiones:</b> ${props.number_of_reps}
                 `;
+
+                // Si es personal, añade botón de borrar
+                if (props.tipo === 'personal') {
+                    detalles += `<br><button id="delete-personal-workout" class="btn btn-sm mt-2"><i class="lni lni-trash-3"></i></button>`;
+                }
+
                 const popup = document.getElementById('workout-details-popup');
                 popup.innerHTML = detalles;
                 popup.style.display = 'block';
@@ -329,6 +338,33 @@ function showWorkoutForm(step, template) {
                 popup.style.left = mouseEvent.pageX + 15 + 'px';
                 popup.style.top = mouseEvent.pageY - 10 + 'px';
                 popup.onclick = function(ev) { ev.stopPropagation(); };
+
+                // Listener para borrar
+                if (props.tipo === 'personal') {
+                    setTimeout(() => { // Espera a que el botón esté en el DOM
+                        const btn = document.getElementById('delete-personal-workout');
+                        if (btn) {
+                            btn.onclick = async function() {
+                                showConfirm('¿Seguro que quieres borrar este entrenamiento?', async function() {
+                                
+                                const res = await fetch('/deletePersonalWorkout', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({ workoutId: e.id })
+                                });
+                                const result = await res.json();
+                                if (result.success) {
+                                    showAlert('Entrenamiento borrado.');
+                                    popup.style.display = 'none';
+                                    cargarEntrenamientosYCalendario();
+                                } else {
+                                    showAlert('Error al borrar entrenamiento.');
+                                }
+                            });
+                            };
+                        }
+                    }, 100);
+                }
             }
     });
     calendar.render();
@@ -370,7 +406,7 @@ function showWorkoutForm(step, template) {
             const personalSession = document.getElementById('personalSession');
 
             if (!coachSession || !personalSession) {
-                alert('Error: No se encontraron los contenedores de sesión en la página.');
+                showAlert('Error: No se encontraron los contenedores de sesión en la página.');
                 return;
             }
 
@@ -404,7 +440,7 @@ function showWorkoutForm(step, template) {
             } else {
                 coachSession.classList.add('d-none');
                 personalSession.classList.add('d-none');
-                alert('No hay sesiones disponibles para hoy.');
+                showAlert('No hay sesiones disponibles para hoy.');
             }
             const historyFeedback = document.getElementById('personal-history-feedback');
             historyFeedback.classList.add('d-none');
@@ -425,7 +461,7 @@ function showWorkoutForm(step, template) {
                         ? `<button class="btn mt-4" disabled>Completado</button>`
                         : `<button class="btn btn-secondary mt-4 btn-completar-coach" data-id="${coachWorkout.id}">No completado</button>`
                     }
-                    <button class="btn btn-tertiary mt-4 btn-view-coach-feedbacks" data-template-id="${coachWorkout.template_id}">Ver historial</button>
+                    <button class="btn btn-tertiary mt-4 btn-view-coach-feedbacks" data-template-id="${coachWorkout.template_id}">Ver feedbacks</button>
                     <button class="btn btn-tertiary mt-4 btn-write-feedback" data-id="${coachWorkout.id}">Escribir feedback</button>
                     <div class="coach-feedbacks-container"></div>
 
@@ -471,9 +507,11 @@ function showWorkoutForm(step, template) {
                         });
                         const result = await res.json();
                         if (result.success) {
-                            this.nextElementSibling.innerHTML = `<div class="alert alert-success mt-2">Feedback guardado correctamente.</div>`;
+                            showAlert("Feedback guardado correctamente.");
+                            // Limpia el formulario
+                            document.getElementById(`feedback-text-${workoutId}`).value = '';
                         } else {
-                            this.nextElementSibling.innerHTML = `<div class="alert alert-danger mt-2">Error al guardar feedback.</div>`;
+                            showAlert("Error al guardar feedback.");
                         }
                         setTimeout(() => {
                             if (this.nextElementSibling) this.nextElementSibling.remove();
@@ -506,7 +544,7 @@ function showWorkoutForm(step, template) {
                 const workouts = Array.isArray(result.workouts) ? result.workouts : [];
                 let accordionHtml = '';
                 if (workouts.length === 0) {
-                    accordionHtml = `<div class="alert alert-info mt-3 feedback-accordion-container">No hay feedbacks para esta plantilla.</div>`;
+                    showAlert("No hay feedbacks para esta plantilla.");
                 } else {
                     accordionHtml = `
                         <div class="feedback-accordion-container mt-3">
@@ -601,7 +639,7 @@ function showWorkoutForm(step, template) {
                 const workouts = Array.isArray(result.workouts) ? result.workouts : [];
                 let accordionHtml = '';
                 if (workouts.length === 0) {
-                    accordionHtml = `<div class="text-failure mt-3 feedback-accordion-container">No hay feedbacks para esta plantilla.</div>`;
+                    showAlert("No hay feedbacks para esta plantilla.");
                 } else {
                     accordionHtml = `
                         <div class="feedback-accordion-container mt-3">
@@ -670,9 +708,11 @@ function showWorkoutForm(step, template) {
                             });
                             const result = await res.json();
                             if (result.success) {
-                                this.nextElementSibling.innerHTML = `<div class="alert alert-success mt-2">Feedback guardado correctamente.</div>`;
+                                showAlert("Feedback guardado correctamente.");
+                                // Limpia el formulario
+                                document.getElementById(`feedback-text-${workoutId}`).value = '';
                             } else {
-                                this.nextElementSibling.innerHTML = `<div class="alert alert-danger mt-2">Error al guardar feedback.</div>`;
+                                showAlert("Error al guardar feedback.");
                             }
                             setTimeout(() => {
                                 if (this.nextElementSibling) this.nextElementSibling.remove();
@@ -702,7 +742,7 @@ function showWorkoutForm(step, template) {
             }
             
         } catch (error) {
-            alert('Error al cargar las sesiones de hoy: ' + error.message);
+            showAlert('Error al cargar las sesiones de hoy: ' + error.message);
         }
     });
 });

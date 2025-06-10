@@ -1,4 +1,5 @@
 import { showPanel } from './shared-functions.js';
+import {showAlert} from './shared-functions.js';
 document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------- Diario de clases----------------------------------------- */
     document.getElementById("my-templates-link").addEventListener("click", async function (e) {
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             });
         } catch (error) {
-            alert("Error cargando las plantillas: " + error.message);
+            showAlert("Error cargando las plantillas: " + error.message);
         }
     }
 
@@ -65,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             leftCol.classList.add("col-md-4");
             rightCol.classList.remove("d-none");
         } catch (error) {
-            alert("Error al cargar los detalles de la plantilla: " + error.message);
+            showAlert("Error al cargar los detalles de la plantilla: " + error.message);
             }
         }
 
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const templateId = document.getElementById("template-id").value;
 
         if (!templateId) {
-            alert("Por favor, selecciona una plantilla.");
+            showAlert("Por favor, selecciona una plantilla.");
             return;
         }
 
@@ -102,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
             if (result.success) {
-                alert('Plantilla eliminada correctamente');
+                
                 loadClassTemplatesTitles();
 
                 // Limpiar detalles y el id seleccionado tras borrar
@@ -118,10 +119,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftCol.classList.add("col-12");
 
             } else {
-                alert('Error al eliminar: ' + result.message);
+                showAlert('Error al eliminar: ' + result.message);
             }
         } catch (error) {
-            alert('Error al enviar datos: ' + error.message);
+            showAlert('Error al enviar datos: ' + error.message);
         }
     });
     
