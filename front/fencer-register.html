@@ -176,10 +176,10 @@
                 alert('El nombre y apellidos solo pueden contener letras y espacios.');
                 return;
             }
-            // Validación de contraseña (mínimo 8 caracteres, al menos una letra y un número
-            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            // Validación de contraseña mínimo una longitud de 8 caracteres
+            const passwordRegex = /^.{8,}$/; // Al menos 8 caracteres
             if (!passwordRegex.test(password)) {
-                alert('La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número.');
+                alert('La contraseña debe tener al menos 8 caracteres.');
                 return;
             }
 

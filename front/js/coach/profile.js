@@ -117,10 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validación de la nueva contraseña (mínimo 8 caracteres, al menos una letra y un número)
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        // Validación de la nueva contraseña (mínimo 8 caracteres)
+        const passwordRegex = /^.{8,}$/; // Al menos 8 caracteres
         if (!passwordRegex.test(newPassword)) {
-            showAlert('La nueva contraseña debe tener al menos 8 caracteres, incluyendo letras y números.');
+            showAlert('La nueva contraseña debe tener al menos 8 caracteres.');
             return;
         }
 
