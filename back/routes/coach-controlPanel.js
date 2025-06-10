@@ -125,11 +125,11 @@ router.post('/createCoachWorkout', isSessionValid, async (req, res) => {
                     workout.date,
                     workout.description,
                     workout.duration,
-                    workout.feedback || '',
+                    workout.feedback || null,
                     workout.number_of_sets,
                     workout.number_of_reps,
                     false, // is_completed por defecto en false
-                    workout.template_id || null // <-- Añadido aquí
+                    workout.template_id 
                 ]);
             }
         }
@@ -284,6 +284,7 @@ router.post('/deleteCoachWorkout', isSessionValid, async (req, res) => {
         await pool.query('DELETE FROM fencer_coach_sessions WHERE id = $1', [workoutId]);
         res.json({ success: true });
     } catch (err) {
+        console.log("Error al eliminar el entrenamiento del coach:", err.message);
         res.json({ success: false, error: err.message });
     }
 });

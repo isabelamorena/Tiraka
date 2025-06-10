@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
 
                 // Botón de borrar
-                    detalles += `<br><button id="delete-personal-workout" class="btn btn-sm mt-2"><i class="lni lni-trash-3"></i></button>`;
+                    detalles += `<br><button id="delete-coach-workout" class="btn btn-sm mt-2"><i class="lni lni-trash-3"></i></button>`;
 
                 const popup = document.getElementById('workout-details-popup');
                 popup.innerHTML = detalles;

@@ -118,10 +118,7 @@ function showWorkoutForm(step, template) {
                 <label>Duración (minutos)</label>
                 <input type="number" class="form-control" name="duration" value="${tpl.duration || ''}" required>
             </div>
-            <div class="mb-3">
-                <label>Feedback</label>
-                <textarea class="form-control" name="feedback"></textarea>
-            </div>
+        
             <div class="mb-3">
                 <label>Número de sets</label>
                 <input type="number" class="form-control" name="number_of_sets" value="${tpl.number_of_sets || ''}" required>
@@ -136,7 +133,7 @@ function showWorkoutForm(step, template) {
         </form>
     `;
     document.getElementById('workouts-form').innerHTML = formHtml;
-
+ 
     document.getElementById('workout-form').onsubmit = function(e) {
         e.preventDefault();
         const formData = new FormData(e.target);

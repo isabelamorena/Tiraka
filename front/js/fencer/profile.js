@@ -251,7 +251,10 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch('/getCoach');
             const data = await response.json();
-
+            if (!data) {
+                document.getElementById("currentTrainer").innerHTML = "No tienes un entrenador asignado.";
+                return;
+            }
             document.getElementById("currentTrainer").innerHTML = "Entrenador actual: "+ data.name + " " + data.surname + " "+ data.secondsurname;
         } catch (error) {
             showAlert("Error al cargar el entrenador" + error);

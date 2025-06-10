@@ -248,6 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (result.success) {
                 // Opcional: resetear el formulario
+                showAlert("Diario de competición guardado correctamente.");
                 document.getElementById("add-competition-diary-form").style.display = "none";
                 document.getElementById("competition-diary-form").reset();
                 loadCompetitionDiaryTitles();

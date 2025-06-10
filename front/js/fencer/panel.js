@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         // Mostrar solo el panel de asistencia
         document.querySelector("#sidebar").classList.toggle("collapsed");
+        showLastAttendances()
+        lastClassDiary();
+        showTodayFencerWorkouts();
+        setDefaultTimes();
         showPanel("main-content");
     });
     
@@ -108,7 +112,50 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    
+    // Función para mostrar los entrenamientos del tirador hoy
+    async function showTodayFencerWorkouts() {
+        const getPersonalWorkoutToday = await fetch('/getPersonalWorkoutToday');
+        const dataPersonal = await getPersonalWorkoutToday.json();
+        const getCoachWorkoutToday = await fetch('/getCoachWorkoutToday');
+        const dataCoach = await getCoachWorkoutToday.json();
+
+        // Extraer correctamente los arrays
+        const personalWorkouts = Array.isArray(dataPersonal.workout) ? dataPersonal.workout : [];
+        const coachWorkouts = Array.isArray(dataCoach.workout) ? dataCoach.workout : [];
+
+        const workoutContainer = document.getElementById('today-workouts');
+        workoutContainer.innerHTML = ''; // Limpiar el contenedor
+
+        if (coachWorkouts.length === 0 && personalWorkouts.length === 0) {
+            workoutContainer.innerHTML = '<p class="text-muted">No hay entrenamientos programados para hoy.</p>';
+            return;
+        }
+
+        // Primero los del entrenador
+        coachWorkouts.forEach(workout => {
+            const workoutElement = document.createElement('div');
+            workoutElement.className = 'workout-item coach';
+            workoutElement.innerHTML = `
+                <h3>Programado por tu entrenador:</h3>
+                <h2>${workout.title}</h2>
+            `;
+            workoutContainer.appendChild(workoutElement);
+        });
+
+        // Luego los personales
+        personalWorkouts.forEach(workout => {
+            const workoutElement = document.createElement('div');
+            workoutElement.className = 'workout-item personal';
+            workoutElement.innerHTML = `
+                <h3>Tu entrenamiento personal:</h3>
+                <h2>${workout.title}</h2>
+            `;
+            workoutContainer.appendChild(workoutElement);
+        });
+
+    }
+
+
     /* ----------------------------------------------- Añadir una asistencia --------------------------------------------------------------------*/
     const formAttendance = document.getElementById("formAttendance");
     formAttendance.addEventListener("submit", async function (e) {
@@ -219,5 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ---------------------------------- Últimas 5 asistencias --------------------------------------------------*/
     showLastAttendances();
 
+    /* ---------------------------------- Entrenamientos del tirador hoy ---------------------------------------- */
+    showTodayFencerWorkouts();
 
 });

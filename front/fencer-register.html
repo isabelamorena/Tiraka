@@ -169,6 +169,10 @@
             const email = document.getElementById('email').value.trim();
             const coachName = document.getElementById('coachName')?.value || '';
 
+            if(coachName === '') {
+                alert('Por favor, selecciona un entrenador.');
+                return;
+            }
 
             // Validación de nombre y apellidos (solo letras y espacios)
             const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/; // Permite letras y espacios, incluyendo acentos

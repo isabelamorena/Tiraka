@@ -1,4 +1,5 @@
 import { showPanel } from './shared-functions.js';
+import { showAlert } from "./shared-functions.js";
 document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------- Diario de clases----------------------------------------- */
     document.getElementById("class-diary-link").addEventListener("click", async function (e) {
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             });
         } catch (error) {
-            alert("Error cargando el diario: " + error.message);
+            showAlert("Error cargando el diario: " + error.message);
         }
     }
 
@@ -63,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
             leftCol.classList.add("col-md-4");
             rightCol.classList.remove("d-none");
         } catch (error) {
-            alert("Error al cargar los detalles del diario: " + error.message);
+            showAlert("Error al cargar los detalles del diario: " + error.message);
             }
         }
 
@@ -101,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const description = document.getElementById("diary-description").value.trim();
 
             if (!title || !date || !description) {
-            alert("Por favor, completa todos los campos.");
+            showAlert("Por favor, completa todos los campos.");
             return;
             }
 
@@ -114,15 +115,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }); 
                 const result = await response.json();
             if (result.success) {
-                alert('Diario de clase guardado correctamente');
+                showAlert('Diario de clase guardado correctamente');
                 document.getElementById("add-class-diary-form").style.display = "none";
                 document.getElementById("diary-form").reset();
                 loadClassDiaryTitles();
             } else {
-                alert('Error al guardar: ' + result.message);
+                showAlert('Error al guardar: ' + result.message);
             }
             } catch (error) {
-                alert('Error al enviar datos: ' + error.message);
+                showAlert('Error al enviar datos: ' + error.message);
             }
         });
     /* --------------------------------------------- Cerrar los detalles de las clases -------------------------------------------- */
@@ -143,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const diaryId = document.getElementById("diary-id").value;
 
         if (!diaryId) {
-            alert("Por favor, selecciona un diario.");
+            showAlert("Por favor, selecciona un diario.");
             return;
         }
 
@@ -156,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
             if (result.success) {
-                alert('Diario de clase eliminado correctamente');
+                showAlert('Diario de clase eliminado correctamente');
                 loadClassDiaryTitles();
 
                 // Limpiar detalles y el id seleccionado tras borrar
@@ -173,10 +174,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftCol.classList.add("col-12");
 
             } else {
-                alert('Error al eliminar: ' + result.message);
+                showAlert('Error al eliminar: ' + result.message);
             }
         } catch (error) {
-            alert('Error al enviar datos: ' + error.message);
+            showAlert('Error al enviar datos: ' + error.message);
         }
     });
     /*----------------------------------------------------- Cerrar formulario -------------------------------------------------- */

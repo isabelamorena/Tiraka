@@ -136,8 +136,8 @@ router.post('/createPersonalWorkout',isSessionValid, async (req, res) => {
         // Consulta para insertar datos en la base de datos (ahora incluye template_id)
         const query = `
             INSERT INTO public.fencer_personal_sessions(
-                fencer_id, title, date, description, duration, number_of_sets, number_of_reps, is_completed, template_id)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;
+                fencer_id, title, date, description, duration, number_of_sets, number_of_reps, is_completed, template_id,feedback)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, null) RETURNING id;
         `;
 
         for (const workout of workouts) {
@@ -332,11 +332,12 @@ router.get('/getCoachTemplateHistory', async (req, res) => {
         const result = await pool.query(
             `SELECT id, title, date, feedback
              FROM public.fencer_coach_sessions
-             WHERE template_id = $1 AND feedback IS NOT NULL AND date <> CURRENT_DATE
+             WHERE template_id = $1 AND feedback IS NOT NULL AND date < CURRENT_DATE
              ORDER BY date DESC
              LIMIT 4`,
             [templateId]
         );
+        console.log("Historial del coach obtenido:", result.rows);
         res.json({
             success: true,
             workouts: result.rows
@@ -442,7 +443,7 @@ router.get('/getPersonalTemplateId', async (req, res) => {
         const result = await pool.query(
             `SELECT id, title, date, feedback
              FROM public.fencer_personal_sessions
-             WHERE template_id = $1 AND feedback IS NOT NULL AND date <> CURRENT_DATE 
+             WHERE template_id = $1 AND feedback IS NOT NULL AND date < CURRENT_DATE 
              ORDER BY date DESC
              LIMIT 4`,
             [templateId]
