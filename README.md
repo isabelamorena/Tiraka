@@ -331,5 +331,5 @@ _Fda.: Isabel Yangxin Moreno Basurto_
 ÍNDICE DE ANEJOS
 
 # ANEJOS A LA MEMORIA
+![image](https://github.com/user-attachments/assets/b24f530e-4ced-40b4-8e24-b90171126e57)
 
-No se incluyen anejos, ya que toda la información relevante está integrada dentro del cuerpo de la memoria.
