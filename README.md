@@ -6,59 +6,7 @@ Autor/s:
 
 Isabel Yangxin Moreno Basurto
 
-Memoria del Proyecto
-
-# MEMORIA
-
 Trabajo Fin de Ciclo
-
-TIRAKA
-
-**INDICE DE CONTENIDO**
-
- 1.  [ANTECEDENTES 3](#_bookmark0)
-        2.  [OBJETO 4](#_bookmark1)
-        3.  [SITUACIÓN ACTUAL – TO BE 5](#_bookmark2)
-            1.  [Situación actual (AS IS) 5](#_bookmark3)
-            2.  [Situación esperada (TO BE) 5](#_bookmark4)
-        4.  [JUSTIFICACIÓN DE LA SOLUCIÓN ADOPTADA – AS IS 6](#_bookmark5)
-    
-    1.  [Tecnologías escogidas 6](#_bookmark6)
-    2.  [Motor de bases de datos 6](#_bookmark7)
-        1.  [DESCRIPCIÓN DEL PROYECTO 7](#_bookmark8)
-    3.  [Funcionalidades principales 7](#_bookmark9)
-    4.  [Mapa del sitio 7](#_bookmark10)
-    5.  [Modelo de la base de datos 8](#_bookmark11)
-    6.  [Organización de archivos 9](#_bookmark12)
-        1.  [Backend (/back) 9](#_bookmark13)
-        2.  [Frontend (/front) 9](#_bookmark14)
-        3.  [Dependencias y configuración 9](#_bookmark15)
-    7.  [Seguridad y privacidad 10](#_bookmark16)
-        1.  [PRESUPUESTOS 11](#_bookmark17)
-            1.  [Hardware y equipo 11](#_bookmark18)
-            2.  [Desarrollo tecnológico 11](#_bookmark19)
-            3.  [Infraestructura y servidores 11](#_bookmark20)
-            4.  [Diseño y software adicional 11](#_bookmark21)
-        2.  [PLAZO DE EJECUCIÓN 12](#_bookmark22)
-            1.  [Etapas del desarrollo 12](#_bookmark23)
-                1.  [Fase 1: Planificación y organización (Marzo 2025) 12](#_bookmark24)
-                2.  [Fase 2: Desarrollo del frontend y backend (Abril 2025) 13](#_bookmark25)
-                3.  [Fase 3: Pruebas y ajustes (Mayo 2025) 13](#_bookmark26)
-                4.  [Fase 3: Continuidad (Junio 2025) 13](#_bookmark27)
-    8.  [Metodología del trabajo 14](#_bookmark28)
-        1.  [DOCUMENTOS INTEGRANTES DEL PROYECTO 15](#_bookmark29)
-    9.  [Código fuente 15](#_bookmark30)
-    10. [Script SQL de la base de datos 15](#_bookmark31)
-    11. [Manual de instalación (en local) 16](#_bookmark32)
-        1.  [Requisitos previos 16](#_bookmark33)
-        2.  [Clonar el proyecto desde GitHub 16](#_bookmark34)
-        3.  [Instalar las dependencias 16](#_bookmark35)
-        4.  [Crear el archivo de configuración (.env) 16](#_bookmark36)
-        5.  [Iniciar servidor y abrir la web desde el navegador 17](#_bookmark37)
-
-[8.5. Enlace al proyecto 17](#_bookmark38)
-
-- - 1.  [CONCLUSIÓN FINAL 18](#_bookmark39)
 
 ## Antecedentes
 
@@ -132,8 +80,7 @@ Todo el software utilizado es de código abierto, lo que representa un ahorro im
 ### Motor de bases de datos
 
 El motor de bases de datos utilizado es PostgreSQL. Las razones de su elección son las siguientes:
-
-- - - Es de código abierto y gratuito, lo que permite una reducción significativa de costes para el cliente.
+ - Es de código abierto y gratuito, lo que permite una reducción significativa de costes para el cliente.
         - Es multiplataforma, funcionando en Windows, Linux y Mac, lo que asegura compa- tibilidad con la mayoría de sistemas operativos actuales.
         - Goza de gran popularidad en la comunidad de desarrolladores, lo que facilita en- contrar documentación, tutoriales y soporte técnico.
 
@@ -141,7 +88,7 @@ El motor de bases de datos utilizado es PostgreSQL. Las razones de su elección 
 
 ### Funcionalidades principales
 
-- - - Registro de entrenamientos, competiciones y clases, con detalles como fecha, du- ración, tipo de ejercicio y resultados.
+ - Registro de entrenamientos, competiciones y clases, con detalles como fecha, du- ración, tipo de ejercicio y resultados.
         - Análisis de rendimiento, mostrando estadísticas y gráficos para evaluar la evolución de cada tirador.
         - Gestión de rutinas personalizadas, permitiendo a los entrenadores asignar ejercicios y ajustar entrenamientos según el progreso.
         - Acceso desde cualquier dispositivo, asegurando disponibilidad en todo momento.
@@ -150,13 +97,13 @@ El motor de bases de datos utilizado es PostgreSQL. Las razones de su elección 
 
 ### Modelo de la base de datos
 
-- - - Usuarios: Se clasifican en esgrimistas y entrenadores, almacenando sus datos per- sonales y credenciales.
-        - Entrenamientos: Registros detallados de sesiones, incluyendo duración, tipo de ejercicio y plantillas de entrenamiento.
-        - Competiciones: Seguimiento de torneos, posiciones obtenidas y detalles de cada etapa.
-        - Relación tirador-entrenador: Registro de entrenamientos personalizados y sesiones específicas según el progreso del deportista.
-        - Sistema de asistencia: Control de asistencia cada día.
-        - Plantillas: Las plantillas de entrenamiento agilizará el proceso de planificación y garantizará una metodología de trabajo eficiente
-        - Diarios: Permitirán a los tiradores registrar su experiencia personal
+ - Usuarios: Se clasifican en esgrimistas y entrenadores, almacenando sus datos per- sonales y credenciales.
+ - Entrenamientos: Registros detallados de sesiones, incluyendo duración, tipo de ejercicio y plantillas de entrenamiento.
+ - Competiciones: Seguimiento de torneos, posiciones obtenidas y detalles de cada etapa.
+ - Relación tirador-entrenador: Registro de entrenamientos personalizados y sesiones específicas según el progreso del deportista.
+ - Sistema de asistencia: Control de asistencia cada día.
+ - Plantillas: Las plantillas de entrenamiento agilizará el proceso de planificación y garantizará una metodología de trabajo eficiente
+- Diarios: Permitirán a los tiradores registrar su experiencia personal
 
 ### Organización de archivos
 
@@ -238,46 +185,40 @@ A continuación, se describen las etapas principales en las que se ha dividido e
 #### Fase 1: Planificación y organización (Marzo 2025)
 
 Esta etapa inicial fue fundamental para sentar las bases del proyecto. Se llevaron a cabo las siguientes tareas:
-
-- - - - Definición de las funcionalidades principales que debía incluir la plataforma, consi- derando las necesidades reales de los tiradores y entrenadores.
-            - Diseño preliminar del esquema de la base de datos, asegurando que la estructura permitiera almacenar y relacionar adecuadamente la información sobre usuarios, entrenamientos, competiciones y estadísticas.
-            - Selección de las tecnologías más adecuadas para el desarrollo, optando por Node.js para el backend, PostgreSQL como sistema gestor de bases de datos y Railway para el despliegue en la nube.
-            - Creación de un plan de trabajo con objetivos mensuales y entregables, para garan- tizar el avance controlado del proyecto.
+ - Definición de las funcionalidades principales que debía incluir la plataforma, consi- derando las necesidades reales de los tiradores y entrenadores.
+ - Diseño preliminar del esquema de la base de datos, asegurando que la estructura permitiera almacenar y relacionar adecuadamente la información sobre usuarios, entrenamientos, competiciones y estadísticas.
+ - Selección de las tecnologías más adecuadas para el desarrollo, optando por Node.js para el backend, PostgreSQL como sistema gestor de bases de datos y Railway para el despliegue en la nube.
+ - Creación de un plan de trabajo con objetivos mensuales y entregables, para garan- tizar el avance controlado del proyecto.
 
 Esta fase sentó las bases para un desarrollo organizado y eficiente.
 
 #### Fase 2: Desarrollo del frontend y backend (Abril 2025)
 
 En esta fase se comenzó con la construcción del sistema propiamente dicho, con las siguien- tes actividades:
-
-- - - - Desarrollo del backend utilizando Node.js y PostgreSQL, implementando la lógica de negocio, las rutas, la conexión a la base de datos y la gestión de sesiones y autenticación de usuarios.
-            - Diseño y programación del frontend, enfocándose en una interfaz intuitiva, accesi- ble y visualmente atractiva, que facilitara la interacción del usuario con la plata- forma.
-            - Implementación del sistema de registro y login para usuarios, incluyendo medidas básicas de seguridad como el cifrado de contraseñas.
-            - Integración entre frontend y backend para asegurar la comunicación efectiva y la correcta gestión de datos.
+- Desarrollo del backend utilizando Node.js y PostgreSQL, implementando la lógica de negocio, las rutas, la conexión a la base de datos y la gestión de sesiones y autenticación de usuarios.
+- Diseño y programación del frontend, enfocándose en una interfaz intuitiva, accesi- ble y visualmente atractiva, que facilitara la interacción del usuario con la plata- forma.
+- Implementación del sistema de registro y login para usuarios, incluyendo medidas básicas de seguridad como el cifrado de contraseñas.
+ - Integración entre frontend y backend para asegurar la comunicación efectiva y la correcta gestión de datos.
 
 Durante esta etapa, se realizaron pruebas unitarias iniciales para verificar que cada módulo funcionaba correctamente.
 
 #### Fase 3: Pruebas y ajustes (Mayo 2025)
 
 Con la mayoría de funcionalidades desarrolladas, esta fase se centró en garantizar la calidad y estabilidad del sistema:
-
-- - - - Ejecución de pruebas exhaustivas para detectar errores o comportamientos ines- perados, abarcando tanto la lógica backend como la experiencia de usuario en el frontend.
-            - Optimización del rendimiento, reduciendo tiempos de carga y mejorando la eficien- cia de consultas a la base de datos.
-            - Fortalecimiento de la seguridad, corrigiendo posibles vulnerabilidades detectadas durante las pruebas.
-            - Ajustes visuales y de usabilidad para hacer la plataforma más intuitiva y agradable para el usuario.
-            - Despliegue de la aplicación en Railway, verificando la correcta configuración del entorno de producción y estabilidad del servidor.
-            - Pruebas finales con usuarios reales para recoger feedback y detectar mejoras antes del lanzamiento oficial.
-
+- Ejecución de pruebas exhaustivas para detectar errores o comportamientos ines- perados, abarcando tanto la lógica backend como la experiencia de usuario en el frontend.
+- Optimización del rendimiento, reduciendo tiempos de carga y mejorando la eficien- cia de consultas a la base de datos.
+- Fortalecimiento de la seguridad, corrigiendo posibles vulnerabilidades detectadas durante las pruebas.
+- Ajustes visuales y de usabilidad para hacer la plataforma más intuitiva y agradable para el usuario.
+- Despliegue de la aplicación en Railway, verificando la correcta configuración del entorno de producción y estabilidad del servidor.
+- Pruebas finales con usuarios reales para recoger feedback y detectar mejoras antes del lanzamiento oficial.
 Publicación de la plataforma y apertura para pruebas públicas.
 
 #### Fase 3: Continuidad (Junio 2025)
-
 - Seguimiento constante de la plataforma para identificar posibles errores o fallos.
 - Corrección rápida de incidencias reportadas por usuarios o detectadas por el equipo.
 - Optimización adicional del rendimiento y refuerzo de la seguridad.
 - Mejoras en la interfaz de usuario basadas en la retroalimentación recibida.
 - Planificación de nuevas funcionalidades para futuras versiones.
-
 Esta fase garantiza que Tiraka se mantenga actualizada, estable y útil para su comunidad a largo plazo.
 
 ### Metodología del trabajo
@@ -337,15 +278,15 @@ Antes de empezar, necesitas tener instalados en tu computadora:
 
 En la misma terminal, escribe: npm install
 
-Este comando descargará todo lo necesario para que el proyecto funcione correc- tamente.
+Este comando descargará todo lo necesario para que el proyecto funcione correctamente.
 
-- - - - Express: para manejar rutas del servidor web
-            - Pg: para conectarse a la base de datos PostreSQL
-            - dotenv: para leer variables desde un archivo .env.
-            - bcryptjs: para encriptar contraseñas.
-            - cookie-parser: para leer cookies del navegador.
-            - cors: para permitir peticiones entre distintas direcciones.
-            - express-session: para manejar sesiones de usuarios.
+ - Express: para manejar rutas del servidor web
+ - Pg: para conectarse a la base de datos PostreSQL
+ - dotenv: para leer variables desde un archivo .env.
+ - bcryptjs: para encriptar contraseñas.
+ - cookie-parser: para leer cookies del navegador.
+ - cors: para permitir peticiones entre distintas direcciones.
+ - express-session: para manejar sesiones de usuarios.
 
 #### Crear el archivo de configuración (.env)
 
