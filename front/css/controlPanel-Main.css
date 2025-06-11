@@ -107,6 +107,40 @@
         width: 100% !important;
         margin-bottom: 1px;
         font-size: 0.9rem;
-        padding: 8px 0;
+        padding: 7px 0;
     }
+}
+.today-workouts-titles {
+    background: #fffbe6;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #fcd03055;
+    padding: 1.5rem 1rem;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+.workout-title-item {
+    font-size: 1.1em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    border: none;
+    background: transparent;
+}
+@media (max-width: 600px) {
+    .today-workouts-titles {
+        padding: 1rem 0.5rem;
+        max-width: 98vw;
+    }
+    .workout-title-item {
+        font-size: 1em;
+        padding: 0.6em 0.2em;
+    }
+}
+.motivational-quote {
+    text-align: center;
+    font-style: italic;
+    color: #B59E4Cff;
+    margin-top: 1.5rem;
 }

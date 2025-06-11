@@ -1,6 +1,7 @@
 import { showPanel } from './shared-functions.js';
 import { showAlert } from './shared-functions.js';
 
+
 document.addEventListener("DOMContentLoaded", function () {
 
     showPanel("main-content");
@@ -130,6 +131,13 @@ document.addEventListener("DOMContentLoaded", function () {
             workoutContainer.innerHTML = '<p class="text-muted">No hay entrenamientos programados para hoy.</p>';
             return;
         }
+        workoutContainer.innerHTML = `
+            <div class="today-workouts-header mb-4 text-center">
+                <span class="d-block mt-2" style="font-size:1.25rem;color:#B59E4Cff;font-weight:bold;">
+                    Hoy tienes los siguientes entrenamientos programados:
+                </span>
+            </div>
+`;
 
         // Primero los del entrenador
         coachWorkouts.forEach(workout => {
@@ -150,9 +158,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 <h3>Tu entrenamiento personal:</h3>
                 <h2>${workout.title}</h2>
             `;
+            
             workoutContainer.appendChild(workoutElement);
+
         });
 
+        // Por último, una frase motivacional
+        const motivationalQuote = document.createElement('div');
+        motivationalQuote.className = 'motivational-quote';
+       
+        const getQuote = await fetch(`/getMotivationalQuotes`);
+        const dataQuote = await getQuote.json();
+        motivationalQuote.innerHTML = `<p>${dataQuote.quote?.quote || "¡Ánimo!"}</p>`;
+        workoutContainer.appendChild(motivationalQuote);
     }
 
 
@@ -270,3 +288,5 @@ document.addEventListener("DOMContentLoaded", function () {
     showTodayFencerWorkouts();
 
 });
+
+window.showPanel = showPanel;

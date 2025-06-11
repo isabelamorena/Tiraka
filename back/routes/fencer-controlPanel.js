@@ -1017,6 +1017,20 @@ router.post('/deleteCompetitionDiary/:id', isSessionValid, async (req, res) => {
     }
 });
 
+/*--------------------------------------------- Frases motivacionales---------------------------------------------- */
+router.get('/getMotivationalQuotes', isSessionValid, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM fencing_quotes ORDER BY RANDOM() LIMIT 1');
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron frases motivacionales' });
+        }
+        console.log("Frase motivacional obtenida:", result.rows[0]);
+        return res.status(200).json({ success: true, quote: result.rows[0] });
+    } catch (error) {
+        console.error("Error al obtener frases motivacionales:", error.message);
+        return res.status(500).json({ success: false, message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.' });
+    }
+});
 
 
 module.exports = router;

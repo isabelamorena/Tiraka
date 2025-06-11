@@ -92,3 +92,5 @@ export function showConfirm(message, onConfirm, onCancel) {
             console.error('Error al cerrar sesión:', error);
         }
     });
+
+

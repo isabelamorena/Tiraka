@@ -455,11 +455,11 @@ function showWorkoutForm(step, template) {
                     <p class="mb-1 mt-4" style="white-space: pre-wrap; background: #F0E1ADff; padding: 15px; border-radius: 4px;">${coachWorkout.description.trim()}</p>
                     ${
                         coachWorkout.is_completed
-                        ? `<button class="btn btn-sm mt-3 w-100 w-md-auto" disabled>Completado</button>`
-                        : `<button class="btn btn-secondary btn-sm mt-3 btn-completar-coach w-100 w-md-auto" data-id="${coachWorkout.id}">No completado</button>`
+                        ? `<button class="btn mt-4" disabled>Completado</button>`
+                        : `<button class="btn btn-secondary mt-4 btn-completar-coach" data-id="${coachWorkout.id}">No completado</button>`
                     }
-                    <button class="btn btn-tertiary btn-sm mt-3 btn-view-coach-feedbacks w-100 w-md-auto" data-template-id="${coachWorkout.template_id}">Ver feedbacks</button>
-                    <button class="btn btn-tertiary btn-sm mt-3 btn-write-feedback w-100 w-md-auto" data-id="${coachWorkout.id}">Escribir feedback</button>
+                    <button class="btn btn-tertiary mt-4 btn-view-coach-feedbacks" data-template-id="${coachWorkout.template_id}">Ver feedbacks</button>
+                    <button class="btn btn-tertiary mt-4 btn-write-feedback" data-id="${coachWorkout.id}">Escribir feedback</button>
                     <div class="coach-feedbacks-container"></div>
 
                 </div>
