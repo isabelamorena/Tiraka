@@ -397,10 +397,11 @@
                             <div class="mb-3" id="fencer-graph-toggle">
                                 <button id="show-training-btn" class="btn btn-primary active" type="button">Entrenamientos</button>
                                 <button id="show-attendance-btn" class="btn btn-secondary" type="button">Asistencias</button>
+                                <button id="show-competitions-btn" class="btn btn-secondary" type="button">Competiciones</button>
                             </div>
                             <!-- Gráficas de entrenamientos -->
-                            <div class="mt-2" id="fencer-training-charts-container">
-                                <div class="mb-4 panel-box-unic">
+                            <div class="mt-4" id="fencer-training-charts-container">
+                                <div class="mb-4">
                                     <h2 class="text-center mb-4">Gráficas de Entrenamientos</h2>
                                     <div id="fencer-training-charts" class="roscos-row"></div>
                                     <div id="training-empty-message" class="alert alert-warning text-center d-none">
@@ -409,8 +410,8 @@
                                 </div>
                             </div>
                             <!-- Gráfica de asistencia -->
-                            <div class="mt-2 d-none" id="fencer-attendance-chart-container">
-                                <div class="mb-4 panel-box-unic">
+                            <div class="mt-4 d-none" id="fencer-attendance-chart-container">
+                                <div class="mb-4">
                                     <h2 class="text-center mb-4"><i class="lni lni-calendar"></i> Asistencia del Tirador</h2>
                                     <div id="attendance-controls" class="mb-3">
                                         <label for="attendance-month-select">Selecciona mes:</label>
@@ -421,6 +422,34 @@
                                     </div>
                                     <div id="attendance-empty-message" class="alert alert-warning text-center d-none">
                                         No hay asistencias para este tirador.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Tabla de competiciones -->
+                            <div class="mt-4 d-none" id="fencer-competitions-container">
+                                <div class="mb-4 ">
+                                    <h2 class="text-center mb-4"><i class="lni lni-trophy"></i> Competiciones</h2>
+                                    <div id="competitions-empty-message" class="alert alert-warning text-center d-none">
+                                        No hay competiciones para este tirador.
+                                    </div>
+                                       <div class="table-responsive mx-auto p-4" style="max-width:900px;">
+                                        <table class="table table-striped" id="fencer-competitions-table">
+                                            <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Fecha</th>
+                                                <th>Lugar</th>
+                                                <th>Puesto final</th>
+                                                <th>Victorias poule</th>
+                                                <th>Derrotas poule</th>
+                                                <th>¿Pasa poule?</th>
+                                                <th>Etapa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Se llenará por JS -->
+                                        </tbody>
+                                    </table>
                                     </div>
                                 </div>
                             </div>

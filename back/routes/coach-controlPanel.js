@@ -84,6 +84,30 @@ router.post('/updateProfilePasswordCoach',isSessionValid, async (req, res) => {
         });
     }
 });
+/* --------------------------------------- Competiciones de tiradores ------------------------------------------------- */
+// Obtener las competiciones de los tiradores del coach
+router.get('/getFencerCompetitions/:fencerId', isSessionValid, async (req, res) => {
+    try {
+        const fencerId = req.params.fencerId;
+        const diaryRes = await pool.query(`SELECT * FROM competition_diary WHERE fencer_id = $1`, [fencerId]);
+        // Si quieres obtener los DE de todas las competiciones:
+        const competitionIds = diaryRes.rows.map(row => row.id);
+        let deRes = { rows: [] };
+        if (competitionIds.length > 0) {
+            deRes = await pool.query(
+                `SELECT competition_entry_id, stage, description FROM competition_diary_de WHERE competition_entry_id = ANY($1::int[]) ORDER BY stage DESC`,
+                [competitionIds]
+            );
+        }
+        if (diaryRes.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron competiciones para este tirador' });
+        }
+        return res.status(200).json({ success: true, competitions: diaryRes.rows, de: deRes.rows });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Error en el servidor al obtener las competiciones' });
+    }
+});
+
 
 /* -------------------------------------- Obtener los tiradores vinculados al coach ------------------------------------*/
 router.get('/getFencersCoach', isSessionValid, async (req, res) => {

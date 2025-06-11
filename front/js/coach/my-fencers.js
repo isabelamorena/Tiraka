@@ -51,36 +51,55 @@ document.addEventListener("DOMContentLoaded", function () {
                     const hasTrainings = await showFencerTrainingChart(fencerId);
                     // Asistencias
                     const hasAttendance = await showFencerAttendanceChart(fencerId);
+                    // Competiciones
+                    const hasCompetitions = await showFencerCompetitions(fencerId);
 
-                    // Mostrar/ocultar botones y contenedores según datos
                     const trainingBtn = document.getElementById("show-training-btn");
                     const attendanceBtn = document.getElementById("show-attendance-btn");
+                    const competitionsBtn = document.getElementById("show-competitions-btn");
 
-                    if (hasTrainings && hasAttendance) {
+                    if (hasTrainings && hasAttendance && hasCompetitions) {
                         trainingBtn.classList.remove("d-none");
                         attendanceBtn.classList.remove("d-none");
+                        competitionsBtn.classList.remove("d-none");
                         // Mostrar entrenamientos por defecto
                         document.getElementById("fencer-training-charts-container").classList.remove("d-none");
                         document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                        document.getElementById("fencer-competitions-container").classList.add("d-none");
                         trainingBtn.classList.add("active");
                         attendanceBtn.classList.remove("active");
+                        competitionsBtn.classList.remove("active");
                     } else if (hasTrainings) {
                         trainingBtn.classList.remove("d-none");
                         attendanceBtn.classList.add("d-none");
+                        competitionsBtn.classList.add("d-none");
                         document.getElementById("fencer-training-charts-container").classList.remove("d-none");
                         document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                        document.getElementById("fencer-competitions-container").classList.add("d-none");
                         trainingBtn.classList.add("active");
                     } else if (hasAttendance) {
                         trainingBtn.classList.add("d-none");
                         attendanceBtn.classList.remove("d-none");
+                        competitionsBtn.classList.add("d-none");
                         document.getElementById("fencer-training-charts-container").classList.add("d-none");
                         document.getElementById("fencer-attendance-chart-container").classList.remove("d-none");
+                        document.getElementById("fencer-competitions-container").classList.add("d-none");
                         attendanceBtn.classList.add("active");
+                    } else if (hasCompetitions) {
+                        trainingBtn.classList.add("d-none");
+                        attendanceBtn.classList.add("d-none");
+                        competitionsBtn.classList.remove("d-none");
+                        document.getElementById("fencer-training-charts-container").classList.add("d-none");
+                        document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                        document.getElementById("fencer-competitions-container").classList.remove("d-none");
+                        competitionsBtn.classList.add("active");
                     } else {
                         trainingBtn.classList.add("d-none");
                         attendanceBtn.classList.add("d-none");
+                        competitionsBtn.classList.add("d-none");
                         document.getElementById("fencer-training-charts-container").classList.add("d-none");
                         document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                        document.getElementById("fencer-competitions-container").classList.add("d-none");
                     }
                 });
             });
@@ -89,6 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.length > 0) {
                 showFencerTrainingChart(data[0].id);
                 showFencerAttendanceChart(data[0].id);
+                showFencerCompetitions(data[0].id);
+
                 document.getElementById("fencer-training-charts-container").classList.remove("d-none");
                 document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
                 document.getElementById("show-training-btn").classList.add("active");
@@ -104,15 +125,28 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("show-training-btn").addEventListener("click", function () {
         document.getElementById("fencer-training-charts-container").classList.remove("d-none");
         document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+        document.getElementById("fencer-competitions-container").classList.add("d-none");
         this.classList.add("active");
         document.getElementById("show-attendance-btn").classList.remove("active");
+        document.getElementById("show-competitions-btn").classList.remove("active");
     });
 
     document.getElementById("show-attendance-btn").addEventListener("click", function () {
         document.getElementById("fencer-training-charts-container").classList.add("d-none");
         document.getElementById("fencer-attendance-chart-container").classList.remove("d-none");
+        document.getElementById("fencer-competitions-container").classList.add("d-none");
         this.classList.add("active");
         document.getElementById("show-training-btn").classList.remove("active");
+        document.getElementById("show-competitions-btn").classList.remove("active");
+    });
+
+    document.getElementById("show-competitions-btn").addEventListener("click", function () {
+        document.getElementById("fencer-training-charts-container").classList.add("d-none");
+        document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+        document.getElementById("fencer-competitions-container").classList.remove("d-none");
+        this.classList.add("active");
+        document.getElementById("show-training-btn").classList.remove("active");
+        document.getElementById("show-attendance-btn").classList.remove("active");
     });
 });
 
@@ -372,4 +406,54 @@ function renderAttendanceChart(month) {
             }
         }
     });
+}
+
+async function showFencerCompetitions(fencerId) {
+    const tableBody = document.querySelector("#fencer-competitions-table tbody");
+    const emptyMsg = document.getElementById("competitions-empty-message");
+    tableBody.innerHTML = "";
+    emptyMsg.classList.add("d-none");
+
+    try {
+        const response = await fetch(`/getFencerCompetitions/${fencerId}`);
+        const data = await response.json();
+
+        if (data.success && data.competitions.length > 0) {
+            data.competitions.forEach(comp => {
+                // Busca la etapa más baja si existe en data.de
+                let stage = "";
+                if (data.de && data.de.length > 0) {
+                    const deEntries = data.de.filter(de => de.competition_entry_id === comp.id);
+                    if (deEntries.length > 0) {
+                        // Etapa más baja (última alcanzada)
+                        const minStage = deEntries.reduce((min, curr) => {
+                            const currStage = parseInt(curr.stage, 10);
+                            return (isNaN(currStage) ? min : Math.min(min, currStage));
+                        }, Infinity);
+                        stage = isFinite(minStage) ? minStage : "";
+                    }
+                }
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${comp.title || ""}</td>
+                    <td>${comp.competition_date ? new Date(comp.competition_date).toLocaleDateString() : ""}</td>
+                    <td>${comp.location || ""}</td>
+                    <td>${comp.final_position ?? ""}</td>
+                    <td>${comp.wins_pool ?? ""}</td>
+                    <td>${comp.losses_pool ?? ""}</td>
+                    <td>${comp.passed_pool === true ? "Sí" : comp.passed_pool === false ? "No" : ""}</td>
+                    <td>${stage}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+            return true;
+        } else {
+            emptyMsg.classList.remove("d-none");
+            return false;
+        }
+    } catch (error) {
+        emptyMsg.textContent = "Error al cargar las competiciones.";
+        emptyMsg.classList.remove("d-none");
+        return false;
+    }
 }
