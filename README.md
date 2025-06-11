@@ -332,13 +332,13 @@ _Fda.: Isabel Yangxin Moreno Basurto_
 ÍNDICE DE ANEJOS
 
 # ANEJOS A LA MEMORIA
-##home.html
+## home.html
 ![image](https://github.com/user-attachments/assets/b24f530e-4ced-40b4-8e24-b90171126e57)
 
-##fencer-login.html
+## fencer-login.html
 ![image](https://github.com/user-attachments/assets/8b4335a2-edc1-4aa0-b478-416c850fdc60)
 
-##fencer-controlPanel.html
+## fencer-controlPanel.html
 ![image](https://github.com/user-attachments/assets/b31fb43d-79c6-41e3-b4c2-c8b3857d5e77)
 
 
