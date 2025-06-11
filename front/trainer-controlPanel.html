@@ -78,12 +78,41 @@
         flex-wrap: wrap;
         gap: 32px;
         align-items: flex-start;
+        justify-content: center;
     }
-    .roscos-row > div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    @media (max-width: 768px) {
+        .roscos-row {
+            gap: 16px;
+        }
+        #fencer-training-charts > div {
+            min-width: 160px;
+            max-width: 90vw;
+        }
+        .nav-tabs {
+            font-size: 0.95rem;
+        }
     }
+
+    /* Responsive para la tabla de competiciones */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .table {
+        min-width: 600px;
+    }
+    @media (max-width: 600px) {
+        .table {
+            font-size: 0.85rem;
+            min-width: 400px;
+        }
+    }
+
+    /* Responsive para los botones de toggle */
+    #fencer-graph-toggle .btn {
+        min-width: 120px;
+        margin-bottom: 4px;
+    }
+
     .fencer-btn.active, .fencer-btn:focus {
         background-color: #fcd03055 !important;
         color: #333 !important;
@@ -99,29 +128,33 @@
         transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         border: 1px solid #e6c200;
         border-radius: 6px;
-    }   
-    .panel-box-unic{
-    width: auto;
-    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
-    border: 1px solid #333;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
-    }
+    } 
     #fencer-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: stretch;
-    margin-bottom: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+        margin-bottom: 24px;
     }
     #fencer-list .fencer-btn {
         min-width: 180px;
         max-width: 220px;
         text-align: center;
+    }
+    /* Cambia el color de las pestañas inactivas de los nav-tabs */
+    .nav-tabs .nav-link {
+        color: #555 !important;         /* Color de texto de las pestañas inactivas */
+        background-color: #fff !important; /* Fondo claro para inactivas */
+        border-color: #dee2e6;
+    }
+
+    /* Opcional: color de la pestaña activa */
+    .nav-tabs .nav-link.active {
+        color: #555 !important;         /* Color de texto de las pestañas inactivas */
+        background-color: #f8f9fa !important; /* Fondo claro para inactivas */
+        border-color: #dee2e6 #dee2e6 #fff !important;
     }
 </style>
 
@@ -387,14 +420,16 @@
                 <!-- Tiradores -->
                 <div id="my-fencers" class="container-fluid d-none panel-box">
                     <div class="row">
-                        <div>
+                        <div class="col-12">
                             <!-- Nav tabs para fencers -->
-                            <ul class="nav nav-tabs mb-3" id="fencer-tabs" role="tablist"></ul>
+                            <ul class="nav nav-tabs mb-3 flex-nowrap overflow-auto" id="fencer-tabs" role="tablist" style="white-space:nowrap;">
+                                <!-- JS rellena los tabs -->
+                            </ul>
                             <div class="tab-content" id="fencer-tabs-content"></div>
                         </div>
-                        <div class="mt-2 w-100">
+                        <div class="col-12">
                             <!-- Botones para alternar entre gráficas -->
-                            <div class="mb-3" id="fencer-graph-toggle">
+                            <div class="mb-3 d-flex flex-wrap justify-content-center gap-2" id="fencer-graph-toggle">
                                 <button id="show-training-btn" class="btn btn-primary active" type="button">Entrenamientos</button>
                                 <button id="show-attendance-btn" class="btn btn-secondary" type="button">Asistencias</button>
                                 <button id="show-competitions-btn" class="btn btn-secondary" type="button">Competiciones</button>
@@ -403,7 +438,7 @@
                             <div class="mt-4" id="fencer-training-charts-container">
                                 <div class="mb-4">
                                     <h2 class="text-center mb-4">Gráficas de Entrenamientos</h2>
-                                    <div id="fencer-training-charts" class="roscos-row"></div>
+                                    <div id="fencer-training-charts" class="roscos-row flex-wrap"></div>
                                     <div id="training-empty-message" class="alert alert-warning text-center d-none">
                                         No hay entrenamientos para este tirador.
                                     </div>
@@ -415,10 +450,12 @@
                                     <h2 class="text-center mb-4"><i class="lni lni-calendar"></i> Asistencia del Tirador</h2>
                                     <div id="attendance-controls" class="mb-3">
                                         <label for="attendance-month-select">Selecciona mes:</label>
-                                        <select id="attendance-month-select" class="form-select" style="width:auto;display:inline-block"></select>
+                                        <select id="attendance-month-select" class="form-select d-inline-block w-auto"></select>
                                     </div>
                                     <div class="mb-4">
-                                        <canvas id="fencer-attendance-chart" width="600" height="200"></canvas>
+                                        <div class="w-100" style="overflow-x:auto;">
+                                            <canvas id="fencer-attendance-chart" style="min-width:350px;max-width:100%;" height="200"></canvas>
+                                        </div>
                                     </div>
                                     <div id="attendance-empty-message" class="alert alert-warning text-center d-none">
                                         No hay asistencias para este tirador.
@@ -427,29 +464,29 @@
                             </div>
                             <!-- Tabla de competiciones -->
                             <div class="mt-4 d-none" id="fencer-competitions-container">
-                                <div class="mb-4 ">
+                                <div class="mb-4">
                                     <h2 class="text-center mb-4"><i class="lni lni-trophy"></i> Competiciones</h2>
                                     <div id="competitions-empty-message" class="alert alert-warning text-center d-none">
                                         No hay competiciones para este tirador.
                                     </div>
-                                       <div class="table-responsive mx-auto p-4" style="max-width:900px;">
+                                    <div class="table-responsive mx-auto p-2" style="max-width:100vw;">
                                         <table class="table table-striped" id="fencer-competitions-table">
                                             <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Fecha</th>
-                                                <th>Lugar</th>
-                                                <th>Puesto final</th>
-                                                <th>Victorias poule</th>
-                                                <th>Derrotas poule</th>
-                                                <th>¿Pasa poule?</th>
-                                                <th>Etapa</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Se llenará por JS -->
-                                        </tbody>
-                                    </table>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>Fecha</th>
+                                                    <th>Lugar</th>
+                                                    <th>Puesto final</th>
+                                                    <th>Victorias poule</th>
+                                                    <th>Derrotas poule</th>
+                                                    <th>¿Pasa poule?</th>
+                                                    <th>Etapa</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Se llenará por JS -->
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
