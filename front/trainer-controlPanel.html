@@ -388,28 +388,40 @@
                 <div id="my-fencers" class="container-fluid d-none panel-box">
                     <div class="row">
                         <div>
-                            <h1 class="text-center mb-4">Mis Tiradores</h1>
-                            <div id="fencer-list" class="list-group"></div>
+                            <!-- Nav tabs para fencers -->
+                            <ul class="nav nav-tabs mb-3" id="fencer-tabs" role="tablist"></ul>
+                            <div class="tab-content" id="fencer-tabs-content"></div>
                         </div>
-                        <div class="d-none mt-2 " id="fencer-training-charts-container">
-                            <div class="mb-4 panel-box-unic">
-                                <h2 class="text-center mb-4">
-                                 Gráficas de Entrenamientos
-                                </h2>
-                                <div id="fencer-training-charts" class="roscos-row"></div>
+                        <div class="mt-2 w-100">
+                            <!-- Botones para alternar entre gráficas -->
+                            <div class="mb-3" id="fencer-graph-toggle">
+                                <button id="show-training-btn" class="btn btn-primary active" type="button">Entrenamientos</button>
+                                <button id="show-attendance-btn" class="btn btn-secondary" type="button">Asistencias</button>
                             </div>
-
-                            <!-- Asistencia -->
-                            <div id="fencer-attendance-chart-container" class="mb-4 panel-box-unic">
-                                <h2 class="text-center mb-4">
-                                    <i class="lni lni-calendar"></i> Asistencia del Tirador
-                                </h2>
-                                <div id="attendance-controls" class="mb-3">
-                                    <label for="attendance-month-select">Selecciona mes:</label>
-                                    <select id="attendance-month-select" class="form-select" style="width:auto;display:inline-block"></select>
+                            <!-- Gráficas de entrenamientos -->
+                            <div class="mt-2" id="fencer-training-charts-container">
+                                <div class="mb-4 panel-box-unic">
+                                    <h2 class="text-center mb-4">Gráficas de Entrenamientos</h2>
+                                    <div id="fencer-training-charts" class="roscos-row"></div>
+                                    <div id="training-empty-message" class="alert alert-warning text-center d-none">
+                                        No hay entrenamientos para este tirador.
+                                    </div>
                                 </div>
-                                <div class="mb-4">
-                                    <canvas id="fencer-attendance-chart" width="600" height="200"></canvas>
+                            </div>
+                            <!-- Gráfica de asistencia -->
+                            <div class="mt-2 d-none" id="fencer-attendance-chart-container">
+                                <div class="mb-4 panel-box-unic">
+                                    <h2 class="text-center mb-4"><i class="lni lni-calendar"></i> Asistencia del Tirador</h2>
+                                    <div id="attendance-controls" class="mb-3">
+                                        <label for="attendance-month-select">Selecciona mes:</label>
+                                        <select id="attendance-month-select" class="form-select" style="width:auto;display:inline-block"></select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <canvas id="fencer-attendance-chart" width="600" height="200"></canvas>
+                                    </div>
+                                    <div id="attendance-empty-message" class="alert alert-warning text-center d-none">
+                                        No hay asistencias para este tirador.
+                                    </div>
                                 </div>
                             </div>
                         </div>

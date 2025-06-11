@@ -1,51 +1,118 @@
 import { showPanel } from "./shared-functions.js";
 import { showAlert } from "./shared-functions.js";
-import { showConfirm } from "./shared-functions.js";
 import { fencersCoach } from "./shared-functions.js";
-import { formatDateYYYYMMDD } from "./shared-functions.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    
     document.getElementById("my-fencers-link").addEventListener("click", function (e) {
         e.preventDefault();
         showPanel("my-fencers");
 
-        let fencers = [];
-        // Crear una lista para que el coach elija sus fencers
         fencersCoach().then(data => {
-            fencers = data;
-            const fencerList = document.getElementById("fencer-list");
-            fencerList.innerHTML = ""; // Limpiar la lista antes de agregar nuevos elementos
+            const fencerTabs = document.getElementById("fencer-tabs");
+            const fencerTabsContent = document.getElementById("fencer-tabs-content");
+            fencerTabs.innerHTML = "";
+            fencerTabsContent.innerHTML = "";
 
-            if (fencers.length === 0) {
-                fencerList.innerHTML = "<div class='alert alert-warning'>No tienes fencers asignados.</div>";
+            if (data.length === 0) {
+                fencerTabsContent.innerHTML = "<div class='alert alert-warning'>No tienes fencers asignados.</div>";
                 return;
             }
 
-            // Seleccionar un fencer al hacer clic
-            fencers.forEach(fencer => {
-                const btn = document.createElement("button");
-                btn.type = "button";
-                btn.className = "list-group-item list-group-item-action fencer-btn mb-2";
-                btn.textContent = `${fencer.name} ${fencer.surname} ${fencer.secondsurname}`;
-                btn.dataset.fencerId = fencer.id;
-                btn.addEventListener("click", function () {
-                    const selectedFencerId = this.dataset.fencerId;
-                    showFencerTrainingChart(selectedFencerId);
-                    showFencerAttendanceChart(selectedFencerId);
+            data.forEach((fencer, idx) => {
+                // Tab
+                const tab = document.createElement("li");
+                tab.className = "nav-item";
+                tab.innerHTML = `
+                    <a class="nav-link${idx === 0 ? " active" : ""}" id="fencer-tab-${fencer.id}" data-bs-toggle="tab" href="#fencer-pane-${fencer.id}" role="tab" aria-controls="fencer-pane-${fencer.id}" aria-selected="${idx === 0}">
+                        ${fencer.name} ${fencer.surname}
+                    </a>
+                `;
+                fencerTabs.appendChild(tab);
 
-                    // Quitar selección previa
-                    document.querySelectorAll('.fencer-btn.active').forEach(el => el.classList.remove('active'));
-                    // Marcar este como activo
-                    this.classList.add('active');
-                });
-                fencerList.appendChild(btn);
+                // Tab content
+                const pane = document.createElement("div");
+                pane.className = `tab-pane fade${idx === 0 ? " show active" : ""}`;
+                pane.id = `fencer-pane-${fencer.id}`;
+                pane.setAttribute("role", "tabpanel");
+                pane.innerHTML = `
+                    <div class="mt-3">
+                        <div id="fencer-info-${fencer.id}"></div>
+                    </div>
+                `;
+                fencerTabsContent.appendChild(pane);
             });
-            document.getElementById("fencer-training-charts-container").classList.add("d-none"); // Asegurarse de que el contenedor no esté oculto
+
+            // Evento para mostrar info y gráficas al cambiar de tab
+            document.querySelectorAll('#fencer-tabs a[data-bs-toggle="tab"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', async function () {
+                    const fencerId = this.id.replace('fencer-tab-', '');
+
+                    // Entrenamientos
+                    const hasTrainings = await showFencerTrainingChart(fencerId);
+                    // Asistencias
+                    const hasAttendance = await showFencerAttendanceChart(fencerId);
+
+                    // Mostrar/ocultar botones y contenedores según datos
+                    const trainingBtn = document.getElementById("show-training-btn");
+                    const attendanceBtn = document.getElementById("show-attendance-btn");
+
+                    if (hasTrainings && hasAttendance) {
+                        trainingBtn.classList.remove("d-none");
+                        attendanceBtn.classList.remove("d-none");
+                        // Mostrar entrenamientos por defecto
+                        document.getElementById("fencer-training-charts-container").classList.remove("d-none");
+                        document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                        trainingBtn.classList.add("active");
+                        attendanceBtn.classList.remove("active");
+                    } else if (hasTrainings) {
+                        trainingBtn.classList.remove("d-none");
+                        attendanceBtn.classList.add("d-none");
+                        document.getElementById("fencer-training-charts-container").classList.remove("d-none");
+                        document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                        trainingBtn.classList.add("active");
+                    } else if (hasAttendance) {
+                        trainingBtn.classList.add("d-none");
+                        attendanceBtn.classList.remove("d-none");
+                        document.getElementById("fencer-training-charts-container").classList.add("d-none");
+                        document.getElementById("fencer-attendance-chart-container").classList.remove("d-none");
+                        attendanceBtn.classList.add("active");
+                    } else {
+                        trainingBtn.classList.add("d-none");
+                        attendanceBtn.classList.add("d-none");
+                        document.getElementById("fencer-training-charts-container").classList.add("d-none");
+                        document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                    }
+                });
+            });
+
+            // Mostrar info del primer fencer por defecto
+            if (data.length > 0) {
+                showFencerTrainingChart(data[0].id);
+                showFencerAttendanceChart(data[0].id);
+                document.getElementById("fencer-training-charts-container").classList.remove("d-none");
+                document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+                document.getElementById("show-training-btn").classList.add("active");
+                document.getElementById("show-attendance-btn").classList.remove("active");
+            }
         }).catch(error => {
             console.error("Error al cargar los fencers:", error);
             showAlert("Error al cargar los fencers");
         });
+    });
+
+    // Botones para alternar entre entrenamientos y asistencias
+    document.getElementById("show-training-btn").addEventListener("click", function () {
+        document.getElementById("fencer-training-charts-container").classList.remove("d-none");
+        document.getElementById("fencer-attendance-chart-container").classList.add("d-none");
+        this.classList.add("active");
+        document.getElementById("show-attendance-btn").classList.remove("active");
+    });
+
+    document.getElementById("show-attendance-btn").addEventListener("click", function () {
+        document.getElementById("fencer-training-charts-container").classList.add("d-none");
+        document.getElementById("fencer-attendance-chart-container").classList.remove("d-none");
+        this.classList.add("active");
+        document.getElementById("show-training-btn").classList.remove("active");
     });
 });
 
@@ -55,6 +122,11 @@ async function showFencerTrainingChart(fencerId) {
     try {
         const response = await fetch(`/getFencerWorkouts/${fencerId}`);
         const data = await response.json();
+
+        const chartsContainer = document.getElementById('fencer-training-charts');
+        const emptyMsg = document.getElementById('training-empty-message');
+        chartsContainer.innerHTML = '';
+        emptyMsg.classList.add('d-none');
 
         if (data.success) {
             const workouts = data.workouts || [];
@@ -77,10 +149,11 @@ async function showFencerTrainingChart(fencerId) {
             // Limpiar gráficos anteriores
             chartInstances.forEach(chart => chart.destroy());
             chartInstances = [];
-            const chartsContainer = document.getElementById('fencer-training-charts');
-            chartsContainer.innerHTML = '';
-            const chartsConta = document.getElementById('fencer-training-charts-container');
-            chartsConta.classList.remove('d-none'); // Asegurarse de que el contenedor no esté oculto
+
+            if (Object.keys(monthlyStats).length === 0) {
+                emptyMsg.classList.remove('d-none');
+                return false;
+            }
 
             // Crear un rosco por cada mes
             Object.keys(monthlyStats).sort().forEach(month => {
@@ -123,12 +196,14 @@ async function showFencerTrainingChart(fencerId) {
                 chartInstances.push(chart);
             });
 
+            return true;
         } else {
-            showAlert(data.message);
+            emptyMsg.classList.remove('d-none');
+            return false;
         }
     } catch (error) {
-        console.error("Error al obtener los entrenamientos del tirador:", error.message);
         showAlert("Error al obtener los entrenamientos del tirador");
+        return false;
     }
 }
 let attendanceChartInstance = null;
@@ -139,20 +214,31 @@ async function showFencerAttendanceChart(fencerId) {
         const response = await fetch(`/getFencerAttendance/${fencerId}`);
         const data = await response.json();
 
+        // Siempre oculta el mensaje y muestra los controles por defecto
+        document.getElementById('attendance-empty-message').classList.add('d-none');
+        document.getElementById('attendance-controls').classList.remove('d-none');
+        document.getElementById('fencer-attendance-chart').classList.remove('d-none');
+
         if (data.success) {
             attendanceDataCache = data.attendance || [];
-            document.getElementById('fencer-attendance-chart-container').classList.remove('d-none'); // Ocultar el contenedor al inicio
-
             // Agrupar por mes
             const months = {};
             attendanceDataCache.forEach(a => {
-                if (!a.date) return; // Ignora registros sin fecha
+                if (!a.date) return;
                 const date = new Date(a.date);
-                if (isNaN(date.getTime())) return; // Ignora fechas inválidas
+                if (isNaN(date.getTime())) return;
                 const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                 if (!months[month]) months[month] = [];
                 months[month].push(a);
             });
+
+            if (Object.keys(months).length === 0) {
+                document.getElementById('attendance-controls').classList.add('d-none');
+                document.getElementById('fencer-attendance-chart').classList.add('d-none');
+                document.getElementById('attendance-empty-message').classList.remove('d-none');
+                if (attendanceChartInstance) attendanceChartInstance.destroy();
+                return false;
+            }
 
             // Llenar el selector de meses
             const monthSelect = document.getElementById('attendance-month-select');
@@ -166,7 +252,7 @@ async function showFencerAttendanceChart(fencerId) {
 
             // Mostrar controles
             document.getElementById('attendance-controls').classList.remove('d-none');
-            document.getElementById('fencer-attendance-chart-container').classList.remove('d-none');
+            document.getElementById('fencer-attendance-chart').classList.remove('d-none');
 
             // Mostrar el mes más reciente por defecto
             if (monthSelect.options.length > 0) {
@@ -179,15 +265,17 @@ async function showFencerAttendanceChart(fencerId) {
                 renderAttendanceChart(this.value);
             };
 
+            return true;
         } else {
-            showAlert(data.message);
-            // Limpiar el gráfico y controles si no hay datos
-            document.getElementById('fencer-attendance-chart-container').classList.add('d-none'); // Ocultar el contenedor al inicio
-
+            document.getElementById('attendance-controls').classList.add('d-none');
+            document.getElementById('fencer-attendance-chart').classList.add('d-none');
+            document.getElementById('attendance-empty-message').classList.remove('d-none');
+            if (attendanceChartInstance) attendanceChartInstance.destroy();
+            return false;
         }
     } catch (error) {
-        console.error("Error al obtener las asistencias del tirador:", error);
         showAlert("Error al obtener las asistencias del tirador");
+        return false;
     }
 }
 
