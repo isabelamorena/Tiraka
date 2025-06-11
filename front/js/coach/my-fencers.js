@@ -395,7 +395,7 @@ function renderAttendanceChart(month) {
                     min: 0,
                     max: 8,
                     ticks: {
-                        stepSize: 0.25,
+                        stepSize: 0.5, // <-- 0.5 horas = 30 minutos
                         callback: function(value) {
                             const h = Math.floor(value);
                             const m = Math.round((value - h) * 60);
