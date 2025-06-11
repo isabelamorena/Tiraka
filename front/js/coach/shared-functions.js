@@ -4,7 +4,8 @@ export function showPanel(panelId) {
         "profile",
         "create-workout",
         "my-templates",
-        "workout-calendar"
+        "workout-calendar",
+        "my-fencers"
     ];
     panels.forEach(id => {
         const el = document.getElementById(id);
@@ -90,3 +91,5 @@ export function showConfirm(message, onConfirm, onCancel) {
         if (onCancel) onCancel();
     };
 }
+
+

@@ -5,45 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de control - Entrenador</title>
 
-  <!-- Conectar a bootstrapstrap -->
-  <link href="css/css/bootstrap.min.css" rel="stylesheet">
-  <script src="js/js/bootstrap.min.js"></script>
-  <script src="js/sidebar-CP.js"></script>
+    <!-- Conectar a bootstrapstrap -->
+    <link href="css/css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/js/bootstrap.min.js"></script>
+    <script src="js/sidebar-CP.js"></script>
 
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Calendario -->
+    <!-- Calendario -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
-  <!-- Link a hoja de estilo CSS para el sitio -->
-  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" /> <!-- para los iconos -->
-
-  <!-- Paginación -->
-  <link rel="stylesheet" href="https://pagination.js.org/dist/2.1.5/pagination.css">
-  <script src="https://pagination.js.org/dist/2.1.5/pagination.min.js"></script>
-  <!-- Choices.js CSS -->
+    <!-- Link a hoja de estilo CSS para el sitio -->
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" /> <!-- para los iconos -->
+    <!-- Gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Paginación -->
+    <link rel="stylesheet" href="https://pagination.js.org/dist/2.1.5/pagination.css">
+    <script src="https://pagination.js.org/dist/2.1.5/pagination.min.js"></script>
+    <!-- Choices.js CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <!-- Choices.js JS -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
     <!-- Date Range Picker CSS -->
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16" />
 
     <script type="module"  src="js/coach/shared-functions.js"></script>
-  <script type="module" src="js/coach/profile.js"></script>
-  <script type="module" src="js/coach/workout-sessions.js"></script>
-  <script type="module" src="js/coach/calendar.js"></script>
+    <script type="module" src="js/coach/profile.js"></script>
+    <script type="module" src="js/coach/workout-sessions.js"></script>
+    <script type="module" src="js/coach/calendar.js"></script>
+    <script type="module" src="js/coach/my-fencers.js"></script>
   
-  <link rel="stylesheet" href="css/generalStyle.css">
-  <link rel="stylesheet" href="css/typography.css">
-  <link rel="stylesheet" href="css/dark-mode.css">
-  <link rel="stylesheet" href="css/sidebar-CP.css">
-  <link rel="stylesheet" href="css/controlPanel-Main.css">
+    <link rel="stylesheet" href="css/generalStyle.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/sidebar-CP.css">
+    <link rel="stylesheet" href="css/controlPanel-Main.css">
 
 <script>
     // Verificar si el usuario está autenticado (llama a una ruta del back-end)
@@ -73,6 +72,58 @@
     checkSession();
 
 </script>
+<style>
+    .roscos-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        align-items: flex-start;
+    }
+    .roscos-row > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .fencer-btn.active, .fencer-btn:focus {
+        background-color: #fcd03055 !important;
+        color: #333 !important;
+        border-color: #e6c200 !important;
+        font-weight: bold;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem #fcd03055;
+    }              
+    .fencer-btn {
+        color: #333;
+        border-color: #e6c200;
+        font-weight: normal;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        border: 1px solid #e6c200;
+        border-radius: 6px;
+    }   
+    .panel-box-unic{
+    width: auto;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
+    border: 1px solid #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
+    }
+    #fencer-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-bottom: 24px;
+    }
+    #fencer-list .fencer-btn {
+        min-width: 180px;
+        max-width: 220px;
+        text-align: center;
+    }
+</style>
 
 
 </head>
@@ -121,7 +172,7 @@
                 
 
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link" id="trainer-fencers-link">
+                    <a href="#" class="sidebar-link" id="my-fencers-link">
                         <i class="lni lni-emoji-smile"></i>
                         <span>Tiradores</span>
                     </a>
@@ -265,7 +316,7 @@
                             </div>
                         </div>
                         <!-- Selector de tiradores: múltiples -->
-                        <div class="col-12 col-md-5 mb-4">
+                        <div class="col-12 col-md-5 mb-4c">
                             <div class="card shadow-sm h-100">
                                 <div class="card-body d-flex flex-column align-items-center">
                                     <h5 class="card-title mb-3"><i class="lni lni-users"></i> Tiradores</h5>
@@ -335,6 +386,38 @@
                             </div>
                         </div>
                         <div id="workout-details-popup" class="calendar-popup"></div>
+                    </div>
+                </div>
+
+                <!-- Tiradores -->
+                <div id="my-fencers" class="container-fluid d-none panel-box">
+                    <div class="row">
+                        <div>
+                            <h1 class="text-center mb-4">Mis Tiradores</h1>
+                            <div id="fencer-list" class="list-group"></div>
+                        </div>
+                        <div class="d-none mt-2 " id="fencer-training-charts-container">
+                            <div class="mb-4 panel-box-unic">
+                                <h2 class="text-center mb-4">
+                                 Gráficas de Entrenamientos
+                                </h2>
+                                <div id="fencer-training-charts" class="roscos-row"></div>
+                            </div>
+
+                            <!-- Asistencia -->
+                            <div id="fencer-attendance-chart-container" class="mb-4 panel-box-unic">
+                                <h2 class="text-center mb-4">
+                                    <i class="lni lni-calendar"></i> Asistencia del Tirador
+                                </h2>
+                                <div id="attendance-controls" class="mb-3">
+                                    <label for="attendance-month-select">Selecciona mes:</label>
+                                    <select id="attendance-month-select" class="form-select" style="width:auto;display:inline-block"></select>
+                                </div>
+                                <div class="mb-4">
+                                    <canvas id="fencer-attendance-chart" width="600" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>

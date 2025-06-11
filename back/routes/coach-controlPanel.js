@@ -199,6 +199,46 @@ router.post('/createTrainingTemplateCoach', isSessionValid, async (req, res) => 
     }
 });
 
+//Obtener los entrenamientos de un tirador específico del coach
+router.get('/getFencerWorkouts/:fencerId', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+    const fencerId = req.params.fencerId;
+
+    try {
+        const result = await pool.query(`
+            SELECT * FROM fencer_coach_sessions WHERE fencer_id = $1 AND coach_id = $2
+        `, [fencerId, coachId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron entrenamientos para este tirador' });
+        }
+
+        console.log("Entrenamientos del tirador:", result.rows);
+        return res.status(200).json({ success: true, workouts: result.rows });
+
+    } catch (error) {
+        console.error("Error al obtener los entrenamientos del tirador:", error);
+        return res.status(500).json({ success: false, message: 'Error en el servidor al obtener los entrenamientos' });
+    }
+});
+
+/* --------------------------------------------------- Asistencias ------------------------------------------- */
+router.get('/getFencerAttendance/:fencerId', isSessionValid, async (req, res) => {
+    const coachId = req.session.user.userId;
+    const fencerId = req.params.fencerId;
+    try {
+        const result = await pool.query(`SELECT * FROM attendance_record WHERE fencer_id = $1 `, [fencerId]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron registros de asistencia para este tirador' });
+        }
+        console.log("Registros de asistencia del tirador:", result.rows);
+        return res.status(200).json({ success: true, attendance: result.rows });
+    } catch (error) {
+        console.error("Error al obtener los registros de asistencia del tirador:", error);
+        return res.status(500).json({ success: false, message: 'Error en el servidor al obtener los registros de asistencia' });
+    }
+});
+
 /* -------------------------------------------------------- Plantillas ------------------------------------------- */
 // Obtener las plantillas del coach
 router.get('/getTemplatesCoach', isSessionValid, async (req, res) => {
