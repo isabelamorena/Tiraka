@@ -16,7 +16,7 @@ TIRAKA
 
 **INDICE DE CONTENIDO**
 
-- - 1.  [ANTECEDENTES 3](#_bookmark0)
+ 1.  [ANTECEDENTES 3](#_bookmark0)
         2.  [OBJETO 4](#_bookmark1)
         3.  [SITUACIÓN ACTUAL – TO BE 5](#_bookmark2)
             1.  [Situación actual (AS IS) 5](#_bookmark3)
