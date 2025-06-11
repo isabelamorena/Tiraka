@@ -89,7 +89,7 @@ router.post('/updateProfilePasswordCoach',isSessionValid, async (req, res) => {
 router.get('/getFencerCompetitions/:fencerId', isSessionValid, async (req, res) => {
     try {
         const fencerId = req.params.fencerId;
-        const diaryRes = await pool.query(`SELECT * FROM competition_diary WHERE fencer_id = $1`, [fencerId]);
+        const diaryRes = await pool.query(`SELECT * FROM competition_diary WHERE fencer_id = $1 `, [fencerId]);
         // Si quieres obtener los DE de todas las competiciones:
         const competitionIds = diaryRes.rows.map(row => row.id);
         let deRes = { rows: [] };

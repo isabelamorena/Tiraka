@@ -156,6 +156,22 @@
         background-color: #f8f9fa !important; /* Fondo claro para inactivas */
         border-color: #dee2e6 #dee2e6 #fff !important;
     }
+
+    .attendance-canvas-responsive {
+        width: 100% !important;
+        max-width: 900px;
+        min-width: 320px;
+        height: auto !important;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    @media (max-width: 800px) {
+        .attendance-canvas-responsive {
+            max-width: 98vw;
+            min-width: 0;
+        }
+    }
 </style>
 
 
@@ -453,10 +469,10 @@
                                         <select id="attendance-month-select" class="form-select d-inline-block w-auto"></select>
                                     </div>
                                     <div class="mb-4">
-                                        <div class="w-100" style="overflow-x:auto;">
-                                            <canvas id="fencer-attendance-chart" style="min-width:350px;max-width:100%;" height="200"></canvas>
-                                        </div>
+                                    <div class="w-100" style="overflow-x:auto;">
+                                        <canvas id="fencer-attendance-chart" class="attendance-canvas-responsive" height="160"></canvas>
                                     </div>
+</div>
                                     <div id="attendance-empty-message" class="alert alert-warning text-center d-none">
                                         No hay asistencias para este tirador.
                                     </div>
