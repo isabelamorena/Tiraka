@@ -96,6 +96,7 @@ El motor de bases de datos utilizado es PostgreSQL. Las razones de su elección 
 ### Mapa del sitio
 
 ### Modelo de la base de datos
+![tiraka_db](https://github.com/user-attachments/assets/d0548e6b-2ac1-4446-b8a6-9e2a3cd7659f)
 
  - Usuarios: Se clasifican en esgrimistas y entrenadores, almacenando sus datos per- sonales y credenciales.
  - Entrenamientos: Registros detallados de sesiones, incluyendo duración, tipo de ejercicio y plantillas de entrenamiento.
@@ -106,7 +107,7 @@ El motor de bases de datos utilizado es PostgreSQL. Las razones de su elección 
 - Diarios: Permitirán a los tiradores registrar su experiencia personal
 
 ### Organización de archivos
-
+![carpetas drawio](https://github.com/user-attachments/assets/ccf6e2ac-ffe2-46e5-a81d-776e7fd1c7ef)
 #### Backend (/back)
 
 Contiene toda la lógica del servidor, incluyendo:
