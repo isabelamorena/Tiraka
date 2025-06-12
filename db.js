@@ -3,8 +3,7 @@ const { Pool } = require('pg');
 process.env.DATABASE_URL = DATABASE_URL;    */
 /* DATABASE_URL = "postgresql://tiraka_db_user:Mu2slymDJTCawGi7F251NnNTfcUAMnNt@dpg-d15k3i3e5dus739p2th0-a.oregon-postgres.render.com/tiraka_db"; // Reemplaza con tu URL de conexión a la base de datos:
  */const pool = new Pool({
-  connectionString: process.env.DATABASE_URL = DATABASE_URL = "postgresql://tiraka_db_user:Mu2slymDJTCawGi7F251NnNTfcUAMnNt@dpg-d15k3i3e5dus739p2th0-a.oregon-postgres.render.com/tiraka_db"; // Reemplaza con tu URL de conexión a la base de datos:
-,
+  connectionString: process.env.DATABASE_URL = DATABASE_URL = "postgresql://tiraka_db_user:Mu2slymDJTCawGi7F251NnNTfcUAMnNt@dpg-d15k3i3e5dus739p2th0-a.oregon-postgres.render.com/tiraka_db", // Reemplaza con tu URL de conexión a la base de datos: 
   /* user: 'postgres',
   host: 'localhost',
   database: 'tiraka',
