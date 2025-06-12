@@ -161,27 +161,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     /* ---------------------------------------------------- Ojo de la contraseña -------------------------------------------------- */
-    document.addEventListener("DOMContentLoaded", function () {
-        const setupPasswordToggle = (inputId, iconId) => {
-        const input = document.getElementById(inputId);
-        const button = document.getElementById(iconId).parentElement;
+   
+    const setupPasswordToggle = (inputId, iconId) => {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById(iconId).parentElement;
 
-        const showPassword = () => input.type = "text";
-        const hidePassword = () => input.type = "password";
+    const showPassword = () => input.type = "text";
+    const hidePassword = () => input.type = "password";
 
-        // Para mouse
-        button.addEventListener("mousedown", showPassword);
-        button.addEventListener("mouseup", hidePassword);
-        button.addEventListener("mouseleave", hidePassword);
+    // Para mouse
+    button.addEventListener("mousedown", showPassword);
+    button.addEventListener("mouseup", hidePassword);
+    button.addEventListener("mouseleave", hidePassword);
 
-        // Para dispositivos táctiles
-        button.addEventListener("touchstart", showPassword);
-        button.addEventListener("touchend", hidePassword);
-        };
+    // Para dispositivos táctiles
+    button.addEventListener("touchstart", showPassword);
+    button.addEventListener("touchend", hidePassword);
+    };
 
-        setupPasswordToggle("profile-current-password", "eye-icon-current");
-        setupPasswordToggle("profile-new-password", "eye-icon-new");
-        setupPasswordToggle("profile-confirm-new-password", "eye-icon-confirm");
-        });
+    setupPasswordToggle("profile-current-password", "eye-icon-current");
+    setupPasswordToggle("profile-new-password", "eye-icon-new");
+    setupPasswordToggle("profile-confirm-new-password", "eye-icon-confirm");
+    
 
 });

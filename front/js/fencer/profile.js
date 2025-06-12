@@ -211,7 +211,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const result = await response.json();
             
             if (result.success) {
-                window.location.reload()
+                showAlert('Contraseña actualizada correctamente');
+                // Limpiar los campos de contraseña
+                document.getElementById("profile-current-password").value = '';
+                document.getElementById("profile-new-password").value = '';
+                document.getElementById("profile-confirm-new-password").value = '';
+                
             } else {
                 showAlert('Error al actualizar la contraseña: ' + result.message);
             }
@@ -243,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setupPasswordToggle("profile-confirm-new-password", "eye-icon-confirm");
 
     /*--------------------------------------------- Mostrar entrenadores para cambiarlo ------------------------------------------------------- */
-    const profileCoach = document.getElementById("profile-coach");
+    const profileCoach = document.getElementById("profile-change-coach");
     profileCoach.addEventListener("click", async function (e) {
         e.preventDefault();
         // Obtener el perfil del entrenador desde el servidor
