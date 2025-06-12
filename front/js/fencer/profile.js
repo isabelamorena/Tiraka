@@ -1,5 +1,5 @@
-import { showPanel } from './shared-functions.js';
-import { showAlert } from './shared-functions.js';
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     /*--------------------------------------------------------- Perfil ------------------------------------------------------------ */
     const showProfile = document.getElementById("profile-link");

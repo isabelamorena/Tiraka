@@ -1,6 +1,4 @@
-import { showPanel } from './shared-functions.js';
-import { showAlert } from "./shared-functions.js";
-
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     /* ------------------------------------------- Perfil ----------------------------------------------------- */
@@ -29,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     profileLink.addEventListener('click', function(e) {
         e.preventDefault(); 
         showProfile(); // Llama a la función para mostrar el perfil
-        showPanel('profile'); // Llama a la función para mostrar el panel del perfil
+        showPanel('profile-coach'); // Llama a la función para mostrar el panel del perfil
     });
 
     // Mostrar el perfil cuando pinchas en general

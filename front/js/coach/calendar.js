@@ -1,13 +1,11 @@
-import { showPanel } from "./shared-functions.js";
-import { showAlert } from "./shared-functions.js";
-import {showConfirm} from "./shared-functions.js";
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
 
 document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("training-calendar-link").addEventListener("click", function (e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        showPanel("workout-calendar");
+        showPanel("workout-calendar-coach");
         cargarEntrenamientosYCalendarioCoach();
     });
 

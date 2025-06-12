@@ -1,5 +1,4 @@
-import { showPanel, fencersCoach, showAlert } from './shared-functions.js';
-import { formatDateYYYYMMDD } from './shared-functions.js';
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
 
 // Función para cargar los tiradores vinculados al entrenador
 // y crear el selector de Choices
@@ -33,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     createWorkoutLink.addEventListener("click", async function (e) {
         e.preventDefault();
         document.querySelector("#sidebar").classList.toggle("collapsed");
-        showPanel("create-workout");
+        showPanel("create-workout-coach");
 
         // Cargar tiradores vinculados
         fencerChoices();
@@ -267,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
    document.getElementById("my-templates-link").addEventListener("click", async function (e) {
        e.preventDefault();
        document.querySelector("#sidebar").classList.toggle("collapsed");
-       showPanel("my-templates");
+       showPanel("my-templates-coach");
         
        // Reset layout
         const leftCol = document.getElementById("left-template-column");

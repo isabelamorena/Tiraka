@@ -1,11 +1,9 @@
-import { showPanel } from "./shared-functions.js";
-import { showAlert } from "./shared-functions.js";
-import { fencersCoach } from "./shared-functions.js";
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("my-fencers-link").addEventListener("click", function (e) {
         e.preventDefault();
-        showPanel("my-fencers");
+        showPanel("my-fencers-coach");
 
         fencersCoach().then(data => {
             const fencerTabs = document.getElementById("fencer-tabs");

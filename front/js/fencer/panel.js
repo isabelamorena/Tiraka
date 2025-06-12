@@ -1,5 +1,4 @@
-import { showPanel } from './shared-functions.js';
-import { showAlert } from './shared-functions.js';
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -238,8 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Redirige a la página de control del tirador si el registro es exitoso
             if (result.success) {
                 
-                const successMessage = document.getElementById('messageAttendance');
-                successMessage.innerHTML = '<p class= "text-success">*registro de asistencia exitoso</p>';
+                showAlert('Asistencia registrada correctamente');
 
                 // Limpiar el formulario y resetear hora
                 formAttendance.reset();
@@ -254,8 +252,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 showLastAttendances();
 
             } else {
-                const successMessage = document.getElementById('messageAttendance');
-                successMessage.innerHTML = '<p class="text-failure">*error en el registro de asistencia</p>';
+                
+                showAlert('Error al registrar la asistencia: ' + result.message);
 
                 setTimeout(() => {
                     successMessage.innerHTML = '';

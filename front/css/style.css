@@ -1,0 +1,1044 @@
+/* --------------- cajas del panel de control ------------------ */
+.panel-box {
+    width: auto;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
+}
+
+.main{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.panel-box-today-sessions {
+    width: 100%;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
+}
+
+.panel-box-only-attendance{
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 730px; 
+}
+#attendance-chart{
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 0 !important;
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 730px; 
+}
+
+/* Gráfica responsive */
+#attendanceAreaChart {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100vw;
+    min-width: 0;
+    padding: 0  !important;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .panel-box-only-attendance {
+        padding: 15px;
+    }
+    #attendanceAreaChart {
+        max-width: 100vw;
+        /* height: 220px !important; */ /* <-- Elimina o comenta esta línea */
+    }
+    #attendance-chart{
+    height: auto !important; /* Ajusta la altura automáticamente en móviles */
+    
+}
+}
+@media (max-width: 768px) {
+  #attendance-record .row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    display: flex;
+  }
+  #attendance-record .col-12 {
+    min-width: auto;
+    flex: 0 0 auto;
+  }
+  #attendance-record .col-md-4,
+  #attendance-record .col-md-8 {
+    min-width: auto;
+    flex: 0 0 auto;
+  }
+  .panel-box-only-attendance {
+        height: auto; /* en tablet/móvil, altura automática */
+    }
+}
+/* ---------------------- en móviles --------------------------- */
+@media (max-width: 768px) {
+   
+    #left-column, #right-column { 
+        margin-bottom: 1rem; 
+    }
+    
+    .main{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .panel-box {
+        padding: 15px; /* menos padding en móviles */
+    }
+}
+.table-responsive {
+  width: 90%;
+  overflow-x: auto;
+}
+@media (max-width: 600px) {
+    .panel-box-today-sessions .btn {
+        width: 100% !important;
+        margin-bottom: 1px;
+        font-size: 0.9rem;
+        padding: 7px 0;
+    }
+}
+.today-workouts-titles {
+    background: #fffbe6;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #fcd03055;
+    padding: 1.5rem 1rem;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+.workout-title-item {
+    font-size: 1.1em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    border: none;
+    background: transparent;
+}
+@media (max-width: 600px) {
+    .today-workouts-titles {
+        padding: 1rem 0.5rem;
+        max-width: 98vw;
+    }
+    .workout-title-item {
+        font-size: 1em;
+        padding: 0.6em 0.2em;
+    }
+}
+.motivational-quote {
+    text-align: center;
+    font-style: italic;
+    color: #B59E4Cff;
+    margin-top: 1.5rem;
+}
+/* --------------- cajas del panel de control ------------------ */
+.panel-box {
+    width: auto;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
+}
+
+.main{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.panel-box-today-sessions {
+    width: 100%;
+    min-height: 360px; /* altura mínima, ajusta este valor según necesites */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: hidden; /* puedes quitar esto si quieres ver el overflow */
+}
+
+
+/* ---------------------- en móviles --------------------------- */
+@media (max-width: 768px) {
+    
+    #left-column, #right-column { 
+        margin-bottom: 1rem; 
+    }
+    
+    .main{
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* ------------------------------------------------------------ Botones -------------------------------------------------------------------*/
+/* Botón principal*/
+.btn-primary{
+    background-color:#F0E1ADff;
+    border:2px solid #F0E1ADff ;
+    color: black;
+}
+.btn-primary:hover{
+    background-color:#B59E4Cff;
+    border:2px solid #B59E4Cff ;
+}
+.btn-primary:active,
+.btn-primary:focus:active,
+.btn-primary.active {
+    background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
+    border-color: #B59E4Cff !important;
+    border:2px solid #B59E4Cff ;
+    box-shadow: none !important;
+}
+
+/* Botón secundario*/
+.btn-secondary{
+    background-color: white;
+    color: black;
+
+    border: 2px solid #423B20ff;
+}
+.btn-secondary:hover{
+    background-color: #B59E4Cff;
+    color: black;
+    border: 2px solid #B59E4Cff;
+}
+.btn-secondary:active,
+.btn-secondary:focus:active,
+.btn-secondary.active {
+    background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
+    border-color: #B59E4Cff !important;
+    box-shadow: none !important;
+    border: 2px solid #B59E4Cff;
+}
+
+/* Botón tercero*/
+.btn-tertiary {
+    background-color: #fff;
+    color: #B59E4Cff;
+    font-weight: 600;
+}
+.btn-tertiary:hover,
+.btn-tertiary:focus {
+    background-color: #B59E4Cff;
+    color: #fff;
+    border: 2px solid #B59E4Cff;
+}
+.btn-tertiary:active,
+.btn-tertiary.active {
+    background-color: #F0E1ADff !important;
+    color: #423B20ff !important;
+    border: 2px solid #F0E1ADff !important;
+    box-shadow: none !important;
+}
+
+.disabled{
+    background-color: #F0E1ADff !important;
+    color: black !important;
+    border: 2px solid #F0E1ADff !important;
+    cursor: not-allowed;
+}
+/*------------------------------------- Acordeón -------------------------------------------*/
+/* Cambiar fondo y borde del acordeón activo */
+.accordion-button:not(.collapsed) {
+  background-color:#F0E1ADff; /* tu color miel */
+  color:black; /* texto */
+  border-color: rgb(247, 200, 115);
+}
+
+/* Quitar el borde azul cuando se hace foco */
+.accordion-button:focus {
+  box-shadow: 3px 3px 0px 0px rgb(247, 200, 115) ;  
+  border-color: rgb(247, 200, 115);
+}
+
+/*----------------------------------------------------- Botón de ojo ------------------------------------------------------------*/
+.btn-eye{
+    border: 1px solid #F0E1ADff;
+}
+.btn-eye:hover{
+    
+    border: 1px solid #B59E4Cff;
+}
+.btn-eye:active,
+.btn-eye:focus:active,
+.btn-eye.active {
+    background-color: #B59E4Cff !important;  /* Color normal del btn-primary */
+    border-color: #B59E4Cff !important;
+    box-shadow: none !important;
+}
+
+.eye-icon{
+    color: #F0E1ADff;
+}
+.eye-icon:hover{
+    
+    color: #B59E4Cff;
+}
+.eye-icon:active,
+.eye-icon:focus:active,
+.eye-icon.active {
+    color: #FCD030ff;
+}
+/* -------------------------------------------------------- Links ---------------------------------------------------------------------*/
+a.link-primary{
+    color: #FCD030ff !important;
+    text-decoration: none;
+}
+a.link-primary:hover{
+    color: #423B20ff !important;
+}
+
+/* ------------------------------------------------ Lista de elementos ---------------------------------------------------------*/
+.custom-list .list-group-item:hover {
+  background-color: #B59E4Cff;
+  color: black !important;
+}
+.custom-list .list-group-item.active {
+  background-color: #B59E4Cff !important;
+  color: white !important;
+  border-color: #423B20ff; 
+}
+
+/* --------------------------------------------- Línea de separación <hr class="line"> --------------------------------------------*/
+.line{
+    
+  border: none;
+  height: 2px;
+  background-color: #B59E4Cff; /* gris claro */
+  margin-bottom: 15px;
+  margin-top: 0;
+}
+
+/* ----------------------------------------------------------- Calendario flatpickr--------------------------------------------------------------*/
+.flatpickr-day:hover {
+  background-color: #B59E4Cff !important;
+  color: white !important;
+  cursor: pointer;
+    border: none;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background-color: #B59E4Cff !important;
+  color: white !important;
+    border: none;
+}
+
+.flatpickr-day.inRange {
+  background-color: #E6E6E6 !important;
+  color: black !important;
+  border: none;
+}
+/* Quitar sombra / línea entre días del rango */
+.flatpickr-day.inRange::before,
+.flatpickr-day.inRange::after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.flatpickr-calendar {
+  color: black !important;
+  border:1px solid #F0E1ADff !important;
+}
+
+/* ----------------------------------------------------------- Texto adicional-------------------------------------------------------------------*/
+.text-success {
+  color: #B59E4Cff !important;
+  background: #f9f6ea;
+  border: 1.5px solid #B59E4Cff;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 16px;
+  display: inline-block;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(181,158,76,0.06);
+}
+
+.text-failure {
+  color: #d9534f !important;
+  background: #fff0f0;
+  border: 1.5px solid #d9534f;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 16px;
+  display: inline-block;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(217,83,79,0.06);
+}
+
+/* ----------------------------------------------------------- Calendario -------------------------------------------------------------------*/
+/* Puedes agregar esto a tu CSS general */
+/* filepath: c:\Users\isabe\OneDrive\Escritorio\Tiraka\front\css\generalStyle.css */
+#calendar {
+  width: 100% !important;
+  min-width: 0;
+}
+.fc {
+  font-size: 1rem;
+}
+@media (max-width: 600px) {
+  .fc-toolbar-title {
+    font-size: 1.1rem;
+  }
+  .fc {
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 600px) {
+  #workout-calendar.panel-box,
+  #workout-calendar .panel-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+  #calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+  #calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+@media (max-width: 600px) {
+  #workout-calendar.panel-box,
+  #workout-calendar .panel-box {
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  #calendar {
+    flex: 1 1 auto;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 0;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+  
+}
+
+/* ----------------------------------------------------------- Tablas -------------------------------------------------------------------*/
+@media screen and (max-width: 600px) {
+  .table-responsive{
+    font-size: 0.7rem;
+  }
+  
+}
+
+/* ----------------------------------------------------------- Eventos del calendario -------------------------------------------------------------------*/
+/* Título del mes */
+.fc-toolbar-title {
+  color: #222;
+  font-weight: bold;
+}
+
+/* Nombres de los días */
+.fc-col-header-cell-cushion {
+  color: #B59E4Cff;
+}
+/* Cambia el color de fondo y texto de los eventos */
+.fc-event {
+  background-color: #F0E1ADff !important; /* tu color */
+  color: black !important;               /* color del texto */
+  border: none !important;
+}
+/* Números de los días en el calendario */
+.fc-daygrid-day-number {
+  color: black; /* Cambia este color a tu gusto */
+  font-size: 1.05rem;
+}
+/* Flechas de navegación del calendario */
+.fc .fc-button-primary {
+  background-color: #F0E1ADff;
+  border: 1.5px solid #B59E4Cff;
+  color: #B59E4Cff;
+  font-weight: 600;
+}
+.fc .fc-button-primary:active,
+.fc .fc-button-primary.fc-button-active {
+  background-color: #B59E4Cff !important;
+  color: #fff !important;
+  border-color: #B59E4Cff !important;
+  box-shadow: none !important;
+}
+/* Día actual resaltado */
+.fc-day-today {
+  background-color: #FCD03022 !important;
+}
+
+.calendar-popup{
+  display:none;
+  position:absolute;
+  z-index:9999;
+  min-width:560px;
+  max-width:620px;
+  background-color: #fff;
+  box-shadow:0 2px 12px rgba(0,0,0,0.15);
+  padding:10px;
+  font-size:1rem;
+  margin-bottom: 15px;
+}
+
+@media screen and (max-width: 600px) {
+  .calendar-popup {
+    width: 100vw;
+    max-width: 100vw;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    margin: 0 !important;
+    border-radius: 16px 16px 0 0;
+    padding: 18px 10px 24px 10px;
+    font-size: 0.95rem;
+    position: fixed !important;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.18);
+    animation: popupBottomIn 0.22s;
+  }
+  /* Oculta la hora en la vista lista */
+  .fc-list-event-time {
+    display: none !important;
+  }
+#calendar, .fc {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+  .fc-event {
+  background-color: #fff !important; /* tu color */
+  color: black !important;               /* color del texto */
+  border: none !important;
+}
+}
+
+/* Animación opcional para entrada suave */
+@keyframes popupBottomIn {
+  from { transform: translateY(100%);}
+  to { transform: translateY(0);}
+}
+#calendar, .fc {
+  height: 100% !important;
+  min-height: 400px; /* o el mínimo que prefieras */
+}
+
+/* ----------------------------------------------------------- alert -------------------------------------------------------------------*/
+
+#custom-alert {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  
+  color: black;
+  border: 1px solid black;
+  padding: 10px 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  font-size: 1.1em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#custom-alert.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+#custom-alert.hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+  pointer-events: none;
+}
+
+
+/* ----------------------------------------------------------- Panel -------------------------------------------------------------------*/
+.workout-item {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    background-color: #f9f9f9;
+    border-left: 6px solid #ccc;
+    transition: transform 0.2s ease;
+}
+
+.workout-item h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #666;
+}
+
+.workout-item h2 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.workout-item:hover {
+    transform: translateY(-3px);
+}
+
+/* Colores diferenciados */
+.workout-item.coach {
+    border-left-color: #28A745;
+    background-color: white;
+}
+
+.workout-item.personal {
+    border-left-color: #007BFF;
+    background-color: #fff;
+}
+body{
+    padding-top: 100px; /* Compensa altura navbar */
+}
+
+
+/* ------------------- Texto principal ------------------- */
+#animatedText {
+    
+    line-height: 2; /* Espaciado entre líneas */
+}
+
+/* ------------------- Enlaces destacados ------------------- */
+.highlight {
+    
+    transition: font-weight 0.5s ease-in-out, font-size 0.5s ease-in-out; /* Transiciones suaves */
+    text-decoration: none; /* Quitar subrayado */
+    color: rgb(146, 154, 171); /* Color del texto destacado */
+}
+.highlight:hover {
+    text-decoration: underline; /* Subrayar al pasar el cursor */
+}
+
+/* ------------------- Imagen estática ------------------- */
+.static-image {
+    position: fixed; /* La imagen permanece en su lugar */
+    top: 50%; /* Centrado vertical */
+    left: 10%; /* Posición horizontal ajustable */
+    transform: translateY(-50%); /* Ajuste fino para centrar verticalmente */
+    z-index: -1; /* La imagen queda detrás del contenido */
+    width: 400px; /* Tamaño ajustable de la imagen */
+    
+}
+
+/* ------------------- Contenedor desplazable ------------------- */
+.scroll-container {
+    margin-left: 45%; /* Evitar que el contenido se superponga con la imagen estática */
+}
+@media (max-width: 768px) {
+    .scroll-container {
+        margin-left: 0%; /* Cuando es móvil se centra */
+    }
+}
+
+/* ------------------- Secciones con scroll ------------------- */
+.scroll-section {
+    margin:  0; /* Espaciado entre las secciones */
+    
+}
+
+/* --------------------- Contacto ------------------------------ */
+.hover-effect {
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/*------------------------------------- Acordeón -------------------------------------------*/
+/* Cambiar fondo y borde del acordeón activo */
+.accordion-button:not(.collapsed) {
+  background-color:#F0E1ADff; /* tu color miel */
+  color:black; /* texto */
+  border-color: rgb(247, 200, 115);
+}
+
+/* Quitar el borde azul cuando se hace foco */
+.accordion-button:focus {
+  box-shadow: 3px 3px 0px 0px rgb(247, 200, 115) ;  
+  border-color: rgb(247, 200, 115);
+}
+
+/* ------------------- Barra de navegación ------------------- */
+.fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100px;
+    background-color: #F0E1ADff;
+    z-index: 9999;
+    box-shadow: 0 0 35px 0 rgba(49, 57, 66, 0.5);
+}
+/* Estilo de los enlaces */
+.navbar-links{
+    text-decoration: none; /* Quitar subrayado de los enlaces */
+    color: black; /* Heredar el color del contenedor padre */
+    transition: color 0.3s ease, font-size 0.3s ease; /* Transiciones suaves */
+}
+/* Estilo de los enlaces al pasar el cursor */
+.navbar-links:hover {
+    color: #B59E4Cff ; /* Color del texto destacado */
+    font-size: 1.7rem; /* Aumentar el tamaño del texto */
+
+}
+
+/* ------------------- Logo ------------------- */
+.logo {
+    max-height: 90px;
+    width: auto;
+    width: auto;
+}
+/*--------------------En móviles----------------------*/
+@media screen and (max-width: 768px) {
+    .logo {
+        max-height: 45px; /* Cambia la altura máxima del logo */
+        width: auto; /* Mantiene la proporción del logo */
+       
+    }
+    .navbar-links {
+        font-size: 0.9rem; /* Cambia el tamaño de la fuente */
+    }
+    .navbar-links:hover{
+        font-size: 1.2rem; /* Cambia el tamaño de la fuente al pasar el cursor */
+    }
+    
+   }
+
+/* ------------------- Botón "Hola!" ------------------- */
+.btn-no-style {
+    background-color: transparent; /* Fondo transparente */
+    border: none; /* Sin bordes */
+    cursor: pointer; /* Cambiar el cursor al estilo puntero */
+}
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #F8F9FA;
+    font-family: 'body-text-font';
+}
+
+h3 {
+    font-size: 1.2375rem;
+    color: black;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+/* Layout skeleton */
+
+.wrapper {
+    align-items: stretch;
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    max-width: 264px;
+    min-width: 264px;
+    transition: all 0.35s ease-in-out;
+    box-shadow: 0 0 35px 0 rgba(49, 57, 66, 0.5);
+    z-index: 1111;
+}
+
+/* Sidebar collapse */
+
+#sidebar.collapsed {
+    margin-left: -264px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+}
+
+.sidebar-logo {
+    padding: 1.15rem 1.5rem;
+}
+
+.sidebar-logo a {
+    color: #000000;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    padding: 0;
+}
+
+.sidebar-header {
+    color: #000000;
+    font-size: .75rem;
+    padding: 1.5rem 1.5rem .375rem;
+}
+
+a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #000000;
+    position: relative;
+    display: block;
+    font-size: 1rem;
+}
+a.sidebar-link:hover {
+    background-color: #86868630;
+}
+
+.sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+
+.content {
+    flex: 1;
+    max-width: 100vw;
+    width: 100vw;
+}
+
+/* Responsive */
+
+@media (min-width:768px) {
+    .content {
+        width: auto;
+    }
+}
+
+.toggler-btn {
+    font-size: 2rem;          /* Hace el icono más grande */
+    border: none;             /* Quita el borde */
+    background: none;         /* Sin fondo */
+    color: inherit;           /* Usa el color del texto actual */
+    padding: 0.5rem 1rem;     /* Opcional: un poco de espacio */
+    cursor: pointer;
+  }
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #F8F9FA;
+    font-family: 'body-text-font';
+}
+
+h3 {
+    font-size: 1.2375rem;
+    color: black;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+/* Layout skeleton */
+
+.wrapper {
+    align-items: stretch;
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    max-width: 264px;
+    min-width: 264px;
+    transition: all 0.35s ease-in-out;
+    box-shadow: 0 0 35px 0 rgba(49, 57, 66, 0.5);
+    z-index: 1111;
+}
+
+/* Sidebar collapse */
+
+#sidebar.collapsed {
+    margin-left: -264px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+}
+
+.sidebar-logo {
+    padding: 1.15rem 1.5rem;
+}
+
+.sidebar-logo a {
+    color: #000000;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    padding: 0;
+}
+
+.sidebar-header {
+    color: #000000;
+    font-size: .75rem;
+    padding: 1.5rem 1.5rem .375rem;
+}
+
+a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #000000;
+    position: relative;
+    display: block;
+    font-size: 1rem;
+}
+a.sidebar-link:hover {
+    background-color: #86868630;
+}
+
+.sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+
+.content {
+    flex: 1;
+    max-width: 100vw;
+    width: 100vw;
+}
+
+/* Responsive */
+
+@media (min-width:768px) {
+    .content {
+        width: auto;
+    }
+}
+
+.toggler-btn {
+    font-size: 2rem;          /* Hace el icono más grande */
+    border: none;             /* Quita el borde */
+    background: none;         /* Sin fondo */
+    color: inherit;           /* Usa el color del texto actual */
+    padding: 0.5rem 1rem;     /* Opcional: un poco de espacio */
+    cursor: pointer;
+  }
+  @font-face {
+    font-family: 'title-font';
+    src: url(../font/Cinzel-VariableFont_wght.ttf) format('truetype');
+} 
+@font-face {
+    font-family: 'subtitle-font';
+    src: url(../font/EBGaramond-VariableFont_wght.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'body-text-font';
+    src: url(../font/Lora-VariableFont_wght.ttf) format('truetype');
+}
+
+.title-font{
+    font-family: 'title-font';
+    font-size: 1.6rem; /* Tamaño grande del texto */
+    font-weight: 600;
+ }
+.subtitle-font{
+    font-family: 'subtitle-font';
+    font-size: 1.6rem; 
+ }
+.body-text-font{
+    font-family: 'body-text-font';
+    font-size: 1.2rem; 
+ }
+
+/*--------------------En móviles----------------------*/
+@media screen and (max-width: 768px) {
+    .title-font{
+        font-size: 1.3rem; /* Tamaño grande del texto */
+    }
+    .subtitle-font{
+        font-size: 1.1rem; 
+    }
+    .body-text-font{
+        font-size: 1.1rem; 
+    }
+}
+  

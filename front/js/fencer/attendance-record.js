@@ -1,5 +1,5 @@
-import { showPanel } from './shared-functions.js';
-import { showAlert } from './shared-functions.js';      
+import { showPanel, showAlert, showConfirm, fencersCoach, formatDateYYYYMMDD } from '../shared-functions.js';
+  
 let selectedStart = null;
 let selectedEnd = null;
 
@@ -108,7 +108,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (selectedStart && selectedEnd) {
             filtered = attendanceDataGlobal.filter(record => {
                 const d = new Date(record.date.split('T')[0]);
-                return d >= selectedStart && d <= selectedEnd;
+                d.setHours(0,0,0,0);
+                const start = new Date(selectedStart);
+                start.setHours(0,0,0,0);
+                const end = new Date(selectedEnd);
+                end.setHours(0,0,0,0);
+                return d >= start && d <= end;
             });
         }
         AttendanceWithPagination(filtered);

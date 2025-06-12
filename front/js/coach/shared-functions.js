@@ -1,11 +1,11 @@
 // Maneja la funcionalidad del perfil del entrenador en la aplicación web.
 export function showPanel(panelId) {
     const panels = [
-        "profile",
-        "create-workout",
-        "my-templates",
-        "workout-calendar",
-        "my-fencers"
+        "profile-coach",
+        "create-workout-coach",
+        "my-templates-coach",
+        "workout-calendar-coach",
+        "my-fencers-coach"
     ];
     panels.forEach(id => {
         const el = document.getElementById(id);
@@ -92,4 +92,25 @@ export function showConfirm(message, onConfirm, onCancel) {
     };
 }
 
+// Cerrar sesión 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/logout', {
+            method: 'POST',
+            credentials: 'include',  // Para enviar la cookie de sesión con la solicitud
+        });
 
+        const result = await response.json();
+
+        if (result.success) {
+            
+            window.location.href = 'home.html';  // Redirige al login o a la página de inicio
+        } else {
+            alert('Hubo un problema al cerrar la sesión');
+        }
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+        }
+    });
+});

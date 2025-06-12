@@ -428,6 +428,10 @@ router.post('/savePersonalFeedback', async (req, res) => {
     }
 });
 
+//Marcar completado en una sesión del coach
+
+
+
 // Obtener el historial de entrenamientos de una plantilla
 router.get('/getPersonalTemplateId', async (req, res) => {
     try {
@@ -559,7 +563,7 @@ router.get('/getPersonalWorkoutToday', isSessionValid, async (req, res) => {
     }
 });
 
-// Entrenamiento completado (true)
+// Entrenamiento personal completado (true)
 router.post('/completeWorkout', isSessionValid, async (req, res) => {
     const { workoutId } = req.body;
 
@@ -574,6 +578,25 @@ router.post('/completeWorkout', isSessionValid, async (req, res) => {
         return res.status(200).json({ success: true, message: 'Entrenamiento completado' });
     } catch (error) {
         console.error("Error al completar el entrenamiento:", error.message);
+        return res.status(500).json({ success: false, message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.' });
+    }
+});
+
+// Entrenamiento del coach completado (true)
+router.post('/completeCoachWorkout', isSessionValid, async (req, res) => {
+    const { workoutId } = req.body;
+
+    try {
+        const updateQuery = `
+            UPDATE public.fencer_coach_sessions
+            SET is_completed = true
+            WHERE id = $1
+        `;
+        await pool.query(updateQuery, [workoutId]);
+
+        return res.status(200).json({ success: true, message: 'Entrenamiento del coach completado' });
+    } catch (error) {
+        console.error("Error al completar el entrenamiento del coach:", error.message);
         return res.status(500).json({ success: false, message: 'Hubo un error en el servidor. Por favor, inténtalo más tarde.' });
     }
 });
