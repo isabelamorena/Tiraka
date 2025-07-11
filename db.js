@@ -2,12 +2,12 @@ const { Pool } = require('pg');
 /* require('dotenv').config(); const DATABASE_URL = "postgresql://postgres:iyfznvlbzFVHpedwGWEZBojpExjweifk@maglev.proxy.rlwy.net:31774/railway"; 
 process.env.DATABASE_URL = DATABASE_URL; */
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  /* user: 'postgres',
+  
+   user: 'postgres',
   host: 'localhost',
   database: 'tiraka',
   password: '3773',
-  port: 5432,  */
+  port: 5432,  
   
   rejectUnauthorized: false
   
